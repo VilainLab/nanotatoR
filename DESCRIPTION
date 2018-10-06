@@ -1,5 +1,5 @@
 Package: nanotatoR
-Title: Annotation of Bionano Structural variants
+Title: nanotatoR: next generation structural variant annotation and classification
 Version: 0.99.0
 Author: Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain
 Maintainer: Surajit Bhattacharya <sbhattach2@childrensnational.org>
