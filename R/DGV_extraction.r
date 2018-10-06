@@ -2,36 +2,41 @@
 #'
 #' @param hgpath  character. Path to Database of Genomic Variants (DGV)
 #'                Text file.
-#' @param smappath  character. Path and file name for textfile.
-#' @param terms  character. Single or Multiple Terms.
-#' @param outpath character. Path where gene lists are saved.
-#' @param input_fmt character. Choice between text or data frame as
+#' @param smappath  character. Path for smap textfile.
+#' @param smap character. File name for smap textfile.
+#' @param input_fmt_DGV character. Choice between text or data frame as
 #' an input to the DGV frequency calculator.
-#' @param smap_data Dataset containing smap data.
-#' @param thresh integer. Threshold for the number of terms sent to entrez.
-#'                Note if large lists are sent to ncbi, it might fail to get
-#'                processed. Default is 5.
-#' @param returnMethod character. Choice between text or data frame as the output.
+#' @param smap_data dataframe. Dataset containing smap data.
+#' @param win_indel_DGV  Numeric. Insertion and deletion error window.Default 10000
+#' bases.
+#' @param win_inv_trans_DGV  Numeric. Inversion and translocation error window.
+#' Default 50000 bases.
+#' @param perc_similarity_DGV  Numeric . ThresholdPercentage similarity 
+#' of the query SV and reference SV. Default 0.5.
+#' @param returnMethod_DGV character. Choice between text or data frame as the output.
+#' @param outpath character. Path where gene lists are saved.
 #' @return Text and character vector containg gene list and terms associated with them
 #'         are stored as text files.
 #' @examples
-#' hgpath="C:\\nanotatoR\\Data\\GRCh37_hg19_variants_2016-05-15.txt";
-#' smappath="Z:/Hayk's_Materials/Bionano/Projects/UDN/F1_UDN287643_Benic.Aria/";
-#' smap="F1_UDN287643_P_Q.S_VAP_SVmerge_trio_access.txt";
-#' win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
-#' DGV_extraction (hgpath, smappath, win_indel = 10000, win_inv_trans = 50000,
-#' perc_similarity = 0.5,returnMethod="dataFrame")
+#' smap="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smappath = system.file("extdata", smap, package="nanotatoR")
+#' hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
+#' win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5
+#' datDGV<- DGV_extraction (hgpath, smappath,input_fmt_DGV = "Text", smap, 
+#' win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
+#' perc_similarity_DGV = 0.5,returnMethod_DGV="dataFrame")
+#' @import utils
 #' @export
 DGV_extraction <-
   function(hgpath,
            smappath,
            smap,
            smap_data,
-           input_fmt = c("Text", "DataFrame"),
-           win_indel = 10000,
-           win_inv_trans = 50000,
-           perc_similarity = 0.5,
-           returnMethod = c("Text", "dataFrame"))
+           input_fmt_DGV = c("Text", "DataFrame"),
+           win_indel_DGV = 10000,
+           win_inv_trans_DGV = 50000,
+           perc_similarity_DGV = 0.5,
+           returnMethod_DGV = c("Text", "dataFrame"),outpath)
   {
     # S='F' Change the window for Inversion/translocation 50000
     
@@ -43,9 +48,9 @@ DGV_extraction <-
     usamp <- 7965
     # varaccl<-length(unique(varacc)) close(con)
     ##Checking if the input format is dataframe or Text
-    if (input_fmt == "Text") {
+    if (input_fmt_DGV == "Text") {
       ##Pattern matching needs to be done to remove #
-      con <- file(paste(smappath, smap, sep = ""), "r")
+      con <- file(smappath, "r")
       r10 <- readLines(con, n = -1)
       close(con)
       datfinal <- data.frame()
@@ -62,19 +67,19 @@ DGV_extraction <-
         stop("column names doesnot Match")
       }
     }
-    else if (input_fmt == "DataFrame") {
+    else if (input_fmt_DGV == "DataFrame") {
       r1 <- smap_data
     }
     else{
       stop("Incorrect format")
     }
     ## Checking Sex male/female and assigning chromosome number accordingly
-    chro <- length(unique(r1$RefcontigID1))
-    chro1 <- c(1:chro)
+    chro <- unique(r1$RefcontigID1)
+    #chro1 <- c(1:chro)
     dataFinal <- c()
     ## Extracting Data for 1 chromosome at a time and comparing Make change
     ## in XY
-    for (ii in 1:length(chro1))
+    for (ii in chro)
     {
       #print(paste("Chromosome:", chro1[ii]))
       ## Extracting data from DGV dataset
@@ -86,7 +91,7 @@ DGV_extraction <-
         kk <- "Y"
       } else
       {
-        kk <- chro1[ii]
+        kk <- ii
       }
       dat <- r[which(r$chr == kk),]
       # variantType1<-dat$variantsubtype Changing the variant terms in DGV to
@@ -99,30 +104,29 @@ DGV_extraction <-
         gsub("gain+loss", "insertion+deletion", dat$variantsubtype)
       variantType1 <- dat$variantsubtype
       ## Extracting data from SVmap
-      dat1 <- r1[which(r1$RefcontigID1 == chro1[ii]),]
+      dat1 <- r1[which(r1$RefcontigID1 == ii),]
       ## Adding the windows to the breakpoints
       rf <- dat1$RefStartPos
-      rf_wb_ind <- rf - win_indel
-      rf_fb_ind <- rf + win_indel
-      rf_wb_int <- rf - win_inv_trans
-      rf_fb_int <- rf + win_inv_trans
+      rf_wb_ind <- rf - win_indel_DGV
+      rf_fb_ind <- rf + win_indel_DGV
+      rf_wb_int <- rf - win_inv_trans_DGV
+      rf_fb_int <- rf + win_inv_trans_DGV
       re <- dat1$RefEndPos
-      re_wf_ind <- re + win_indel
-      re_wb_ind <- re - win_indel
-      re_wb_int <- re - win_inv_trans
-      re_fb_int <- re + win_inv_trans
+      re_wf_ind <- re + win_indel_DGV
+      re_wb_ind <- re - win_indel_DGV
+      re_wb_int <- re - win_inv_trans_DGV
+      re_fb_int <- re + win_inv_trans_DGV
       ## Calculating size
       size_bn <- dat1$Size
       variantType2 <- as.character(dat1$Type)
       
       # countfre<-0 percn<-c()
       datf <- c()
-      #for (nn in 1:length(rf))
-      for (nn in 1:10)
+      for (nn in 1:length(rf))
+      #for (nn in 1:10)
       {
         ## Comparing the conditions
-        if (variantType2[nn] == "deletion" |
-            variantType2[nn] == "insertion")
+        if (variantType2[nn] == "deletion" | variantType2[nn] == "insertion")
         {
           dat2 <-
             dat[which((
@@ -150,7 +154,7 @@ DGV_extraction <-
             {
               size_dgv <- dat2$end[ll] - dat2$start[ll]
               perc <- (size1 / size_dgv)
-              if (perc >= perc_similarity & (identical(type[ll],
+              if (perc >= perc_similarity_DGV & (identical(type[ll],
                                                        variantType2[nn])))
               {
                 fre <- as.character(dat2$samples[ll])
@@ -192,7 +196,7 @@ DGV_extraction <-
             type <- dat2$variantsubtype
             size_dgv <- dat2$end - dat2$start
             perc <- (size1 / size_dgv)
-            if (perc >= perc_similarity &
+            if (perc >= perc_similarity_DGV &
                 (identical(type, variantType2[nn])))
             {
               fre <- as.character(dat2$samples)
@@ -242,8 +246,9 @@ DGV_extraction <-
           }
           
         }
-        else if (variantType2[nn] == "deletion" |
-                 variantType2[nn] == "insertion")
+        else if ((variantType2[nn] == "duplication" | variantType2[nn] == "duplication_split"
+			            |variantType2[nn] == "duplication_inverted" |
+						variantType2[nn] == "insertion"))
         {
           dat2 <-
             dat[which((
@@ -271,7 +276,7 @@ DGV_extraction <-
             {
               size_dgv <- dat2$end[ll] - dat2$start[ll]
               perc <- (size1 / size_dgv)
-              if (perc >= perc_similarity & (identical(type[ll],
+              if (perc >= perc_similarity_DGV & (identical(type[ll],
                                                        variantType2[nn])))
               {
                 fre <- as.character(dat2$samples[ll])
@@ -313,7 +318,7 @@ DGV_extraction <-
             type <- dat2$variantsubtype
             size_dgv <- dat2$end - dat2$start
             perc <- (size1 / size_dgv)
-            if (perc >= perc_similarity &
+            if (perc >= perc_similarity_DGV &
                 (identical(type, variantType2[nn])))
             {
               fre <- as.character(dat2$samples)
@@ -345,10 +350,7 @@ DGV_extraction <-
             data1 <-
               data.frame(
                 dat1[nn,],
-                DGV_Freq_Perc = format(((
-                  countfre / usamp
-                ) *
-                  100), scientific = FALSE),
+                DGV_Freq_Perc = format(((countfre / usamp) *100), scientific = FALSE),
                 stringsAsFactors = FALSE
               )
             datf <- rbind(datf, data1)
@@ -385,15 +387,13 @@ DGV_extraction <-
           countfreunfilt <- 0
           if (nrow(dat2) > 1)
           {
-            countfre <- c()
+            countfre <- 0
             countfreunfilt <- 0
             type <- dat2$variantsubtype
             for (ll in 1:nrow(dat2))
             {
-              size_dgv <- dat2$end[ll] - dat2$start[ll]
-              perc <- (size1 / size_dgv)
-              if (perc >= perc_similarity & (identical(type[ll],
-                                                       variantType2[nn])))
+             
+              if ((identical(type[ll],variantType2[nn])))
               {
                 fre <- as.character(dat2$samples[ll])
                 if (length(fre) >= 1)
@@ -421,21 +421,14 @@ DGV_extraction <-
             data1 <-
               data.frame(
                 dat1[nn,],
-                DGV_Freq_Perc = format(((
-                  countfre / usamp
-                ) *
-                  100), scientific = FALSE),
-                stringsAsFactors = FALSE
-              )
+                DGV_Freq_Perc = format(((countfre / usamp) * 100), scientific = FALSE),
+                stringsAsFactors = FALSE)
             datf <- rbind(datf, data1)
           } else if (nrow(dat2) == 1)
           {
             # dgv_match=TRUE Calculating percentage similarity
             type <- dat2$variantsubtype
-            size_dgv <- dat2$end - dat2$start
-            perc <- (size1 / size_dgv)
-            if (perc >= perc_similarity &
-                (identical(type, variantType2[nn])))
+            if ((identical(type, variantType2[nn])))
             {
               fre <- as.character(dat2$samples)
               if (length(fre) >= 1)
@@ -497,22 +490,22 @@ DGV_extraction <-
       dataFinal <- rbind(dataFinal, datf)
     }
     ##Return Mode Dataframe or Text
-    if (returnMethod == "Text") {
+    if (returnMethod_DGV == "Text") {
       st1 <- strsplit(smap, ".txt")
       fname <- st1[[1]][1]
       row.names(dataFinal) <- c()
       write.table(
         dataFinal,
-        paste(smappath, fname, "_DGV.txt", sep = ""),
+        paste(outpath, fname, "_DGV.txt", sep = ""),
         sep = "\t",
         row.names = FALSE
       )
     }
-    else if (returnMethod == "dataFrame") {
+    else if (returnMethod_DGV == "dataFrame") {
       return (dataFinal)
     }
     else{
-      stop ("ReturnMethod Incorrect")
+      stop ("returnMethod_DGV Incorrect")
     }
   }
 
@@ -520,7 +513,11 @@ DGV_extraction <-
 #'
 #' @param samp  character. Unique samples
 #' @examples
+#' hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
+#' r <- read.table(paste(hgpath), header = TRUE, sep = "\t")
+#' samp <- as.character(unique(r$samples))
 #' UniqueSample(samp)
+#' @import utils
 #' @export
 UniqueSample <- function(samp)
 {

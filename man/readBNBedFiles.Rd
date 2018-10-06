@@ -16,6 +16,6 @@ Data Frame Contains the gene information.
 Reads Bionano Bedfiles
 }
 \examples{
-BNFile="C:\\\\nanotatoR\\\\Data\\\\Homo_sapiens.GRCH19_BN.bed"
-readBNBedFiles(BNFile)
+BNFile <- system.file("extdata", "Homo_sapiens.GRCH19_BN.bed", package="nanotatoR")
+bed<-readBNBedFiles(BNFile)
 }

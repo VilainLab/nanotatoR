@@ -4,28 +4,36 @@
 \alias{compSmapbed}
 \title{Extracts gene information from bed files}
 \usage{
-compSmapbed(smap, bed, inputfmt = c("bed", "BNBed"), outpath, n = 3,
-  returnMethod = c("Text", "dataFrame"))
+compSmapbed(smap, bed, inputfmtBed = c("BED", "BNBED"), outpath, n = 3,
+  returnMethod_bedcomp = c("Text", "dataFrame"))
 }
 \arguments{
 \item{smap}{character. Path to SMAP file.}
 
-\item{bed}{Text Bionano Bed file.}
+\item{bed}{Text. Normal Bed files or Bionano Bed file.}
 
-\item{inputfmt}{character Whether the bed input is UCSC bed or Bionano bed.
+\item{inputfmtBed}{character Whether the bed input is UCSC bed or Bionano bed.
 Note: extract in bed format to be read by bedsv:
-awk '{print $1,$3,$4,$5,$18,$7}' gencode.v19.annotation.gtf >HomoSapienGRCH19.bed}
+awk '{print $1,$4,$5,$18,$7}' gencode.v19.annotation.gtf >HomoSapienGRCH19.bed}
 
 \item{outpath}{character Path for the output files.}
 
 \item{n}{numeric Number of genes to report which are nearest to the 
 breakpoint. Default is      3.}
 
-\item{returnMethod}{Character. Type of output Dataframe or in Text format.}
+\item{returnMethod_bedcomp}{Character. Type of output Dataframe or in Text format.}
 }
 \value{
 Data Frame and Text file. Contains the smap with additional Gene Information.
 }
 \description{
 Extracts gene information from bed files
+}
+\examples{
+smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smap = system.file("extdata", smapName, package="nanotatoR")
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+outpath <- system.file("extdata",  package="nanotatoR")
+datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
+n = 3, returnMethod_bedcomp = c("Text", "dataFrame"))
 }

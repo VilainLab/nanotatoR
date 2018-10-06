@@ -10,6 +10,8 @@ makeMergedSVData(path, pattern, outpath)
 \item{path}{character. Path to the solo files.}
 
 \item{pattern}{character. file name pattern for solo files.}
+
+\item{outpath}{character. path name for the output.}
 }
 \value{
 Text file containing all the solo SMAP files.
@@ -18,7 +20,7 @@ Text file containing all the solo SMAP files.
 Merges Solo SV files to one common SV file
 }
 \examples{
-path="Z:/Hayks_Materials/Bionano/Projects/UDN/VSVM_Solo"
-pattern="_solo.txt"
-makeMergedSVData(path, pattern, outpath=systemDir())
+path <- system.file("extdata", "SoloFile/", package="nanotatoR")
+pattern="_hg19.smap"
+mergedFiles<-makeMergedSVData(path, pattern, outpath=path)
 }

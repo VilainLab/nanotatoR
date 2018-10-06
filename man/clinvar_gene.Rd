@@ -18,7 +18,5 @@ Extracting genes from clinvar database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-gtr_gene(terms, dataset="hsapiens_gene_ensembl",
-      attributes=c("entrezgene", "ensembl_gene_id", "hgnc_symbol"),
-       filters = "entrezgene")
+datclinvar<-clinvar_gene(term=terms)
 }

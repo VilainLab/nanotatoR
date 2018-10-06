@@ -4,98 +4,99 @@
 \alias{nanotatoR_main}
 \title{Annotation and visualisation of Bionano SV.}
 \usage{
-nanotatoR_main(smap, bed, inputfmt = c("bed", "BNBed"), n = 3,
-  mergedFiles, smappath, buildSVInternalDB = FALSE, path, pattern,
+nanotatoR_main(smap, bed, inputfmtBed = c("BED", "BNBED"), n = 3,
+  mergedFiles, buildSVInternalDB = FALSE, soloPath, solopattern,
   win_indel_INF = 10000, win_inv_trans_INF = 50000,
   perc_similarity_INF = 0.5, indelconf = 0.5, invconf = 0.01,
-  transconf = 0.1, hgpath, win_indel_DGV = 10000,
-  win_inv_trans_DGV = 50000, perc_similarity_DGV = 0.5,
-  method = c("Single", "Multiple", "Text"), smapName, termPath, term,
-  thresh = 5, RNAseqcombine = TRUE, RNASeqDir,
-  returnMethod = "dataFrame", input_fmt_SV = "dataFrame",
-  input_fmt_RNASeq = "dataFrame", RNASeqData, RNASeqPATH,
-  outputfmt = "datFrame", pattern_Proband = NA, pattern_Mother = NA,
-  pattern_Father = NA, pattern_Sibling = NA, outpath,
-  outputFilename = "")
+  transconf = 0.1, limsize = 1000, input_fmt_INF = c("Text",
+  "dataframe"), returnMethod_GeneList = c("Text", "dataframe"),
+  returnMethod_bedcomp = c("Text", "dataframe"),
+  returnMethod_DGV = c("Text", "dataframe"),
+  returnMethod_Internal = c("Text", "dataframe"),
+  input_fmt_DGV = c("Text", "dataframe"), hgpath,
+  win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
+  perc_similarity_DGV = 0.5, smapName, method = c("Single", "Multiple",
+  "Text"), termPath = "", term, thresh = 5,
+  input_fmt_geneList = c("Text", "dataframe"),
+  input_fmt_svMap = c("Text", "dataframe"), svData, dat_geneList,
+  outpath = "", outputFilename = "", RZIPpath = "")
 }
 \arguments{
 \item{smap}{character. Path to SMAP file.}
 
-\item{bed}{Text Bionano Bed file.}
+\item{bed}{Text Choice between UCSC bed or Bionano bed.}
 
-\item{inputfmt}{character Whether the bed input is UCSC bed or Bionano bed.}
+\item{inputfmtBed}{character. Choice between Text and DataFrame
+as input for bed file.}
 
 \item{n}{numeric Number of genes to report which are nearest to the breakpoint.
 Default is      3.}
 
-\item{mergedFiles}{character. Path to the merged SV files.}
-
-\item{smappath}{character. path to the query smap file.}
+\item{mergedFiles}{character. Path to the merged SV solo files.}
 
 \item{buildSVInternalDB}{boolean. Checking whether the merged solo 
-file database exist.}
+file database exist or you need to build it. Default= TRUE.}
 
-\item{path}{character. Path to the solo file database.}
+\item{soloPath}{character. Path to the solo file database.}
 
-\item{pattern}{character. pattern of the file names to merge.}
+\item{solopattern}{character. pattern of the file names to merge.}
+
+\item{win_indel_INF}{Numeric. Insertion and deletion error window.}
+
+\item{win_inv_trans_INF}{Numeric. Inversion and translocation error window.}
+
+\item{perc_similarity_INF}{Numeric . ThresholdPercentage similarity 
+of the query SV and reference SV.}
 
 \item{indelconf}{Numeric. Threshold for insertion and deletion confidence.}
+
+\item{invconf}{Numeric. Threshold for inversion confidence.}
+
+\item{transconf}{Numeric. Threshold for translocation confidence.}
+
+\item{limsize}{Numeric. Threshold for size limit for the breakpoint, 
+for checking that the breakpint size is valid or not. Default is 1000 bases.}
+
+\item{input_fmt_INF}{character. Choice between Text and DataFrame
+for input to INF.}
+
+\item{returnMethod_GeneList}{character. Return Methods from the gene_list_generation 
+function, choice between Text and Dataframe.}
+
+\item{returnMethod_bedcomp}{character. Return Methods from the compSmapbed 
+function, choice between Text and Dataframe.}
+
+\item{returnMethod_DGV}{character. Return Methods from the DGV_extraction function, choice between
+Text and Dataframe.}
+
+\item{returnMethod_Internal}{character. Return Methods from the internalFrequency function, choice between
+Text and Dataframe.}
+
+\item{input_fmt_DGV}{character. Choice between Text and DataFrame 
+for input to DGV.}
 
 \item{hgpath}{character. Path to Database of Genomic Variants (DGV)
 Text file.}
 
-\item{method}{character. Input Method for terms. Choices are 
-"Single","Multiple" and "Text".}
+\item{win_indel_DGV}{Numeric. Insertion and deletion error window.}
 
-\item{termPath}{character. Path and file name for textfile.}
+\item{win_inv_trans_DGV}{Numeric. Inversion and translocation error window.}
 
-\item{thresh}{integer. Threshold for the number of terms sent to entrez.
-Note if large lists are sent to ncbi, it might fail to get
-processed. Default is 5.}
-
-\item{returnMethod}{Character. Type of output Dataframe or in Text format.}
-
-\item{outpath}{character. Path where gene lists are saved.}
-
-\item{terms}{character. Single or Multiple Terms.}
-
-\item{outpath}{character Path for the output files.}
-
-\item{smap}{character. File name for the smap}
-
-\item{inputfmt}{character. Choice between Text and DataFrame.}
-
-\item{outpath}{character. Path to merged SV solo datasets.}
-
-\item{win_indel}{Numeric. Insertion and deletion error window.}
-
-\item{win_inv_trans}{Numeric. Inversion and translocation error window.}
-
-\item{perc_similarity}{Numeric . ThresholdPercentage similarity 
+\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity 
 of the query SV and reference SV.}
 
-\item{indelconf}{Numeric. Threshold for inversion confidence.}
+\item{smapName}{character. Name of the smap file.}
 
-\item{indelconf}{Numeric. Threshold for translocation confidence.}
+\item{method}{character. Input Method for terms for entrez. Choices are 
+"Single","Multiple" and "Text".}
 
-\item{returnMethod}{character. Choice between Text and DataFrame.}
+\item{termPath}{character. Path and file name for textfile for terms.}
 
-\item{smappath}{character. Path and file name for textfile.}
-
-\item{terms}{character. Single or Multiple Terms.}
-
-\item{outpath}{character. Path where gene lists are saved.}
-
-\item{input_fmt}{character. Choice between text or data frame as 
-an input to the DGV frequency calculator.}
-
-\item{smap_data}{Dataset containing smap data.}
+\item{term}{character. Single or Multiple Terms as vectord.}
 
 \item{thresh}{integer. Threshold for the number of terms sent to entrez.
 Note if large lists are sent to ncbi, it might fail to get
 processed. Default is 5.}
-
-\item{returnMethod}{character. Choice between text or data frame as the output.}
 
 \item{input_fmt_geneList}{character. Choice of gene list input 
 Text or Dataframe.}
@@ -103,29 +104,20 @@ Text or Dataframe.}
 \item{input_fmt_svMap}{character. Choice of gene list input 
 Text or Dataframe.}
 
-\item{SVFile}{character. SV file name.}
-
 \item{svData}{Dataframe Input data containing SV data.}
 
 \item{dat_geneList}{Dataframe Input data containing geneList data.}
 
-\item{fileName}{Character Name of file containing Gene List data.}
-
 \item{outpath}{Character Directory to the output file.}
 
-\item{outFileName}{Character Output filename.}
+\item{outputFilename}{Character Output filename for the annotated smap.}
+
+\item{RZIPpath}{Character. Path for the Rtools zip.exe}
 }
 \value{
 Excel file containing the annotated SV map, tabs divided based on
 type of SVs.
-
-Text files containg gene list and terms associated with them
-        are stored as text files.
 }
 \description{
 Annotation and visualisation of Bionano SV.
-}
-\examples{
-terms="Muscle Weakness"
-gene_list_generation(method="Single", terms, outpath=systemDir())
 }

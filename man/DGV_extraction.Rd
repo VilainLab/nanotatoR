@@ -4,30 +4,36 @@
 \alias{DGV_extraction}
 \title{Frequency calculation of variants compared to DGV.}
 \usage{
-DGV_extraction(hgpath, smappath, smap, smap_data, input_fmt = c("Text",
-  "DataFrame"), win_indel = 10000, win_inv_trans = 50000,
-  perc_similarity = 0.5, returnMethod = c("Text", "dataFrame"))
+DGV_extraction(hgpath, smappath, smap, smap_data,
+  input_fmt_DGV = c("Text", "DataFrame"), win_indel_DGV = 10000,
+  win_inv_trans_DGV = 50000, perc_similarity_DGV = 0.5,
+  returnMethod_DGV = c("Text", "dataFrame"), outpath)
 }
 \arguments{
 \item{hgpath}{character. Path to Database of Genomic Variants (DGV)
 Text file.}
 
-\item{smappath}{character. Path and file name for textfile.}
+\item{smappath}{character. Path for smap textfile.}
 
-\item{smap_data}{Dataset containing smap data.}
+\item{smap}{character. File name for smap textfile.}
 
-\item{input_fmt}{character. Choice between text or data frame as
+\item{smap_data}{dataframe. Dataset containing smap data.}
+
+\item{input_fmt_DGV}{character. Choice between text or data frame as
 an input to the DGV frequency calculator.}
 
-\item{returnMethod}{character. Choice between text or data frame as the output.}
+\item{win_indel_DGV}{Numeric. Insertion and deletion error window.Default 10000
+bases.}
 
-\item{terms}{character. Single or Multiple Terms.}
+\item{win_inv_trans_DGV}{Numeric. Inversion and translocation error window.
+Default 50000 bases.}
+
+\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity 
+of the query SV and reference SV. Default 0.5.}
+
+\item{returnMethod_DGV}{character. Choice between text or data frame as the output.}
 
 \item{outpath}{character. Path where gene lists are saved.}
-
-\item{thresh}{integer. Threshold for the number of terms sent to entrez.
-Note if large lists are sent to ncbi, it might fail to get
-processed. Default is 5.}
 }
 \value{
 Text and character vector containg gene list and terms associated with them
@@ -37,10 +43,11 @@ Text and character vector containg gene list and terms associated with them
 Frequency calculation of variants compared to DGV.
 }
 \examples{
-hgpath="C:\\\\nanotatoR\\\\Data\\\\GRCh37_hg19_variants_2016-05-15.txt";
-smappath="Z:/Hayk's_Materials/Bionano/Projects/UDN/F1_UDN287643_Benic.Aria/";
-smap="F1_UDN287643_P_Q.S_VAP_SVmerge_trio_access.txt";
-win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
-DGV_extraction (hgpath, smappath, win_indel = 10000, win_inv_trans = 50000,
-perc_similarity = 0.5,returnMethod="dataFrame")
+smap="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smappath = system.file("extdata", smap, package="nanotatoR")
+hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
+win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5
+datDGV<- DGV_extraction (hgpath, smappath,input_fmt_DGV = "Text", smap, 
+win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
+perc_similarity_DGV = 0.5,returnMethod_DGV="dataFrame")
 }

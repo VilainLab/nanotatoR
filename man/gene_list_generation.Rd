@@ -5,7 +5,8 @@
 \title{Extracting genes for phenotype/diseases from NCBI.}
 \usage{
 gene_list_generation(method = c("Single", "Multiple", "Text"), termPath,
-  term, outpath, thresh = 5, returnMethod = c("Text", "dataFrame"))
+  term, outpath, thresh = 5, returnMethod_GeneList = c("Text",
+  "dataFrame"))
 }
 \arguments{
 \item{method}{character. Input Method for terms. Choices are
@@ -13,15 +14,15 @@ gene_list_generation(method = c("Single", "Multiple", "Text"), termPath,
 
 \item{termPath}{character. Path and file name for textfile.}
 
+\item{term}{character. Single or Multiple Terms.}
+
 \item{outpath}{character. Path where gene lists are saved.}
 
 \item{thresh}{integer. Threshold for the number of terms sent to entrez.
 Note if large lists are sent to ncbi, it might fail to get
 processed. Default is 5.}
 
-\item{returnMethod}{Method of returning output. Options, Text or data.frame.}
-
-\item{terms}{character. Single or Multiple Terms.}
+\item{returnMethod_GeneList}{Method of returning output. Options, Text or data.frame.}
 }
 \value{
 Text files containg gene list and terms associated with them
@@ -32,5 +33,6 @@ Extracting genes for phenotype/diseases from NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-gene_list_generation(method="Single", term, returnMethod="dataFrame")
+gene<-gene_list_generation(method="Single", term=terms, 
+  	returnMethod_GeneList="dataFrame")
 }

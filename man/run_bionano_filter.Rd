@@ -7,7 +7,7 @@ information based on type of variants.}
 \usage{
 run_bionano_filter(input_fmt_geneList = c("Text", "dataFrame"),
   input_fmt_svMap = c("Text", "dataFrame"), SVFile = NULL, svData,
-  dat_geneList, fileName, outpath, outputFilename = "")
+  dat_geneList, fileName, outpath, outputFilename = "", RZIPpath = "")
 }
 \arguments{
 \item{input_fmt_geneList}{character. Choice of gene list input 
@@ -26,7 +26,9 @@ Text or Dataframe.}
 
 \item{outpath}{Character Directory to the output file.}
 
-\item{outFileName}{Character Output filename.}
+\item{outputFilename}{Output filename.}
+
+\item{RZIPpath}{Character. Path for the Rtools zip.exe}
 }
 \value{
 Excel file containing the annotated SV map, tabs divided based on
@@ -37,8 +39,13 @@ Getting the data from annotated smaps to extract SV
 information based on type of variants.
 }
 \examples{
-path="Z:/Hayk's_Materials/Bionano/Projects/UDN/F1_UDN287643_Benic.Aria"
-SVFile="F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_DGV_Int.txt"
-fileName="F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_DGV.txt"
-run_bionano_filter(path,SVFile,fileName)
+\dontrun{
+smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smappath = system.file("extdata", smapName, package="nanotatoR")
+terms="Muscle Weakness"
+gene<-gene_list_generation(method="Single", term=terms, 
+  	returnMethod_GeneList="dataFrame")
+run_bionano_filter(SVFile=smappath,fileName,input_fmt_geneList="dataFrame",
+      	input_fmt_svMap="Text",RtoolsZIPpath="")
+}
 }

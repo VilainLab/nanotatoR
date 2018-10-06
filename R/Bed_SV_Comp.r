@@ -3,8 +3,9 @@
 #' @param BNFile  character. Path to Bionano Bed File.
 #' @return Data Frame Contains the gene information.
 #' @examples
-#' BNFile="C:\\nanotatoR\\Data\\Homo_sapiens.GRCH19_BN.bed"
-#' readBNBedFiles(BNFile)
+#' BNFile <- system.file("extdata", "Homo_sapiens.GRCH19_BN.bed", package="nanotatoR")
+#' bed<-readBNBedFiles(BNFile)
+#' @import utils
 #' @export
 readBNBedFiles <- function(BNFile)
 {
@@ -28,10 +29,13 @@ readBNBedFiles <- function(BNFile)
 #'
 #' @param bedFile  character. Path to UCSC Bed File.
 #' @param outdir  character. Path to output directory.
+#' @param returnMethod  character. Path to output directory.
 #' @return Data Frame or text file. Contains the gene information.
 #' @examples
-#' bedFile = "C:\\nanotatoR\\Data\\Homo_sapiens.Hg19.bed"
-#' buildrunBNBedFiles(bedFile,outdir=tempdir())
+#' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+#' bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
+#' @import utils
+#' @import stringr
 #' @export
 buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"), 
     outdir)
@@ -46,10 +50,10 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
     ## Extracting data
     print(dim(r12))
     chrom <- stringr::str_trim(r12[, 1])
-    chromstart <- stringr::str_trim(r12[, 3])
-    chromend <- stringr::str_trim(r12[, 4])
-    gene <- stringr::str_trim(as.character(r12[, 5]))
-    strand <- stringr::str_trim(as.character(r12[, 6]))
+    chromstart <- stringr::str_trim(r12[, 2])
+    chromend <- stringr::str_trim(r12[, 3])
+    gene <- stringr::str_trim(as.character(r12[, 4]))
+    strand <- stringr::str_trim(as.character(r12[, 5]))
     ## Changing the chromosome Start Name
     chrom1 <- gsub("chr", "", x = chrom)
     ## Male and Female chromosome association
@@ -102,8 +106,10 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
 #' @param smap  character. Path to SMAP file.
 #' @return Data Frame or text file. Contains the SMAP information.
 #' @examples
-#' smap = "C:\\nanotatoR\\Data\\F1_UDN287643_P_Q.S_VAP_SVmerge_trio.txt"
+#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smap = system.file("extdata", smapName, package="nanotatoR")
 #' readSMap(smap)
+#' @import utils
 #' @export
 
 readSMap <- function(smap)
@@ -137,15 +143,21 @@ readSMap <- function(smap)
 #' @return Data Frame. Contains the SVID,Gene name,strand information and
 #' percentage of SV covered.
 #' @examples
-#' smap="C:\\nanotatoR\\Data\\F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_original.txt"
-#' bedFile = "C:\\nanotatoR\\Data\\Homo_sapiens.GRCH19.bed"
-#' bed<-buildrunBNBedFiles(bedFile,returnMethod = "dataFrame")
+#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smap = system.file("extdata", smapName, package="nanotatoR")
+#' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+#' bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 #' smap<-readSMap(smap)
 #' chrom<-smap$RefcontigID1
 #' startpos<-smap$RefStartPos
 #' endpos<-smap$RefEndPos
-#' svid<-smap$SVIndex
+#' if (length(grep("SVIndex",names(smap)))>0){
+#'    svid <- smap$SVIndex
+#'  }else{
+#'	svid <- smap$SmapEntryID
+#'	}
 #' overlapGenes(bed, chrom, startpos, endpos, svid)
+#' @import utils
 #' @export
 overlapGenes <- function(bed, chrom, startpos, endpos, svid)
 {
@@ -161,6 +173,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
     for (ii in 1:length(chrom))
     {
         # Checking for genes in the breakpoint
+		print(ii)
         dat10 <- bed[which(bed$Chromosome == chrom[ii]), ]
         dat11 <- dat10[which(((dat10$Chromosome_Start >= startpos[ii] & 
             dat10$Chromosome_End <= endpos[ii]) | (dat10$Chromosome_End >= 
@@ -218,11 +231,17 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
                 {
                   percentage = "NA"
                 }
+				if(percentage =="NA"){
+					geneInfo<-"NA"
+				}
+				else{
                 geneInfo <- c(geneInfo, paste(gen1[k], "(", strnd[k], ":", 
-                  percentage, ")", sep = ""))
+                percentage, ")", sep = ""))
+				}
             }
             geneInfo1 <- paste(geneInfo, collapse = ";")
             gnsInf <- c(gnsInf, geneInfo1)
+			print(paste("1:",ii,":",svid[ii],sep=""))
             SVID <- c(SVID, svid[ii])
         } else if (nrow(dat11) == 1)
         {
@@ -261,14 +280,22 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
             {
                 percentage = "NA"
             }
+			if(percentage =="NA"){
+				geneInfo1<-"NA"
+			}
+			else{
             geneInfo1 <- c(geneInfo, paste(gen1, "(", strnd, ":", percentage, 
                 ")", sep = ""))
+			}
             gnsInf <- c(gnsInf, geneInfo1)
             SVID <- c(SVID, svid[ii])
+			print(paste("1:",ii,":",svid[ii],sep=""))
+			
         } else
         {
             SVID <- c(SVID, svid[ii])
             gnsInf <- c(gnsInf, "")
+			print(paste("1:",ii,":",svid[ii],sep=""))
         }
     }
     ## Writing a returning a data frame with gene information and SVID
@@ -287,18 +314,24 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
 #' @return Data Frame. Contains the SVID,Gene name,strand information and
 #' Distance from the SV covered.
 #' @examples
-#' smap="C:\\nanotatoR\\Data\\F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_original.txt"
-#' bedFile = "C:\\nanotatoR\\Data\\Homo_sapiens.GRCH19.bed"
-#' bed<-buildrunBNBedFiles(bedFile,returnMethod = "dataFrame")
+#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smap = system.file("extdata", smapName, package="nanotatoR")
+#' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+#' bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 #' smap<-readSMap(smap)
 #' chrom<-smap$RefcontigID1
 #' startpos<-smap$RefStartPos
 #' endpos<-smap$RefEndPos
-#' svid<-smap$SVIndex
+#' if (length(grep("SVIndex",names(smap)))>0){
+#'    svid <- smap$SVIndex
+#'  }else{
+#'	svid <- smap$SmapEntryID
+#'	}
 #' n<-3
 #' nonOverlapGenes(bed, chrom, startpos, endpos, svid,n)
+#' @import utils
 #' @export
-nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid, SVTyp, 
+nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,  
     n = 3)
     {
     ## Initializing data
@@ -491,7 +524,7 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid, SVTyp,
             genesUP1 <- paste(genesUP, collapse = ";")
             gnsInf_UP <- c(gnsInf_UP, as.character(genesUP1))
             gnsInf_DN <- c(gnsInf_DN, "-")
-        } else
+        }	 else
         {
             gnsInf_UP <- c(gnsInf_UP, "-")
             gnsInf_DN <- c(gnsInf_DN, "-")
@@ -516,28 +549,35 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid, SVTyp,
 #' Extracts gene information from bed files
 #'
 #' @param smap  character. Path to SMAP file.
-#' @param bed  Text Bionano Bed file.
-#' @param inputfmt character Whether the bed input is UCSC bed or Bionano bed.
+#' @param bed  Text. Normal Bed files or Bionano Bed file.
+#' @param inputfmtBed character Whether the bed input is UCSC bed or Bionano bed.
 #' Note: extract in bed format to be read by bedsv:
-#' awk '{print $1,$3,$4,$5,$18,$7}' gencode.v19.annotation.gtf >HomoSapienGRCH19.bed
+#' awk '{print $1,$4,$5,$18,$7}' gencode.v19.annotation.gtf >HomoSapienGRCH19.bed
 #' @param outpath  character Path for the output files.
 #' @param n  numeric Number of genes to report which are nearest to the 
 #' breakpoint. Default is  	3.
-#' @param returnMethod Character. Type of output Dataframe or in Text format.
+#' @param returnMethod_bedcomp Character. Type of output Dataframe or in Text format.
 #' @return Data Frame and Text file. Contains the smap with additional Gene Information.
+#' @examples
+#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smap = system.file("extdata", smapName, package="nanotatoR")
+#' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+#' outpath <- system.file("extdata",  package="nanotatoR")
+#' datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
+#' n = 3, returnMethod_bedcomp = c("Text", "dataFrame"))
+#' @import utils
 #' @export
-compSmapbed <- function(smap, bed, inputfmt = c("bed", "BNBed"), outpath, 
-    n = 3, returnMethod = c("Text", "dataFrame"))
+compSmapbed <- function(smap, bed, inputfmtBed = c("BED", "BNBED"), outpath, 
+    n = 3, returnMethod_bedcomp = c("Text", "dataFrame"))
     {
     print("###Comparing SVs and Beds###")
     ## Checking if bed file is from UCSC or BN bed files.
-    if (inputfmt == "BNBed")
+    if (inputfmtBed == "BNBED")
     {
-        BNBed <- BNBed
-        r1 <- readBNBedFiles(BNBed)
-    } else if (inputfmt == "bed")
+        r1 <- readBNBedFiles(BNFile=bed)
+    } else if (inputfmtBed == "BED")
     {
-        r1 <- buildrunBNBedFiles(bed, returnMethod = "dataFrame")
+        r1 <- buildrunBNBedFiles(bed, returnMethod= "dataFrame")
     } else
     {
         stop("Incorrect File format")
@@ -547,7 +587,11 @@ compSmapbed <- function(smap, bed, inputfmt = c("bed", "BNBed"), outpath,
     chrom <- r2$RefcontigID1
     startpos <- r2$RefStartPos
     endpos <- r2$RefEndPos
+	if(length(grep("SVIndex",names(r2)))>0){
     svid <- r2$SVIndex
+	}else{
+	svid <- r2$SmapEntryID
+	}
     SVTyp <- r2$Type
     ## Calls for the functions to extract overlap/non-overlap genes and
     ## calculate informations for the same.
@@ -559,13 +603,13 @@ compSmapbed <- function(smap, bed, inputfmt = c("bed", "BNBed"), outpath,
     data1 <- data.frame(r2, OverlapGenes_strand_perc = dat3$OverlapGenes_strand_perc, 
         dat4[, 2:ncol(dat4)])
     print(names(data1))
-    if (returnMethod == "Text")
+    if (returnMethod_bedcomp == "Text")
     {
         st1 <- strsplit(smap, split = "\\\\")
         st2 <- strsplit(st1[[1]][4], split = ".txt")
         fname <- paste(st2[[1]][1], "_Final_SVMAP.txt", sep = "")
         write.table(data1, file.path(outpath, fname))
-    } else if (returnMethod == "dataFrame")
+    } else if (returnMethod_bedcomp == "dataFrame")
     {
         return(data1)
     } else

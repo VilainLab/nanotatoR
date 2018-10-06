@@ -2,12 +2,14 @@
 #'
 #' @param path  character. Path to the solo files.
 #' @param pattern  character. file name pattern for solo files.
+#' @param outpath  character. path name for the output.
 #' @return Text file containing all the solo SMAP files.
 #' @examples
-#' path="Z:/Hayks_Materials/Bionano/Projects/UDN/VSVM_Solo"
-#' pattern="_solo.txt"
-#' makeMergedSVData(path, pattern, outpath=systemDir())
+#' path <- system.file("extdata", "SoloFile/", package="nanotatoR")
+#' pattern="_hg19.smap"
+#' mergedFiles<-makeMergedSVData(path, pattern, outpath=path)
 #' @import stats 
+#' @import utils
 #' @export
 
 
@@ -60,49 +62,59 @@ makeMergedSVData <- function(path, pattern, outpath)
 #'
 #' @param mergedFiles  character. Path to the merged SV files.
 #' @param smappath  character. path to the query smap file.
-#' @param smap  character. File name for the smap
+#' @param smapName  character. File name for the smap
+#' @param smapdata  character. dataframe containing smap data, if 
+#' input_fmt_INF= dataFrame
 #' @param buildSVInternalDB  boolean. Checking whether the merged solo 
 #' file database exist.
-#' @param inputfmt character. Choice between Text and DataFrame.
-#' @param path  character. Path to the solo file database.
-#' @param pattern  character. pattern of the file names to merge.
+#' @param input_fmt_INF character. Choice between Text and DataFrame.
+#' @param soloPath  character. Path to the solo file database.
+#' @param solopattern  character. pattern of the file names to merge.
 #' @param outpath  character. Path to merged SV solo datasets.
 #' @param win_indel  Numeric. Insertion and deletion error window.
 #' @param win_inv_trans  Numeric. Inversion and translocation error window.
 #' @param perc_similarity  Numeric . ThresholdPercentage similarity 
 #' of the query SV and reference SV.
 #' @param indelconf  Numeric. Threshold for insertion and deletion confidence.
-#' @param indelconf  Numeric. Threshold for inversion confidence.
-#' @param indelconf  Numeric. Threshold for translocation confidence.
-#' @param returnMethod character. Choice between Text and DataFrame.
+#' @param invconf  Numeric. Threshold for inversion confidence.
+#' @param transconf  Numeric. Threshold for translocation confidence.
+#' @param limsize  Numeric. Threshold for size limit for the breakpoint, 
+#' for checking that the breakpint size is valid or not. Default is 1000 bases.
+#' @param returnMethod_Internal character. Choice between Text and DataFrame.
 #' @return Text file or data frames containing internalFrequency data.
 #' @examples
-#' mergedFiles = "Z:/bionano/VSVM_Solo/UDN_Samples_Meged.txt"
-#' smappath = "Z:\\bionano\\"
+#' \dontrun{
+#' path <- system.file("extdata", "SoloFile", package="nanotatoR")
+#' pattern="_hg19.smap"
+#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smappath = system.file("extdata", smapName, package="nanotatoR")
 #' win_indel = 10000; win_inv_trans = 50000; perc_similarity = 0.5;
-#' indelconf = 0.5; invconf = 0.01;transconf = 0.1
-#' internalFrequency(mergedFiles , smappath , buildSVInternalDB=FALSE, 
-#' win_indel, win_inv_trans, perc_similarity , indelconf, invconf , 
-#' transconf,returnMethod="dataFrame")
+#' indelconf = 0.5; invconf = 0.01;transconf = 0.1;limsize=1000;
+#' internalFrequency(smappath=smappath , buildSVInternalDB=TRUE, soloPath=path,
+#' solopattern=pattern,outpath=path,input_fmt_INF="Text",win_indel,limsize =limsize,
+#' win_inv_trans, perc_similarity ,indelconf, invconf ,transconf,
+#' returnMethod_Internal="dataFrame")
+#' }
 #' @importFrom stats na.omit
 #' @import hash
+#' @import utils
 #' @export
 
-internalFrequency <- function(mergedFiles, smappath , smap , 
-	buildSVInternalDB=FALSE, smapdata, input_fmt=c("Text","dataFrame"), path, pattern, outpath, 
+internalFrequency <- function(mergedFiles, smappath , smapName , 
+	buildSVInternalDB=FALSE, smapdata, input_fmt_INF=c("Text","dataFrame"), soloPath, solopattern, outpath, 
 	win_indel = 10000, win_inv_trans = 50000, 
 	perc_similarity = 0.5, indelconf = 0.5, invconf = 0.01,limsize=1000, 
-	transconf = 0.1,returnMethod=c("Text","dataFrame"))
+	transconf = 0.1,returnMethod_Internal=c("Text","dataFrame"))
     {
     #library(hash)
     if(buildSVInternalDB==TRUE){
-	    r<-makeMergedSVData(path, pattern, outpath)
+	    r<-makeMergedSVData(soloPath, solopattern, outpath)
 	} else{
 	    r <- read.table(mergedFiles, sep = "\t", header = TRUE)
 	}
     usamp <- length(unique(r$SVIdentifier))
-    if(input_fmt=="Text"){
-	con <- file(paste(smappath, smap, sep = ""), "r")
+    if(input_fmt_INF=="Text"){
+	con <- file(description=smappath, open="r")
     r10 <- readLines(con, n = -1)
     close(con)
     # datfinal<-data.frame()
@@ -119,7 +131,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         stop("column names doesnot Match")
     }
     }
-	else if(input_fmt=="dataFrame"){
+	else if(input_fmt_INF=="dataFrame"){
 	r1<-smapdata
 	}
 	else{
@@ -136,10 +148,10 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
     ha <- hash()
     .set(ha, keys = as.character(datf1$famid), values = as.character(datf1$Freq))
     ## Checking Sex male/female and assigning chromosome number accordingly
-    chro <- length(unique(r1$RefcontigID1))
-    chro1 <- c(1:chro)
+    chro <- unique(r1$RefcontigID1)
+    #chro1 <- c(1:chro)
     dataFinal <- c()
-    for (ii in 1:length(chro1))
+    for (ii in chro)
     {
          #print(paste('Chrom:',ii,sep=''))
         dat <- r[which(r$RefcontigID1 == ii), ]
@@ -150,7 +162,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         BSPQI_status_DB <- as.character(dat$Found_in_self_BSPQI_molecules)
         BSSSI_status_DB <- as.character(dat$Found_in_self_BSSSI_molecules)
         ## Extracting data from SVmap
-        dat1 <- r1[which(r1$RefcontigID1 == chro1[ii]), ]
+        dat1 <- r1[which(r1$RefcontigID1 == ii), ]
 		chromo2<-dat1$RefcontigID2
         ## Adding the windows to the breakpoints
         rf <- dat1$RefStartPos
@@ -169,8 +181,8 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         variantType2 <- as.character(dat1$Type)
 		
         # svfam<-as.character(dat1$SVIdentifier)
-		if((length(grep("\\\\",smap))>=1)){
-		spl<-strsplit(as.character(smap), split = "\\\\")
+		if((length(grep("\\\\",smapName))>=1)){
+		spl<-strsplit(as.character(smapName), split = "\\\\")
 		lenspll1<-length(spl[[1]])
 		spl1 <- strsplit(as.character(spl[[1]][lenspll1]), split = "_")
         # svfamid<-as.character(spl1[[1]][2])
@@ -178,8 +190,8 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         patID <- spl2[[1]][2]
         svfamid <- spl2[[1]][1]
 		}
-		else if((length(grep("/",smap))>=1)){
-		spl<-strsplit(as.character(smap), split = "/")
+		else if((length(grep("/",smapName))>=1)){
+		spl<-strsplit(as.character(smapName), split = "/")
 		lenspll1<-length(spl[[1]])
 		spl1 <- strsplit(as.character(spl[[1]][lenspll1]), split = "_")
         # svfamid<-as.character(spl1[[1]][2])
@@ -188,7 +200,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         svfamid <- spl2[[1]][1]
 		}
 		else{
-		spl1 <- strsplit(as.character(smap), split = "_")
+		spl1 <- strsplit(as.character(smapName), split = "_")
         # svfamid<-as.character(spl1[[1]][2])
         spl2 <- strsplit(as.character(spl1[[1]][1]), split = "[.]")
         patID <- spl2[[1]][2]
@@ -200,8 +212,8 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         
         # conf<-dat$Confidence countfre<-0 percn<-c()
         datf <- c()
-        #for (nn in 1:length(rf))
-		for (nn in 1:10)
+        for (nn in 1:length(rf))
+		#for (nn in 1:10)
         {
             #### 
 			#print(paste("nn:",nn)) 
@@ -412,9 +424,11 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                   countfre <- 0;countfreunfilt<-0
                   conf <- dat2$Confidence
                   size_internal <- dat2$Size
+				  
                   BSPQI_status_DB <- as.character(dat2$Found_in_self_BSPQI_molecules)
                   BSSSI_status_DB <- as.character(dat2$Found_in_self_BSSSI_molecules)
                   perc <- (size1/size_internal)
+				  svfam1 <- dat2$SVIdentifier
                   svv <- strsplit(as.character(svfam1), split = "_")
                   zygo <- as.character(dat2$Zygosity)
                   stt <- strsplit(svv[[1]][1], split = "[.]")
@@ -459,7 +473,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                     "no" & BSSSI_status_DB == "yes") | (BSPQI_status_DB == 
                     "yes" & BSSSI_status_DB == "no") | (BSPQI_status_DB == 
                     "yes" & BSSSI_status_DB == "-") | (BSPQI_status_DB == 
-                    "-" & BSSSI_status_DB == "yes")) & conf > indelconf)+
+                    "-" & BSSSI_status_DB == "yes")) & conf > indelconf)
                     {
                     countfre <- 1
                     motherZygosity <- "-"
@@ -507,7 +521,8 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
             } 
 				else if ((variantType2[nn] == "duplication" |
 						variantType2[nn] == "duplication_split"
-			            |variantType2[nn] == "duplication_inverted"))
+			            |variantType2[nn] == "duplication_inverted"|
+						variantType2[nn] == "insertion"))
             {
                 dat2 <- dat[which((dat$RefStartPos <= rf[nn] & dat$RefStartPos >= 
                   rf_wb_ind[nn] | dat$RefStartPos >= rf[nn] & dat$RefStartPos <= 
@@ -539,7 +554,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                     patID1 <- stt[[1]][2]
                     svfamid1 <- stt[[1]][1]
                     #### print(svfamid1)
-                    if ((identical(type[ll], variantType2[nn]) | identical(type[ll], "insertion")) & 
+                    if ((identical(type[ll], variantType2[nn])) & 
                       (identical(svfamid1, svfamid)) & ((BSPQI_status_DB[ll] == 
                       "yes" & BSSSI_status_DB[ll] == "yes") | (BSPQI_status_DB[ll] == 
                       "no" & BSSSI_status_DB[ll] == "yes") | (BSPQI_status_DB[ll] == 
@@ -571,7 +586,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                         motherZygosity <- c(motherZygosity, "-")
                         fatherZygosity <- c(fatherZygosity, "-")
                       }
-                    } else if ((identical(type[ll], variantType2[nn]) | identical(type[ll], "insertion"))
+                    } else if ((identical(type[ll], variantType2[nn]))
 					& !(identical(svfamid1, svfamid)) & ((BSPQI_status_DB[ll] == 
                       "yes" & BSSSI_status_DB[ll] == "yes") | (BSPQI_status_DB[ll] == 
                       "no" & BSSSI_status_DB[ll] == "yes") | (BSPQI_status_DB[ll] == 
@@ -586,7 +601,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                     }
 					else
                     {
-                      if ((identical(type[ll], variantType2[nn]) | identical(type[ll], "insertion"))
+                      if ((identical(type[ll], variantType2[nn]))
 					    & !(identical(svfamid1, svfamid)) & 
 					  ((BSPQI_status_DB[ll] == "no" & BSSSI_status_DB[ll] == "no") | (BSPQI_status_DB[ll] == 
                       "-" & BSSSI_status_DB[ll] == "-")|(BSPQI_status_DB[ll] == 
@@ -708,6 +723,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                   # dgv_match=TRUE Calculating percentage similarity
                   countfre <- 0;countfreunfilt<-0
                   size_internal <- dat2$Size
+				  svfam1 <- dat2$SVIdentifier
                   BSPQI_status_DB <- as.character(dat2$Found_in_self_BSPQI_molecules)
                   BSSSI_status_DB <- as.character(dat2$Found_in_self_BSSSI_molecules)
                   perc <- (size1/size_internal)
@@ -720,7 +736,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                   fatherZygosity <- ""
                   
                   type <- as.character(dat2$Type)
-                  if ((identical(type, variantType2[nn]) | identical(type, "insertion")) & 
+                  if ((identical(type, variantType2[nn])) & 
                     (identical(svfamid1, svfamid)) & ((BSPQI_status_DB == 
                     "yes" & BSSSI_status_DB == "yes") | (BSPQI_status_DB == 
                     "no" & BSSSI_status_DB == "yes") | (BSPQI_status_DB == 
@@ -746,20 +762,20 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                       motherZygosity <- "-"
                       fatherZygosity <- "-"
                     }
-                  } else if ((identical(type, variantType2[nn]) | identical(type, "insertion")) & 
+                  } else if ((identical(type, variantType2[nn])) & 
                     !(identical(svfamid1, svfamid)) & ((BSPQI_status_DB == 
                     "yes" & BSSSI_status_DB == "yes") | (BSPQI_status_DB == 
                     "no" & BSSSI_status_DB == "yes") | (BSPQI_status_DB == 
                     "yes" & BSSSI_status_DB == "no") | (BSPQI_status_DB == 
                     "yes" & BSSSI_status_DB == "-") | (BSPQI_status_DB == 
-                    "-" & BSSSI_status_DB == "yes")) & conf > indelconf)
+                    "-" & BSSSI_status_DB == "yes")))
                     {
                     countfre <- 1
                     motherZygosity <- "-"
                     fatherZygosity <- "-"
                   } else
                   {
-                    if ((identical(type, variantType2[nn]) | identical(type, "insertion")) 
+                    if ((identical(type, variantType2[nn])) 
 					        & !(identical(svfamid1, svfamid))& 
 					  ((BSPQI_status_DB == "no" & BSSSI_status_DB == "no") | (BSPQI_status_DB == 
                       "-" & BSSSI_status_DB == "-")|(BSPQI_status_DB == 
@@ -1019,6 +1035,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                   ## dgv_match=TRUE Calculating percentage similarity
                   countfre<-0;countfreunfilt<-0
 				  chrom2<-dat2$RefcontigID2
+				  svfam1 <- dat2$SVIdentifier
                   svv <- strsplit(as.character(svfam1), split = "_")
                   zygo <- as.character(dat2$Zygosity)
                   stt <- strsplit(svv[[1]][1], split = "[.]")
@@ -1132,19 +1149,19 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         }
         dataFinal <- rbind(dataFinal, datf)
     }
-	if(returnMethod=="Text"){
-    st1 <- strsplit(smap, ".txt")
+	if(returnMethod_Internal=="Text"){
+    st1 <- strsplit(smapName, ".txt")
     fname <- st1[[1]][1]
     row.names(dataFinal) <- c()
 	filenam<-paste(fname,"_Int.txt",sep="")
     write.table(dataFinal, file.path(smappath, fname), sep = "\t", 
 	            row.names = FALSE)
 	}
-	else if (returnMethod=="dataFrame"){
+	else if (returnMethod_Internal=="dataFrame"){
 	return(dataFinal)
 	}
 	else{
-	stop("returnMethod Incorrect")
+	stop("returnMethod_Internal Incorrect")
 	}
 }
 

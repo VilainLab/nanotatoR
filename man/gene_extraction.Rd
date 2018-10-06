@@ -18,7 +18,5 @@ Extracting genes from gene database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-gene_extraction(terms, dataset="hsapiens_gene_ensembl",
-      attributes=c("entrezgene", "ensembl_gene_id", "hgnc_symbol"),
-       filters = "entrezgene")
+datgene<-gene_extraction(term=terms)
 }

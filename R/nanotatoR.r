@@ -3,7 +3,13 @@
 #' Annotation of Bionano data using available databases
 #'
 #' @import knitr
+#' @examples
+#' \dontrun{
+#' smap="C:\\Annotator\\Data\\F1_UDN287643_P_Q.S_VAP_SVmerge_trio.txt"
+#' bedFile = "C:\\Annotator\\Data\\Homo_sapiens.Hg19.bed"
+#' compSmapbed(smap,bed, inputfmt="BED') 
+#' }
 #' @docType package
 #' @name nanotatoR
 NULL
-# > [1] '_PACKAGE' 
+# > [1] '_PACKAGE'

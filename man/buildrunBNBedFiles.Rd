@@ -10,6 +10,8 @@ buildrunBNBedFiles(bedFile, returnMethod = c("Text", "dataFrame"),
 \arguments{
 \item{bedFile}{character. Path to UCSC Bed File.}
 
+\item{returnMethod}{character. Path to output directory.}
+
 \item{outdir}{character. Path to output directory.}
 }
 \value{
@@ -19,6 +21,6 @@ Data Frame or text file. Contains the gene information.
 Reads BED files to produce bionano Bed files
 }
 \examples{
-bedFile = "C:\\\\nanotatoR\\\\Data\\\\Homo_sapiens.Hg19.bed"
-buildrunBNBedFiles(bedFile,outdir=tempdir())
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 }

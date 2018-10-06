@@ -13,5 +13,8 @@ UniqueSample(samp)
 Calculating number of samples.
 }
 \examples{
+hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
+r <- read.table(paste(hgpath), header = TRUE, sep = "\\t")
+samp <- as.character(unique(r$samples))
 UniqueSample(samp)
 }

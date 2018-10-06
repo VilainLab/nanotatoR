@@ -10,26 +10,33 @@
 #' @param dat_geneList Dataframe Input data containing geneList data.
 #' @param fileName Character Name of file containing Gene List data.
 #' @param outpath Character Directory to the output file.
-#' @param outFileName Character Output filename.
+#' @param outputFilename   Output filename.
+#' @param RZIPpath Character. Path for the Rtools zip.exe
 #' @return Excel file containing the annotated SV map, tabs divided based on
 #' type of SVs.
 #' @examples
-#' path="Z:/Hayk's_Materials/Bionano/Projects/UDN/F1_UDN287643_Benic.Aria"
-#' SVFile="F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_DGV_Int.txt"
-#' fileName="F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_DGV.txt"
-#' run_bionano_filter(path,SVFile,fileName)
+#' \dontrun{
+#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+#' smappath = system.file("extdata", smapName, package="nanotatoR")
+#' terms="Muscle Weakness"
+#' gene<-gene_list_generation(method="Single", term=terms, 
+#'   	returnMethod_GeneList="dataFrame")
+#' run_bionano_filter(SVFile=smappath,fileName,input_fmt_geneList="dataFrame",
+#'       	input_fmt_svMap="Text",RtoolsZIPpath="")
+#' }
 #' @import openxlsx 
 #' @import hash
+#' @import utils
 #' @export
 
 
 run_bionano_filter <- function(input_fmt_geneList = c("Text", "dataFrame"), 
     input_fmt_svMap = c("Text", "dataFrame"), SVFile = NULL, svData, dat_geneList, 
-    fileName, outpath, outputFilename = "")
+    fileName, outpath, outputFilename = "",RZIPpath="")
     {
     # library(openxlsx) library(hash) setwd(path)##change the directory to
     # your working directory
-    Sys.setenv(R_ZIPCMD = "C:/Rtools/bin/zip.exe")
+    Sys.setenv(R_ZIPCMD = RZIPpath)
     ## GeneList Input Format
     if (input_fmt_geneList == "Text")
     {
@@ -49,7 +56,7 @@ run_bionano_filter <- function(input_fmt_geneList = c("Text", "dataFrame"),
     # ll<-list.files(pattern='txt')
     if (input_fmt_svMap == "Text")
     {
-        r <- read.table(SVFile, sep = "\t", header = T)
+        r <- read.table(SVFile, sep = "\t", header = TRUE)
     } else if (input_fmt_svMap == "dataFrame")
     {
         r <- svData

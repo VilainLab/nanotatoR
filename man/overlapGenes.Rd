@@ -25,13 +25,18 @@ percentage of SV covered.
 Calculates Genes that overlap the SV region
 }
 \examples{
-smap="C:\\\\nanotatoR\\\\Data\\\\F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_original.txt"
-bedFile = "C:\\\\nanotatoR\\\\Data\\\\Homo_sapiens.GRCH19.bed"
-bed<-buildrunBNBedFiles(bedFile,returnMethod = "dataFrame")
+smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smap = system.file("extdata", smapName, package="nanotatoR")
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 smap<-readSMap(smap)
 chrom<-smap$RefcontigID1
 startpos<-smap$RefStartPos
 endpos<-smap$RefEndPos
-svid<-smap$SVIndex
+if (length(grep("SVIndex",names(smap)))>0){
+   svid <- smap$SVIndex
+ }else{
+svid <- smap$SmapEntryID
+}
 overlapGenes(bed, chrom, startpos, endpos, svid)
 }
