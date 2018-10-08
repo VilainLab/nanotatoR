@@ -124,8 +124,11 @@ svData,dat_geneList,outpath="",outputFilename="",RZIPpath="")
 #References
 
 1.Hayk Barseghyan, Wilson Tang, Richard T. Wang, Miguel Almalvez, Eva Segura, Matthew S. Bramble, Allen Lipson, Emilie D. Douine, Hane Lee, Emmanuèle C. Délot, Stanley F. Nelson and Eric Vilain.Next-generation mapping: a novel approach for detection of pathogenic structural variants with a potential utility in clinical diagnosis. Genome Medicine 2017 9:90. https://doi.org/10.1186/s13073-017-0479-0
+
 2. Winter, D. J.  rentrez: an R package for the NCBI eUtils API The R Journal 2017 9(2):520-526
+
 3. Christopher Brown.  hash: Full feature implementation of hash/associated arrays/dictionaries.2013. R package version 2.2.6. https://CRAN.R-project.org/package=hash
+
 4. Hadley Wickham. stringr: Simple, Consistent Wrappers for Common String Operations. 2018. R package version 1.3.1. https://CRAN.R-project.org/package=stringr
-4. Hadley Wickham. stringr: Simple, Consistent Wrappers for Common String Operations. 2018. R package version 1.3.1. https://CRAN.R-project.org/package=stringr
+
 
