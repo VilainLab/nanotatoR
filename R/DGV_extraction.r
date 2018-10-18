@@ -512,6 +512,7 @@ DGV_extraction <-
 #' Calculating number of samples.
 #'
 #' @param samp  character. Unique samples
+#' @return Numeric value containing the number of unique samples.
 #' @examples
 #' hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
 #' r <- read.table(paste(hgpath), header = TRUE, sep = "\t")
