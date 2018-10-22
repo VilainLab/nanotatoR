@@ -1,0 +1,10 @@
+---
+title: "News"
+output: html_document
+---
+
+####nanotatoR 0.99.0
+Initial Release.
+
+####nanotatoR 0.99.1
+updated the Description, and R files.

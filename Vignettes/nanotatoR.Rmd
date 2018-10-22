@@ -1,9 +1,11 @@
 ---
 title: 'nanotatoR: next generation structural variant annotation and classification'
 author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain"
-output:
-  html_document: default
-  word_document: default
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{nanotatoR}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 # Introduction
@@ -17,6 +19,10 @@ library("devtools")
 devtools::install_github("VilainLab/Nanotator")
 ```
 
+```{r eval=TRUE}
+library("nanotatoR")
+```
+
 The **nanotatoR** package is compatible with R versions ≥ 3.43.
 
 #Package Functionalities
@@ -26,7 +32,7 @@ Given a list of structural variants with chromosome number, SV type, and variant
 ##Structural Variant Frequency
 
 Genomic variant frequencies are one of the most important filtration characteristics for identification of rare, possibly pathogenic, variants. NanotatoR utilizes Database of Genomic Variants (**DGV**), a publically available reference control database, to estimate structural variant frequencies in the general population. Compared with the traditional single nucleotide variant frequency calculations, frequency estimates for structural variants pose larger difficulty due to the much higher breakpoint variability between “same” structural variants. In order to provide accurate estimates of population frequencies, nanotatoR recognizes four categories of SVs: insertions, deletions, inversions and translocations (e.g. “duplications” and/or “gains” are considered as “insertions” and “loss” is considered as “deletion”). Additionally, in order for the SVs to be considered the “same”, nanotatoR, by default, checks whether two independent variants in the same category (e.g. deletion) have greater than 50% size similarity and if the SV breakpoints (start and end positions) are within 10 kbp from each other. Currently the 50% size similarity cutoff is not applied for inversions or translocations as the sizes for these structural variations is not computed by most SV callers; however, nanotatoR implements a breakpoint cutoff of 50 kbp for inversion and translocation calls in order to identify variant frequency. In order for natotatoR to estimate SV frequencies it requires the following input files: DGV reference file(**dgvpath**) and “smap” file containing structural variant information generated via next-generation optical mapping  (**smappath**). The default input parameters for SV breakpoints and percent similarities are as follows: insertions/deletions (**win_indel**) of 10,000 bases, inversions and translocations  (**win_inv_trans**) of 50,000 bases and percentage similarity (**perc_similarity**) of 0.5 or 50%. The output from this function can be of 2 types: an R object (**dataFrame**) or a text file (**Text**) .
-```{r eval=FALSE}
+```{r eval=TRUE}
 smap="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smap, package="nanotatoR")
 hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
@@ -46,12 +52,15 @@ path <- system.file("extdata", "SoloFile", package="nanotatoR")
 pattern="_hg19.smap"
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smapName, package="nanotatoR")
-win_indel = 10000; win_inv_trans = 50000; perc_similarity = 0.5;
-indelconf = 0.5; invconf = 0.01;transconf = 0.1;limsize=1000;
-internalFrequency(smappath=smappath , buildSVInternalDB=TRUE, soloPath=path,
-solopattern=pattern,outpath=path,input_fmt_INF="Text",win_indel,limsize =limsize,
-win_inv_trans, perc_similarity ,indelconf, invconf ,transconf,
-returnMethod_Internal="dataFrame")
+win_indel = 10000
+perc_similarity = 0.5
+indelconf = 0.5
+invconf = 0.01
+transconf =0.1
+limsize=1000
+intFreq<-internalFrequency(smappath=smappath , buildSVInternalDB=TRUE, soloPath=path, solopattern=pattern,outpath=path,input_fmt_INF="Text",win_indel,limsize =limsize,
+win_inv_trans=50000, perc_similarity ,indelconf, invconf ,transconf,returnMethod_Internal="dataFrame")
+intFreq[1:2,]
 ```
 
 ##Gene Overlap 
@@ -60,7 +69,7 @@ Incorporates known gene and non-coding RNA genomic locations that overlap with o
 The function requires an input BED file (**inputfmt**=*BED*) or bionano compliant BED file (**inputfmt**=*BNBED*), which replaces the X and Y chromosome notations to 23 and 24, respectively. The BED files are used to overlap structural variants of the query smap file (**smap**), with overlapping and non-overlapping upstream and down-stream (**n**;default is 3). The output from this function can be of 2 types: an R object (**dataFrame**) or a text file (**Text**).
 
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
@@ -75,7 +84,7 @@ n = 3, returnMethod_bedcomp = c("Text", "dataFrame"))
 Generates a list of genes involved with the patient’s phenotype and overlaps it with gene names that span structural variants. The user provided, phenotype based key words are used to generate gene lists from selected databases such as ClinVar, OMIM, GTR and Gene Registry. The generated lists are used to prioritize structural variants that occur in genes known to be associated with patient’s phenotype.
 The input to the function is a term, which can be provided as a single character input (**method**=“Single”), or a vector of terms (**method**=“Multiple”) or as a text file (**method**=“Text”). The output can be selected as a (**dataFrame**) or a text file (**Text**).
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 terms="Muscle Weakness"
 gene<-gene_list_generation(method="Single", term=terms, 
    	returnMethod_GeneList="dataFrame")

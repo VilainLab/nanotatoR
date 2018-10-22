@@ -57,8 +57,7 @@
 #' @param RZIPpath Character. Path for the Rtools zip.exe
 #' @return Excel file containing the annotated SV map, tabs divided based on
 #' type of SVs.
-#' @return Text files containg gene list and terms associated with them
-#'         are stored as text files.
+#' @return Text files containg gene list and terms associated with them are stored as text files.
 #' \dontrun{
 #' @examples
 #' terms="Muscle Weakness"

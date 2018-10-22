@@ -7,7 +7,7 @@ information based on type of variants.}
 \usage{
 run_bionano_filter(input_fmt_geneList = c("Text", "dataFrame"),
   input_fmt_svMap = c("Text", "dataFrame"), SVFile = NULL, svData,
-  dat_geneList, fileName, outpath, outputFilename = "", RZIPpath = "")
+  dat_geneList, fileName, outpath, outputFilename = "", RZIPpath)
 }
 \arguments{
 \item{input_fmt_geneList}{character. Choice of gene list input 
@@ -26,9 +26,9 @@ Text or Dataframe.}
 
 \item{outpath}{Character Directory to the output file.}
 
-\item{outputFilename}{Output filename.}
+\item{outputFilename}{Character Output filename.}
 
-\item{RZIPpath}{Character. Path for the Rtools zip.exe}
+\item{RZIPpath}{Character Path for the Rtools Zip package.}
 }
 \value{
 Excel file containing the annotated SV map, tabs divided based on
@@ -40,12 +40,18 @@ information based on type of variants.
 }
 \examples{
 \dontrun{
-smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-smappath = system.file("extdata", smapName, package="nanotatoR")
 terms="Muscle Weakness"
 gene<-gene_list_generation(method="Single", term=terms, 
-  	returnMethod_GeneList="dataFrame")
-run_bionano_filter(SVFile=smappath,fileName,input_fmt_geneList="dataFrame",
-      	input_fmt_svMap="Text",RtoolsZIPpath="")
+	returnMethod_GeneList="dataFrame")
+smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smappath = system.file("extdata", smapName, package="nanotatoR")
+nanotatoR_main(smap, bed, inputfmtBed = c("BNBED"), 
+n=3,mergedFiles , buildSVInternalDB=TRUE, soloPath, solopattern, 
+input_fmt_INF=c("dataframe"),returnMethod_GeneList=c("dataframe"),
+returnMethod_bedcomp=c("dataframe"),returnMethod_DGV=c("dataframe"),
+returnMethod_Internal=c("dataframe"),input_fmt_DGV=c("dataframe"),	
+hgpath, smapName,method=c("Single"), term, thresh=5,
+input_fmt_geneList=c("dataframe"),input_fmt_svMap=c("dataframe"),
+svData,dat_geneList,outpath="",outputFilename="",RZIPpath="")
 }
 }

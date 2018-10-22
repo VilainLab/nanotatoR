@@ -69,7 +69,7 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
         print("Genome doesnot have any Sex Chromosome")
     }
     ## Combining the data to form a data frame
-    num <- 1:length(strand)
+    num <- seq_len(length(strand))
     dat1 <- data.frame(Chromosome = as.character(chrom1), 
 		Chromosome_Start = as.numeric(chromstart), 
         Chromosome_End = as.numeric(chromend), Gene = as.character(gene), 
@@ -170,10 +170,10 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
     ## bed$Chromosome_Start)/2)) Detecting Genes present between the SV
     ## breakpoints and Calculating the percentage coverage of genes across
     ## the breakpoints per chromosome.
-    for (ii in 1:length(chrom))
+    for (ii in seq_len(length(chrom)))
     {
         # Checking for genes in the breakpoint
-		print(ii)
+		#print(ii)
         dat10 <- bed[which(bed$Chromosome == chrom[ii]), ]
         dat11 <- dat10[which(((dat10$Chromosome_Start >= startpos[ii] & 
             dat10$Chromosome_End <= endpos[ii]) | (dat10$Chromosome_End >= 
@@ -197,7 +197,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
             genMid <- dat11$geneMid
             geneInfo <- c()
             ## Calculating the coverage of the gene
-            for (k in 1:length(gen1))
+            for (k in seq_len(length(gen1)))
             {
                 lengthgene <- chromStart[k] - chromEnd[k]
                 lengthbp <- startpos[ii] - endpos[ii]
@@ -341,7 +341,7 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
     SVID <- c()
     ## Extracting genes near the breakpoints and calculating distance from
     ## it.
-    for (ii in 1:length(chrom))
+    for (ii in seq_len(length(chrom)))
     {
         # print(paste('ii:',ii,sep=''))
         dat12 <- bed[which(as.character(bed$Chromosome) == chrom[ii]), 
@@ -361,7 +361,7 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
         if (nrow(datup) > 0 & nrow(datdn) > 0)
         {
             ## Upstream Genes
-            for (ll in 1:length(datup$Chromosome))
+            for (ll in seq_len(length(datup$Chromosome))) 
             {
                 diffStartGene_startbp = startpos[ii] - datup$Chromosome_Start[ll]
                 diffEndGene_startbp = endpos[ii] - datup$Chromosome_Start[ll]
@@ -564,7 +564,8 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
 #' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
 #' outpath <- system.file("extdata",  package="nanotatoR")
 #' datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
-#' n = 3, returnMethod_bedcomp = c("Text", "dataFrame"))
+#' n = 3, returnMethod_bedcomp = "dataFrame")
+#' datcomp[1:2,]
 #' @import utils
 #' @export
 compSmapbed <- function(smap, bed, inputfmtBed = c("BED", "BNBED"), outpath, 

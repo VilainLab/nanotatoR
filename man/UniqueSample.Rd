@@ -9,6 +9,9 @@ UniqueSample(samp)
 \arguments{
 \item{samp}{character. Unique samples}
 }
+\value{
+Numeric. Sample size.
+}
 \description{
 Calculating number of samples.
 }

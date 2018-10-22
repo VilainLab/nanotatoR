@@ -145,7 +145,7 @@ internalFrequency <- function(mergedFiles, smappath , smapName ,
         famid <- c(famid, as.character(stt[[1]][1]))
     }
     datf1 <- data.frame(table(famid))
-    ha <- hash()
+    ha <- hash::hash()
     .set(ha, keys = as.character(datf1$famid), values = as.character(datf1$Freq))
     ## Checking Sex male/female and assigning chromosome number accordingly
     chro <- unique(r1$RefcontigID1)

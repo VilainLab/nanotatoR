@@ -35,5 +35,6 @@ smap = system.file("extdata", smapName, package="nanotatoR")
 bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
 outpath <- system.file("extdata",  package="nanotatoR")
 datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
-n = 3, returnMethod_bedcomp = c("Text", "dataFrame"))
+n = 3, returnMethod_bedcomp = "dataFrame")
+datcomp[1:2,]
 }

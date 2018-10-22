@@ -14,19 +14,17 @@ Imports:
     stats,
 	grDevices,
 	graphics,
-    grDevices,
-	stringr,
-    graphics,
-	knitr,
+    stringr,
+    knitr,
+	testthat,
 	utils
 Suggests:
     rmarkdown,
-    testthat,
-	yaml
+    yaml
 VignetteBuilder:
     knitr
 License: GPL-2
-biocViews: Software, WorkflowStep, Annotation
+biocViews: Software, WorkflowStep, GenomeAssembly, VariantAnnotation
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0

@@ -11,5 +11,9 @@
 #' }
 #' @docType package
 #' @name nanotatoR
+#' @import testthat
+#' @import graphics
+#' @import grDevices
+#' @import knitr
 NULL
 # > [1] '_PACKAGE'
