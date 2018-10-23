@@ -8,3 +8,6 @@ Initial Release.
 
 ####nanotatoR 0.99.1
 updated the Description, and R files.
+
+####nanotatoR 0.99.2
+Latest Version
