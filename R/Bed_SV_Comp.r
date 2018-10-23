@@ -48,7 +48,7 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
     dat4 <- textConnection(r10)
     r12 <- read.table(dat4, sep = "\t", header = FALSE)
     ## Extracting data
-    print(dim(r12))
+    #print(dim(r12))
     chrom <- stringr::str_trim(r12[, 1])
     chromstart <- stringr::str_trim(r12[, 2])
     chromend <- stringr::str_trim(r12[, 3])
@@ -173,7 +173,11 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
     for (ii in seq_len(length(chrom)))
     {
         # Checking for genes in the breakpoint
+<<<<<<< HEAD
 		#print(ii)
+=======
+		##print(ii)
+>>>>>>> b6660ce0f492d34d4065de6b03c69fed653bb565
         dat10 <- bed[which(bed$Chromosome == chrom[ii]), ]
         dat11 <- dat10[which(((dat10$Chromosome_Start >= startpos[ii] & 
             dat10$Chromosome_End <= endpos[ii]) | (dat10$Chromosome_End >= 
@@ -241,7 +245,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
             }
             geneInfo1 <- paste(geneInfo, collapse = ";")
             gnsInf <- c(gnsInf, geneInfo1)
-			print(paste("1:",ii,":",svid[ii],sep=""))
+			#print(paste("1:",ii,":",svid[ii],sep=""))
             SVID <- c(SVID, svid[ii])
         } else if (nrow(dat11) == 1)
         {
@@ -295,7 +299,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
         {
             SVID <- c(SVID, svid[ii])
             gnsInf <- c(gnsInf, "")
-			print(paste("1:",ii,":",svid[ii],sep=""))
+			#print(paste("1:",ii,":",svid[ii],sep=""))
         }
     }
     ## Writing a returning a data frame with gene information and SVID
@@ -564,8 +568,13 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
 #' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
 #' outpath <- system.file("extdata",  package="nanotatoR")
 #' datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
+<<<<<<< HEAD
 #' n = 3, returnMethod_bedcomp = "dataFrame")
 #' datcomp[1:2,]
+=======
+#' n = 3, returnMethod_bedcomp = c("dataFrame"))
+#' datcomp[1,]
+>>>>>>> b6660ce0f492d34d4065de6b03c69fed653bb565
 #' @import utils
 #' @export
 compSmapbed <- function(smap, bed, inputfmtBed = c("BED", "BNBED"), outpath, 
@@ -597,13 +606,13 @@ compSmapbed <- function(smap, bed, inputfmtBed = c("BED", "BNBED"), outpath,
     ## Calls for the functions to extract overlap/non-overlap genes and
     ## calculate informations for the same.
     dat3 <- overlapGenes(r1, chrom, startpos, endpos, svid)
-    print(names(dat3))
+    #print(names(dat3))
     dat4 <- nonOverlapGenes(r1, chrom, startpos, endpos, svid)
-    print(names(dat4))
+    #print(names(dat4))
     ## Writing results in data frame and text files
     data1 <- data.frame(r2, OverlapGenes_strand_perc = dat3$OverlapGenes_strand_perc, 
         dat4[, 2:ncol(dat4)])
-    print(names(data1))
+    #print(names(data1))
     if (returnMethod_bedcomp == "Text")
     {
         st1 <- strsplit(smap, split = "\\\\")
