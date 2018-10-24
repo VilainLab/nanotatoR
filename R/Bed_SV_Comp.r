@@ -173,11 +173,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid)
     for (ii in seq_len(length(chrom)))
     {
         # Checking for genes in the breakpoint
-<<<<<<< HEAD
-		#print(ii)
-=======
-		##print(ii)
->>>>>>> b6660ce0f492d34d4065de6b03c69fed653bb565
+
         dat10 <- bed[which(bed$Chromosome == chrom[ii]), ]
         dat11 <- dat10[which(((dat10$Chromosome_Start >= startpos[ii] & 
             dat10$Chromosome_End <= endpos[ii]) | (dat10$Chromosome_End >= 
@@ -568,13 +564,8 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
 #' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
 #' outpath <- system.file("extdata",  package="nanotatoR")
 #' datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
-<<<<<<< HEAD
-#' n = 3, returnMethod_bedcomp = "dataFrame")
-#' datcomp[1:2,]
-=======
 #' n = 3, returnMethod_bedcomp = c("dataFrame"))
 #' datcomp[1,]
->>>>>>> b6660ce0f492d34d4065de6b03c69fed653bb565
 #' @import utils
 #' @export
 compSmapbed <- function(smap, bed, inputfmtBed = c("BED", "BNBED"), outpath, 
