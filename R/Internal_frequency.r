@@ -15,14 +15,14 @@
 
 makeMergedSVData <- function(path, pattern, outpath)
 {
-    setwd(path)
-    l <- list.files(".", pattern)
+    #setwd(path)
+    l <- list.files(path, pattern)
     nam <- c()
     datfinal <- data.frame()
     for (ii in 1:length(l))
     {
         print(l[ii])
-        con <- file(l[ii], "r")
+        con <- file(file.path(path,l[ii]), "r")
         r10 <- readLines(con, n = -1)
         close(con)
         g1 <- grep("RefEndPos", r10)

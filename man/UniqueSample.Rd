@@ -10,7 +10,7 @@ UniqueSample(samp)
 \item{samp}{character. Unique samples}
 }
 \value{
-Numeric. Sample size.
+Numeric value containing the number of unique samples.
 }
 \description{
 Calculating number of samples.

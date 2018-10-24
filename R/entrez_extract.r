@@ -264,7 +264,8 @@ gene_extraction <- function(terms) {
         as.character(rep(paste(terms, "_Gene", sep = ""), length(gn_1)))
       Final_terms <- c(Final_terms, terms_list)
     } else{
-      next
+	  geneName <- c(geneName, "-")
+      Final_terms <- c(Final_terms, terms)
     }
   } else{
     stop("Term length is zero")
@@ -394,7 +395,8 @@ omim_gene <- function(terms) {
         as.character(rep(paste(terms, "_OMIMGene", sep = ""), length(gn_2)))
       Final_terms_OMIM <- c(Final_terms_OMIM, terms_list)
     } else{
-      next
+      geneName <- c(geneName, "-")
+      Final_terms <- c(Final_terms, terms)
     }
   }
   else{
@@ -492,7 +494,8 @@ gtr_gene <- function(terms) {
       Final_terms_GTR <- c(Final_terms_GTR, terms_list)
       
     } else{
-      next
+      geneName <- c(geneName, "-")
+      Final_terms <- c(Final_terms, terms)
     }
   }
   else {
@@ -629,7 +632,8 @@ clinvar_gene <- function(terms) {
       Final_terms_Clinvar <- c(Final_terms_Clinvar, terms_list)
     }
     else{
-      next
+      geneName <- c(geneName, "-")
+      Final_terms <- c(Final_terms, terms)
     }
   }
   else{

@@ -61,8 +61,8 @@
 #' \dontrun{
 #' @examples
 #' terms="Muscle Weakness"
-#' gene<-gene_list_generation(method="Single", term=terms, 
-#'   	returnMethod_GeneList="dataFrame")
+#' gene<-gene_list_generation(method="Single", term=terms,
+#'      returnMethod_GeneList="dataFrame")
 #' 
 #' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 #' smappath = system.file("extdata", smapName, package="nanotatoR")
