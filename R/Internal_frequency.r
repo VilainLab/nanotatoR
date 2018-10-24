@@ -15,8 +15,8 @@
 
 makeMergedSVData <- function(path, pattern, outpath)
 {
-    setwd(path)
-    l <- list.files(".", pattern)
+    #setwd(path)
+    l <- list.files(path, pattern)
     nam <- c()
     datfinal <- data.frame()
     for (ii in 1:length(l))
