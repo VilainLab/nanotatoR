@@ -264,7 +264,7 @@ gene_extraction <- function(terms) {
         as.character(rep(paste(terms, "_Gene", sep = ""), length(gn_1)))
       Final_terms <- c(Final_terms, terms_list)
     } else{
-	  geneName <- c(geneName, "-")
+      geneName <- c(geneName, "-")
       Final_terms <- c(Final_terms, terms)
     }
   } else{
