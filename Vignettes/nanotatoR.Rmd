@@ -39,26 +39,24 @@ hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="na
 win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5
 datDGV<- DGV_extraction (hgpath, smappath,input_fmt_DGV = "Text", smap, 
 win_indel_DGV = 10000, win_inv_trans_DGV = 50000,perc_similarity_DGV = 0.5,returnMethod_DGV="dataFrame")
-
 ```
 
 ##Cohort Analysis
 
 The cohort analysis is designed to provide internal variant frequency, and parental zygosity within the cohort. The function will first merge all of the available individual smaps to form an “internal reference” (**buildSVInternalDB**=*TRUE*) or use an existing file if the internal SV database is already available (**buildSVInternalDB**=*FALSE*). The function requires the paths of the query smap file, the merged internal database file, as well as the following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1). The output can be a (**dataFrame**) or a text file (**Text**).
 
-```{r eval=TRUE}
-
+```{r eval=FALSE}
 path <- system.file("extdata", "SoloFile", package="nanotatoR")
 pattern="_hg19.smap"
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smapName, package="nanotatoR")
 win_indel = 10000
-perc_similarity = 0.5
-indelconf = 0.5
-invconf = 0.01
-transconf =0.1
-limsize=1000
-intFreq<-internalFrequency(smappath=smappath , buildSVInternalDB=TRUE, soloPath=path, solopattern=pattern,outpath=path,input_fmt_INF="Text",win_indel,limsize =limsize,win_inv_trans=50000, perc_similarity ,indelconf, invconf ,transconf,returnMethod_Internal="dataFrame")
+perc_similarity = .5
+indelconf = .5
+invconf = .01
+transconf = .1
+limsize= 1000
+intFreq<-internalFrequency(smappath = smappath , buildSVInternalDB = TRUE, soloPath= path, solopattern = pattern,outpath = path,input_fmt_INF= "Text",win_indel,limsize = limsize,win_inv_trans= 50000, perc_similarity ,indelconf, invconf ,transconf,returnMethod_Internal = "dataFrame")
 intFreq[1:2,]
 ```
 
@@ -69,7 +67,6 @@ The function requires an input BED file (**inputfmt**=*BED*) or bionano complian
 
 
 ```{r eval=TRUE}
-
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
 bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
@@ -116,7 +113,6 @@ It takes as an input the smap file, DGV file, BED file, internal database file, 
 terms="Muscle Weakness"
 gene<-gene_list_generation(method="Single", term=terms, 
   	returnMethod_GeneList="dataFrame")
-
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smapName, package="nanotatoR")
 nanotatoR_main(smap, bed, inputfmtBed = c("BNBED"), 
@@ -138,5 +134,4 @@ svData,dat_geneList,outpath="",outputFilename="",RZIPpath="")
 3. Christopher Brown.  hash: Full feature implementation of hash/associated arrays/dictionaries.2013. R package version 2.2.6. https://CRAN.R-project.org/package=hash
 
 4. Hadley Wickham. stringr: Simple, Consistent Wrappers for Common String Operations. 2018. R package version 1.3.1. https://CRAN.R-project.org/package=stringr
-
 
