@@ -33,6 +33,6 @@ Extracting genes for phenotype/diseases from NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-gene<-gene_list_generation(method="Single", term=terms, 
+gene<-gene_list_generation(method="Single", term=terms,
   	returnMethod_GeneList="dataFrame")
 }

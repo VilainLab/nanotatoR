@@ -28,7 +28,7 @@ bases.}
 \item{win_inv_trans_DGV}{Numeric. Inversion and translocation error window.
 Default 50000 bases.}
 
-\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity 
+\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity
 of the query SV and reference SV. Default 0.5.}
 
 \item{returnMethod_DGV}{character. Choice between text or data frame as the output.}
@@ -47,7 +47,7 @@ smap="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smap, package="nanotatoR")
 hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
 win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5
-datDGV<- DGV_extraction (hgpath, smappath,input_fmt_DGV = "Text", smap, 
+datDGV<- DGV_extraction (hgpath, smappath,input_fmt_DGV = "Text", smap,
 win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
 perc_similarity_DGV = 0.5,returnMethod_DGV="dataFrame")
 }

@@ -18,7 +18,7 @@ awk '{print $1,$4,$5,$18,$7}' gencode.v19.annotation.gtf >HomoSapienGRCH19.bed}
 
 \item{outpath}{character Path for the output files.}
 
-\item{n}{numeric Number of genes to report which are nearest to the 
+\item{n}{numeric Number of genes to report which are nearest to the
 breakpoint. Default is      3.}
 
 \item{returnMethod_bedcomp}{Character. Type of output Dataframe or in Text format.}
@@ -34,7 +34,7 @@ smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
 bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
 outpath <- system.file("extdata",  package="nanotatoR")
-datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath, 
+datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BED", outpath,
 n = 3, returnMethod_bedcomp = c("dataFrame"))
 datcomp[1,]
 }

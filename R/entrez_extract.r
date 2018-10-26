@@ -13,9 +13,9 @@
 #'         are stored as text files.
 #' @examples
 #' terms="Muscle Weakness"
-#' gene<-gene_list_generation(method="Single", term=terms, 
+#' gene<-gene_list_generation(method="Single", term=terms,
 #'   	returnMethod_GeneList="dataFrame")
-#' @import rentrez 
+#' @import rentrez
 #' @import utils
 #' @export
 gene_list_generation <-
@@ -25,9 +25,9 @@ gene_list_generation <-
            outpath,
            thresh = 5,
            returnMethod_GeneList = c("Text", "dataFrame")) {
-    #setwd(path)
-    thresh = 5
-    ##Checking for whether the input method is commandline (Single or Multiple)
+    # setwd(path)
+    thresh <- 5
+    ## Checking for whether the input method is commandline (Single or Multiple)
     ## or from Text
     if (method == "Single") {
       terms <- term
@@ -40,20 +40,20 @@ gene_list_generation <-
       r <- read.csv(termPath)
       terms <- as.character(r$Term)
     }
-    else{
+    else {
       stop("Method of Input Incorrect!!!")
     }
-    #ensembl = useMart("ensembl",dataset="hsapiens_gene_ensembl")
-    ##Checking whether the number of terms is above the threshold
+    # ensembl = useMart("ensembl",dataset="hsapiens_gene_ensembl")
+    ## Checking whether the number of terms is above the threshold
     # and then calls the appropriate functions for getting gene lists.
-    ##Note if the term number is more than 40, supply terms in batches
+    ## Note if the term number is more than 40, supply terms in batches
     # of 15 or 20
     if (length(terms) >= thresh) {
-      ##Diving the number of genes to be given as an
-      ##input based on the threshold.
+      ## Diving the number of genes to be given as an
+      ## input based on the threshold.
       terms_1 <- as.character(terms[1:thresh])
       terms_2 <- as.character(terms[thresh:length(terms)])
-      ##Extracting genes from the databases
+      ## Extracting genes from the databases
       g <- gene_extraction(terms_1)
       g_1 <- gene_extraction(terms_2)
       g_o <- omim_gene(terms_1)
@@ -62,7 +62,7 @@ gene_list_generation <-
       g_g_1 <- gtr_gene(terms_2)
       g_c <- clinvar_gene(terms_1)
       g_c_1 <- clinvar_gene(terms_2)
-      ##Collating output from all the datasets
+      ## Collating output from all the datasets
       Genes <- c(
         as.character(g$geneName),
         as.character(g_1$geneName),
@@ -84,17 +84,17 @@ gene_list_generation <-
           as.character(g_c$Final_terms_Clinvar),
           as.character(g_c_1$Final_terms_Clinvar)
         )
-      ##Writing genes and terms in a dataset
+      ## Writing genes and terms in a dataset
       dat <- data.frame(Genes, Terms)
     }
-    else{
-      ##Extracting genes from the databases
+    else {
+      ## Extracting genes from the databases
       g <- gene_extraction(terms)
       print(dim(g))
       g_o <- omim_gene(terms)
       g_g <- gtr_gene(terms)
       g_c <- clinvar_gene(terms)
-      ##Collating output from all the datasets
+      ## Collating output from all the datasets
       Genes <-
         c(
           as.character(g$geneName),
@@ -109,15 +109,15 @@ gene_list_generation <-
           as.character(g_o$Final_terms_OMIM),
           as.character(g_c$Final_terms_Clinvar)
         )
-      ##Writing genes and terms in a dataset
+      ## Writing genes and terms in a dataset
       dat <- data.frame(Genes, Terms)
     }
-    ##We write out all the genes and terms from the different databases into a$description
-    ##single dataframe
+    ## We write out all the genes and terms from the different databases into a$description
+    ## single dataframe
     gene1 <- c()
     term1 <- c()
     uqGenes <- as.character(unique(na.exclude(Genes)))
-    for (ii in 1:length(uqGenes)) {
+    for (ii in seq_len(length(uqGenes)))  {
       idx <- which(dat$Genes %in% uqGenes[ii])
       if (length(idx) > 1) {
         gene1 <- c(gene1, as.character(uqGenes[ii]))
@@ -125,17 +125,16 @@ gene_list_generation <-
         pa <- paste(tt, collapse = ",")
         term1 <- c(term1, as.character(pa))
       }
-      else{
+      else {
         gene1 <- c(gene1, as.character(uqGenes[ii]))
         term1 <- c(term1, as.character(Terms[idx]))
-        
       }
     }
-    ##Write the final dataframe
+    ## Write the final dataframe
     dat_Final <- data.frame(Genes = gene1, Terms = term1)
-    
-    #final_genes<-unique(final_genes)
-    ##Make the filename and write the data into a text file
+
+    # final_genes<-unique(final_genes)
+    ## Make the filename and write the data into a text file
     if (returnMethod_GeneList == "Text") {
       st <- strsplit(term, ".csv")
       fname <- st[[1]][1]
@@ -152,7 +151,7 @@ gene_list_generation <-
     else if (returnMethod_GeneList == "dataFrame") {
       dat_Final <- dat_Final
     }
-    else{
+    else {
       stop("Return Method Incorrect")
     }
     return(dat_Final)
@@ -165,53 +164,57 @@ gene_list_generation <-
 #' @examples
 #' terms="Muscle Weakness"
 #' datgene<-gene_extraction(term=terms)
-#' @import rentrez 
-#' @importFrom biomaRt getBM 
-#' @importFrom biomaRt useMart 
+#' @import rentrez
+#' @importFrom biomaRt getBM
+#' @importFrom biomaRt useMart
 #' @import utils
 #' @export
 
 gene_extraction <- function(terms) {
-  ##Initializing values
+  ## Initializing values
   geneName <- c()
   Final_terms <- c()
-  ##Initialising data to be extracted from ensembl
-  ensembl = biomaRt::useMart(
+  ## Initialising data to be extracted from ensembl
+  ensembl <- biomaRt::useMart(
     "ensembl",
     host = "www.ensembl.org",
     ensemblRedirect = FALSE,
     dataset = "hsapiens_gene_ensembl"
   )
-  ##Checking for term size and extracting gene list accordingly
+  ## Checking for term size and extracting gene list accordingly
   if (length(terms) > 1) {
-    #checking for terms greater than 1
-    for (ll in 1:length(terms)) {
-      ##Searching Entrez with the terms
-      b <- entrez_search(db = "gene",
-                         term = terms[ll],
-                         retmax = 99999999)
-      ##Extracting gene IDs, and checking if length of the gene ids
-      ##greater than 0.
+    # checking for terms greater than 1
+    for (ll in seq_len(length(terms))) {
+      ## Searching Entrez with the terms
+      b <- entrez_search(
+        db = "gene",
+        term = terms[ll],
+        retmax = 99999999
+      )
+      ## Extracting gene IDs, and checking if length of the gene ids
+      ## greater than 0.
       geneID <- b$ids
       gg1 <- data.frame()
-      ##Checking if geneids greater than 0, if not moved to the next term
+      ## Checking if geneids greater than 0, if not moved to the next term
       if (length(geneID) > 0) {
-        #print(paste("GeneID length:",length(geneID),sep=""))
-        ##uid<-c();geneNam<-c();desc<-c();status<-c()
-        #geneNam<-c()
-        
-        #for(ii in 1:length(geneID)){
-        #				a<-entrez_summary(db="gene", id=geneID[ii])
-        #				##uid<-c(uid,as.character(a$uid))
-        #				geneNam<-c(geneNam,toupper(a$name))
+        # print(paste("GeneID length:",length(geneID),sep=""))
+        ## uid<-c();geneNam<-c();desc<-c();status<-c()
+        # geneNam<-c()
+
+        # for(ii in 1:length(geneID)){
+        # 				a<-entrez_summary(db="gene", id=geneID[ii])
+        # 				##uid<-c(uid,as.character(a$uid))
+        # 				geneNam<-c(geneNam,toupper(a$name))
         #
-        #				##desc<-c(desc,a$description)
-        #				##status<-c(status,a$status)
-        #			}
-        ##extracting  the gene Symbols associated with the gene id from Biomart.
-        gene1 = biomaRt::getBM(
-          attributes = c("entrezgene", "ensembl_gene_id",
-                         "hgnc_symbol"),
+        # 				##desc<-c(desc,a$description)
+        # 				##status<-c(status,a$status)
+        # 			}
+        ## extracting  the gene Symbols associated with the gene id from Biomart.
+        gene1 <- biomaRt::getBM(
+          attributes = c(
+            "entrezgene", "ensembl_gene_id",
+            "hgnc_symbol"
+          ),
           filters = "entrezgene",
           values = geneID,
           mart = ensembl
@@ -223,36 +226,40 @@ gene_extraction <- function(terms) {
           as.character(rep(paste(terms[ll], "_Gene", sep = ""), length(gn_1)))
         Final_terms <- c(Final_terms, terms_list)
       }
-      else{
+      else {
         next
       }
     }
   } else if (length(terms) == 1) {
-    #checking for terms equal to 1
-    ##Searching in the entrez database
-    b <- entrez_search(db = "gene",
-                       term = terms,
-                       retmax = 99999999)
+    # checking for terms equal to 1
+    ## Searching in the entrez database
+    b <- entrez_search(
+      db = "gene",
+      term = terms,
+      retmax = 99999999
+    )
     geneID <- b$ids
     gg1 <- data.frame()
-    ##Checking if geneids greater than 0, if not moved to the next term
+    ## Checking if geneids greater than 0, if not moved to the next term
     if (length(geneID) > 0) {
       print(paste("GeneID length:", length(geneID), sep = ""))
-      ##uid<-c();geneNam<-c();desc<-c();status<-c()
-      #geneNam<-c()
-      
-      #for(ii in 1:length(geneID)){
-      #				a<-entrez_summary(db="gene", id=geneID[ii])
-      #				##uid<-c(uid,as.character(a$uid))
-      #				geneNam<-c(geneNam,toupper(a$name))
+      ## uid<-c();geneNam<-c();desc<-c();status<-c()
+      # geneNam<-c()
+
+      # for(ii in 1:length(geneID)){
+      # 				a<-entrez_summary(db="gene", id=geneID[ii])
+      # 				##uid<-c(uid,as.character(a$uid))
+      # 				geneNam<-c(geneNam,toupper(a$name))
       #
-      #				##desc<-c(desc,a$description)
-      #				##status<-c(status,a$status)
-      #			}
-      ##Extracting gene symbols using BiMart
-      gene1 = biomaRt::getBM(
-        attributes = c("entrezgene", "ensembl_gene_id",
-                       "hgnc_symbol"),
+      # 				##desc<-c(desc,a$description)
+      # 				##status<-c(status,a$status)
+      # 			}
+      ## Extracting gene symbols using BiMart
+      gene1 <- biomaRt::getBM(
+        attributes = c(
+          "entrezgene", "ensembl_gene_id",
+          "hgnc_symbol"
+        ),
         filters = "entrezgene",
         values = geneID,
         mart = ensembl
@@ -263,18 +270,18 @@ gene_extraction <- function(terms) {
       terms_list <-
         as.character(rep(paste(terms, "_Gene", sep = ""), length(gn_1)))
       Final_terms <- c(Final_terms, terms_list)
-    } else{
+    } else {
       geneName <- c(geneName, "-")
       Final_terms <- c(Final_terms, terms)
     }
-  } else{
+  } else {
     stop("Term length is zero")
   }
-  
-  ##Data written to the dataframe and returned
+
+  ## Data written to the dataframe and returned
   dat1 <- data.frame(geneName, Final_terms)
-  #Finaldata<-c()
-  #print(paste("GeneName length:",length(geneName),sep=""))
+  # Finaldata<-c()
+  # print(paste("GeneName length:",length(geneName),sep=""))
   return(dat1)
 }
 #' Extracting genes from OMIM database NCBI.
@@ -286,56 +293,58 @@ gene_extraction <- function(terms) {
 #' terms="Muscle Weakness"
 #' datomim<-omim_gene(term=terms)
 #' @import rentrez
-#' @import utils 
-#' @importFrom biomaRt getBM 
-#' @importFrom biomaRt useMart 
+#' @import utils
+#' @importFrom biomaRt getBM
+#' @importFrom biomaRt useMart
 #' @export
 
 omim_gene <- function(terms) {
-  ##Initialising variables
+  ## Initialising variables
   omimGenes <- c()
   Final_terms_OMIM <- c()
-  ##Initialising data to be extracted from ensembl
-  ensembl = biomaRt::useMart(
+  ## Initialising data to be extracted from ensembl
+  ensembl <- biomaRt::useMart(
     "ensembl",
     host = "www.ensembl.org",
     ensemblRedirect = FALSE,
     dataset = "hsapiens_gene_ensembl"
   )
-  ####Checking for term size and extracting gene list accordingly
+  #### Checking for term size and extracting gene list accordingly
   if (length(terms) > 1) {
-    ##Length of the terms input greater than 1.
-    for (ll in 1:length(terms)) {	
+    ## Length of the terms input greater than 1.
+    for (ll in 1:length(terms)) {
       ## Searching the OMIM database for terms and Gene IDs extracted
-      c <-entrez_search(
-          db = "omim",
-          term = paste(terms[ll], "[WORD]", sep = ""),
-          retmax = 99999999
-        )
-      d <-entrez_search(
-          db = "omim",
-          term = paste(terms[ll], "[DIS]", sep = ""),
-          retmax = 99999999
-        )
+      c <- entrez_search(
+        db = "omim",
+        term = paste(terms[ll], "[WORD]", sep = ""),
+        retmax = 99999999
+      )
+      d <- entrez_search(
+        db = "omim",
+        term = paste(terms[ll], "[DIS]", sep = ""),
+        retmax = 99999999
+      )
       omimgeneID_word <- c$ids
       omimgeneID_dis <- d$ids
       final_omim <- unique(c(
         as.character(omimgeneID_word),
         as.character(omimgeneID_dis)
       ))
-      ##Checking if geneids greater than 0, if not moved to the next term
+      ## Checking if geneids greater than 0, if not moved to the next term
       if (length(final_omim) > 0) {
-        #omimgen<-c()
-        #for (kk in 1:length(final_omim)){
-        #k<-entrez_summary(db="omim", id=final_omim[kk])
-        #gene<-as.character(k$title)
-        #st<-strsplit(gene,split=";")
-        #omimgen<-c(omimgen,as.character(toupper(st[[1]][2])))
-        #}
-        ##Get the Human gene symbols for the extracted Gene IDs
-        gene2 = biomaRt::getBM(
-          attributes = c("entrezgene", "ensembl_gene_id",
-                         "hgnc_symbol"),
+        # omimgen<-c()
+        # for (kk in 1:length(final_omim)){
+        # k<-entrez_summary(db="omim", id=final_omim[kk])
+        # gene<-as.character(k$title)
+        # st<-strsplit(gene,split=";")
+        # omimgen<-c(omimgen,as.character(toupper(st[[1]][2])))
+        # }
+        ## Get the Human gene symbols for the extracted Gene IDs
+        gene2 <- biomaRt::getBM(
+          attributes = c(
+            "entrezgene", "ensembl_gene_id",
+            "hgnc_symbol"
+          ),
           filters = "entrezgene",
           values = final_omim,
           mart = ensembl
@@ -345,22 +354,21 @@ omim_gene <- function(terms) {
         omimGenes <- c(omimGenes, as.character(gn_2))
         terms_list <-
           as.character(rep(paste(terms[ll], "_OMIMGene", sep = ""), length(gn_2)))
-        ##Writing it into a data frame
+        ## Writing it into a data frame
         Final_terms_OMIM <- c(Final_terms_OMIM, terms_list)
-      } else{
+      } else {
         next
       }
-      
     }
   }
   else if (length(terms) == 1) {
-    ##Extracting data from OMIM
-    c <-entrez_search(
-        db = "omim",
-        term = paste(terms, "[WORD]", sep = ""),
-        retmax = 99999999
-      )
-    d <-entrez_search(
+    ## Extracting data from OMIM
+    c <- entrez_search(
+      db = "omim",
+      term = paste(terms, "[WORD]", sep = ""),
+      retmax = 99999999
+    )
+    d <- entrez_search(
       db = "omim",
       term = paste(terms, "[DIS]", sep = ""),
       retmax = 99999999
@@ -372,17 +380,17 @@ omim_gene <- function(terms) {
         as.character(omimgeneID_word),
         as.character(omimgeneID_dis)
       ))
-    ##Checking if geneids greater than 0, if not move to the next term
+    ## Checking if geneids greater than 0, if not move to the next term
     if (length(final_omim) > 0) {
-      #omimgen<-c()
-      #for (kk in 1:length(final_omim)){
-      #k<-entrez_summary(db="omim", id=final_omim[kk])
-      #gene<-as.character(k$title)
-      #st<-strsplit(gene,split=";")
-      #omimgen<-c(omimgen,as.character(toupper(st[[1]][2])))
-      #}
-      ##Extract Gene Symols throug Bionano
-      gene2 = biomaRt::getBM(
+      # omimgen<-c()
+      # for (kk in 1:length(final_omim)){
+      # k<-entrez_summary(db="omim", id=final_omim[kk])
+      # gene<-as.character(k$title)
+      # st<-strsplit(gene,split=";")
+      # omimgen<-c(omimgen,as.character(toupper(st[[1]][2])))
+      # }
+      ## Extract Gene Symols throug Bionano
+      gene2 <- biomaRt::getBM(
         attributes = c("entrezgene", "ensembl_gene_id", "hgnc_symbol"),
         filters = "entrezgene",
         values = final_omim,
@@ -394,15 +402,15 @@ omim_gene <- function(terms) {
       terms_list <-
         as.character(rep(paste(terms, "_OMIMGene", sep = ""), length(gn_2)))
       Final_terms_OMIM <- c(Final_terms_OMIM, terms_list)
-    } else{
+    } else {
       geneName <- c(geneName, "-")
       Final_terms <- c(Final_terms, terms)
     }
   }
-  else{
+  else {
     stop("Term length is zero")
   }
-  ##Writing data into data frame and returning
+  ## Writing data into data frame and returning
   dat2 <- data.frame(omimGenes, Final_terms_OMIM)
   print(paste("OMIM GeneName length:", length(omimGenes), sep = ""))
   return(dat2)
@@ -415,40 +423,42 @@ omim_gene <- function(terms) {
 #' @examples
 #' terms="Muscle Weakness"
 #' datgtr<-gtr_gene(term=terms)
-#' @import rentrez 
+#' @import rentrez
 #' @import utils
-#' @importFrom biomaRt getBM 
+#' @importFrom biomaRt getBM
 #' @importFrom biomaRt useMart
 #' @export
 
 gtr_gene <- function(terms) {
-  ##Initialising variables
+  ## Initialising variables
   gtrGenes <- c()
   Final_terms_GTR <- c()
-  ##Initialising data to be extracted from ensembl
-  ensembl = biomaRt::useMart(
+  ## Initialising data to be extracted from ensembl
+  ensembl <- biomaRt::useMart(
     "ensembl",
     host = "www.ensembl.org",
     ensemblRedirect = FALSE,
     dataset = "hsapiens_gene_ensembl"
   )
-  ####Checking for term size and extracting gene list accordingly
+  #### Checking for term size and extracting gene list accordingly
   if (length(terms) > 1) {
     for (ll in 1:length(terms)) {
-      ##if term length greater than 1
-      ##Extracting data from GTR database
-      e <- entrez_search(db = "gtr",
-                         term = terms[ll],
-                         retmax = 99999999)
+      ## if term length greater than 1
+      ## Extracting data from GTR database
+      e <- entrez_search(
+        db = "gtr",
+        term = terms[ll],
+        retmax = 99999999
+      )
       gtrgeneID <- e$ids
-      ##Checking if gene ID extracted is greater than 0
+      ## Checking if gene ID extracted is greater than 0
       if (length(gtrgeneID) > 0) {
-        #for (nn in 1:length(gtrgeneID)){
-        #n<-entrez_summary(db="gtr", id=gtrgeneID[nn])
-        #gtrGenes<-c(gtrGenes,n$testtargetlist)
-        #}
-        ##Extracting gene symbols through Biomart
-        gene3 = biomaRt::getBM(
+        # for (nn in 1:length(gtrgeneID)){
+        # n<-entrez_summary(db="gtr", id=gtrgeneID[nn])
+        # gtrGenes<-c(gtrGenes,n$testtargetlist)
+        # }
+        ## Extracting gene symbols through Biomart
+        gene3 <- biomaRt::getBM(
           attributes = c("entrezgene", "ensembl_gene_id", "hgnc_symbol"),
           filters = "entrezgene",
           values = gtrgeneID,
@@ -460,27 +470,28 @@ gtr_gene <- function(terms) {
         terms_list <-
           as.character(rep(paste(terms[ll], "_GTRGene", sep = ""), length(gn_3)))
         Final_terms_GTR <- c(Final_terms_GTR, terms_list)
-        
-      } else{
+      } else {
         next
       }
     }
   }
   else if (length(terms) == 1) {
-    ##For single terms
-    ##Extracting data from GTR
-    e <- entrez_search(db = "gtr",
-                       term = terms,
-                       retmax = 99999999)
+    ## For single terms
+    ## Extracting data from GTR
+    e <- entrez_search(
+      db = "gtr",
+      term = terms,
+      retmax = 99999999
+    )
     gtrgeneID <- e$ids
-    ##If extracted gene length greater than 0
+    ## If extracted gene length greater than 0
     if (length(gtrgeneID) > 0) {
-      #for (nn in 1:length(gtrgeneID)){
-      #n<-entrez_summary(db="gtr", id=gtrgeneID[nn])
-      #gtrGenes<-c(gtrGenes,n$testtargetlist)
-      #}
-      ##Extracting gene symbols from Biomart
-      gene3 = biomaRt::getBM(
+      # for (nn in 1:length(gtrgeneID)){
+      # n<-entrez_summary(db="gtr", id=gtrgeneID[nn])
+      # gtrGenes<-c(gtrGenes,n$testtargetlist)
+      # }
+      ## Extracting gene symbols from Biomart
+      gene3 <- biomaRt::getBM(
         attributes = c("entrezgene", "ensembl_gene_id", "hgnc_symbol"),
         filters = "entrezgene",
         values = gtrgeneID,
@@ -492,17 +503,16 @@ gtr_gene <- function(terms) {
       terms_list <-
         as.character(rep(paste(terms, "_GTRGene", sep = ""), length(gn_3)))
       Final_terms_GTR <- c(Final_terms_GTR, terms_list)
-      
-    } else{
+    } else {
       geneName <- c(geneName, "-")
       Final_terms <- c(Final_terms, terms)
     }
   }
   else {
-    ##If term length is zero
+    ## If term length is zero
     stop("Term length is zero")
   }
-  ##Writing data into data frame and returning
+  ## Writing data into data frame and returning
   dat3 <- data.frame(gtrGenes, Final_terms_GTR)
   print(paste("gtrGenes GeneName length:", length(gtrGenes), sep = ""))
   return(dat3)
@@ -515,18 +525,18 @@ gtr_gene <- function(terms) {
 #' @examples
 #' terms="Muscle Weakness"
 #' datclinvar<-clinvar_gene(term=terms)
-#' @import rentrez 
+#' @import rentrez
 #' @import utils
-#' @importFrom biomaRt getBM 
-#' @importFrom biomaRt useMart 
+#' @importFrom biomaRt getBM
+#' @importFrom biomaRt useMart
 #' @export
 
 clinvar_gene <- function(terms) {
-  ##Initializing variables
+  ## Initializing variables
   clinvarGenes <- c()
   Final_terms_Clinvar <- c()
-  ##Initialising the database
-  ensembl = biomaRt::useMart(
+  ## Initialising the database
+  ensembl <- biomaRt::useMart(
     "ensembl",
     host = "www.ensembl.org",
     ensemblRedirect = FALSE,
@@ -534,20 +544,22 @@ clinvar_gene <- function(terms) {
   )
   if (length(terms) > 1) {
     for (ll in 1:length(terms)) {
-      ##Extracting data from Clinvar
-      f <-entrez_search(
-          db = "clinvar",
-          term = paste(terms[ll], "[WORD]", sep = ""),
-          retmax = 99999999
-        )
-      g <-entrez_search(
-          db = "clinvar",
-          term = paste(terms[ll], "[DIS]", sep = ""),
-          retmax = 99999999
-        )
-      h <- entrez_search(db = "clinvar",
-                         term = terms[ll],
-                         retmax = 99999999)
+      ## Extracting data from Clinvar
+      f <- entrez_search(
+        db = "clinvar",
+        term = paste(terms[ll], "[WORD]", sep = ""),
+        retmax = 99999999
+      )
+      g <- entrez_search(
+        db = "clinvar",
+        term = paste(terms[ll], "[DIS]", sep = ""),
+        retmax = 99999999
+      )
+      h <- entrez_search(
+        db = "clinvar",
+        term = terms[ll],
+        retmax = 99999999
+      )
       clinvargeneID_word <- f$ids
       clinvargeneID_dis <- g$ids
       clinvargeneID_all <- h$ids
@@ -557,17 +569,19 @@ clinvar_gene <- function(terms) {
           as.character(clinvargeneID_dis),
           as.character(clinvargeneID_all)
         ))
-      ##Checking whether extracted gene lengths greater than 0
+      ## Checking whether extracted gene lengths greater than 0
       if (length(final_clinvar) > 0) {
-        #clinvargen<-c()
-        #for (tt in 1:length(final_clinvar)){
-        #t<-entrez_summary(db="clinvar", id=final_clinvar[tt])
-        #clinvargen<-c(clinvargen,as.character(t$genes$symbol))
-        #}
-        ##Extracting gene symbols through biomart
-        gene4 = biomaRt::getBM(
-          attributes = c("entrezgene", "ensembl_gene_id",
-                         "hgnc_symbol"),
+        # clinvargen<-c()
+        # for (tt in 1:length(final_clinvar)){
+        # t<-entrez_summary(db="clinvar", id=final_clinvar[tt])
+        # clinvargen<-c(clinvargen,as.character(t$genes$symbol))
+        # }
+        ## Extracting gene symbols through biomart
+        gene4 <- biomaRt::getBM(
+          attributes = c(
+            "entrezgene", "ensembl_gene_id",
+            "hgnc_symbol"
+          ),
           filters = "entrezgene",
           values = final_clinvar,
           mart = ensembl
@@ -576,18 +590,20 @@ clinvar_gene <- function(terms) {
         gn_4 <- gn4[gn4 != ""]
         clinvarGenes <- c(clinvarGenes, as.character(gn_4))
         terms_list <-
-          as.character(rep(paste(terms[ll], "_ClinVarGene", sep = ""),
-                           length(gn_4)))
+          as.character(rep(
+            paste(terms[ll], "_ClinVarGene", sep = ""),
+            length(gn_4)
+          ))
         Final_terms_Clinvar <- c(Final_terms_Clinvar, terms_list)
       }
-      else{
+      else {
         next
       }
     }
   }
   else if (length(terms) == 1) {
-    ##Checking if term is single
-    ##Extracting data from Clinvar
+    ## Checking if term is single
+    ## Extracting data from Clinvar
     f <- entrez_search(
       db = "clinvar",
       term = paste(terms, "[WORD]", sep = ""),
@@ -599,9 +615,11 @@ clinvar_gene <- function(terms) {
       ,
       retmax = 99999999
     )
-    h <- entrez_search(db = "clinvar",
-                       term = terms,
-                       retmax = 99999999)
+    h <- entrez_search(
+      db = "clinvar",
+      term = terms,
+      retmax = 99999999
+    )
     clinvargeneID_word <- f$ids
     clinvargeneID_dis <- g$ids
     clinvargeneID_all <- h$ids
@@ -610,15 +628,15 @@ clinvar_gene <- function(terms) {
       as.character(clinvargeneID_dis),
       as.character(clinvargeneID_all)
     ))
-    ##Checking whether extracted gene lengths greater than 0
+    ## Checking whether extracted gene lengths greater than 0
     if (length(final_clinvar) > 0) {
-      #clinvargen<-c()
-      #for (tt in 1:length(final_clinvar)){
-      #t<-entrez_summary(db="clinvar", id=final_clinvar[tt])
-      #clinvargen<-c(clinvargen,as.character(t$genes$symbol))
-      #}
-      ##Extracting gene symbol through biomart
-      gene4 = biomaRt::getBM(
+      # clinvargen<-c()
+      # for (tt in 1:length(final_clinvar)){
+      # t<-entrez_summary(db="clinvar", id=final_clinvar[tt])
+      # clinvargen<-c(clinvargen,as.character(t$genes$symbol))
+      # }
+      ## Extracting gene symbol through biomart
+      gene4 <- biomaRt::getBM(
         attributes = c("entrezgene", "ensembl_gene_id", "hgnc_symbol"),
         filters = "entrezgene",
         values = final_clinvar,
@@ -631,17 +649,17 @@ clinvar_gene <- function(terms) {
         as.character(rep(paste(terms, "_ClinVarGene", sep = ""), length(gn_4)))
       Final_terms_Clinvar <- c(Final_terms_Clinvar, terms_list)
     }
-    else{
+    else {
       geneName <- c(geneName, "-")
       Final_terms <- c(Final_terms, terms)
     }
   }
-  else{
-    ##If term length is zero
+  else {
+    ## If term length is zero
     stop("Term length is zero")
   }
-  ##Writing gene and terms into dataframe and returning
+  ## Writing gene and terms into dataframe and returning
   dat4 <- data.frame(clinvarGenes, Final_terms_Clinvar)
-  #print(paste("clinvarGenes GeneName length:",length(clinvarGenes),sep=""))
+  # print(paste("clinvarGenes GeneName length:",length(clinvarGenes),sep=""))
   return(dat4)
 }

@@ -34,7 +34,7 @@ Default is      3.}
 
 \item{mergedFiles}{character. Path to the merged SV solo files.}
 
-\item{buildSVInternalDB}{boolean. Checking whether the merged solo 
+\item{buildSVInternalDB}{boolean. Checking whether the merged solo
 file database exist or you need to build it. Default= TRUE.}
 
 \item{soloPath}{character. Path to the solo file database.}
@@ -45,7 +45,7 @@ file database exist or you need to build it. Default= TRUE.}
 
 \item{win_inv_trans_INF}{Numeric. Inversion and translocation error window.}
 
-\item{perc_similarity_INF}{Numeric . ThresholdPercentage similarity 
+\item{perc_similarity_INF}{Numeric . ThresholdPercentage similarity
 of the query SV and reference SV.}
 
 \item{indelconf}{Numeric. Threshold for insertion and deletion confidence.}
@@ -54,16 +54,16 @@ of the query SV and reference SV.}
 
 \item{transconf}{Numeric. Threshold for translocation confidence.}
 
-\item{limsize}{Numeric. Threshold for size limit for the breakpoint, 
+\item{limsize}{Numeric. Threshold for size limit for the breakpoint,
 for checking that the breakpint size is valid or not. Default is 1000 bases.}
 
 \item{input_fmt_INF}{character. Choice between Text and DataFrame
 for input to INF.}
 
-\item{returnMethod_GeneList}{character. Return Methods from the gene_list_generation 
+\item{returnMethod_GeneList}{character. Return Methods from the gene_list_generation
 function, choice between Text and Dataframe.}
 
-\item{returnMethod_bedcomp}{character. Return Methods from the compSmapbed 
+\item{returnMethod_bedcomp}{character. Return Methods from the compSmapbed
 function, choice between Text and Dataframe.}
 
 \item{returnMethod_DGV}{character. Return Methods from the DGV_extraction function, choice between
@@ -72,7 +72,7 @@ Text and Dataframe.}
 \item{returnMethod_Internal}{character. Return Methods from the internalFrequency function, choice between
 Text and Dataframe.}
 
-\item{input_fmt_DGV}{character. Choice between Text and DataFrame 
+\item{input_fmt_DGV}{character. Choice between Text and DataFrame
 for input to DGV.}
 
 \item{hgpath}{character. Path to Database of Genomic Variants (DGV)
@@ -82,12 +82,12 @@ Text file.}
 
 \item{win_inv_trans_DGV}{Numeric. Inversion and translocation error window.}
 
-\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity 
+\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity
 of the query SV and reference SV.}
 
 \item{smapName}{character. Name of the smap file.}
 
-\item{method}{character. Input Method for terms for entrez. Choices are 
+\item{method}{character. Input Method for terms for entrez. Choices are
 "Single","Multiple" and "Text".}
 
 \item{termPath}{character. Path and file name for textfile for terms.}
@@ -98,10 +98,10 @@ of the query SV and reference SV.}
 Note if large lists are sent to ncbi, it might fail to get
 processed. Default is 5.}
 
-\item{input_fmt_geneList}{character. Choice of gene list input 
+\item{input_fmt_geneList}{character. Choice of gene list input
 Text or Dataframe.}
 
-\item{input_fmt_svMap}{character. Choice of gene list input 
+\item{input_fmt_svMap}{character. Choice of gene list input
 Text or Dataframe.}
 
 \item{svData}{Dataframe Input data containing SV data.}

@@ -1,4 +1,4 @@
-#' nanotatoR: Annotation package for Bionano Data 
+#' nanotatoR: Annotation package for Bionano Data
 #'
 #' Annotation of Bionano data using available databases
 #'
@@ -7,7 +7,7 @@
 #' \dontrun{
 #' smap="C:\\Annotator\\Data\\F1_UDN287643_P_Q.S_VAP_SVmerge_trio.txt"
 #' bedFile = "C:\\Annotator\\Data\\Homo_sapiens.Hg19.bed"
-#' compSmapbed(smap,bed, inputfmt="BED') 
+#' compSmapbed(smap,bed, inputfmt="BED')
 #' }
 #' @docType package
 #' @name nanotatoR

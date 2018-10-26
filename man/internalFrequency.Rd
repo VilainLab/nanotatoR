@@ -18,10 +18,10 @@ internalFrequency(mergedFiles, smappath, smapName,
 
 \item{smapName}{character. File name for the smap}
 
-\item{buildSVInternalDB}{boolean. Checking whether the merged solo 
+\item{buildSVInternalDB}{boolean. Checking whether the merged solo
 file database exist.}
 
-\item{smapdata}{character. dataframe containing smap data, if 
+\item{smapdata}{character. dataframe containing smap data, if
 input_fmt_INF= dataFrame}
 
 \item{input_fmt_INF}{character. Choice between Text and DataFrame.}
@@ -36,14 +36,14 @@ input_fmt_INF= dataFrame}
 
 \item{win_inv_trans}{Numeric. Inversion and translocation error window.}
 
-\item{perc_similarity}{Numeric . ThresholdPercentage similarity 
+\item{perc_similarity}{Numeric . ThresholdPercentage similarity
 of the query SV and reference SV.}
 
 \item{indelconf}{Numeric. Threshold for insertion and deletion confidence.}
 
 \item{invconf}{Numeric. Threshold for inversion confidence.}
 
-\item{limsize}{Numeric. Threshold for size limit for the breakpoint, 
+\item{limsize}{Numeric. Threshold for size limit for the breakpoint,
 for checking that the breakpint size is valid or not. Default is 1000 bases.}
 
 \item{transconf}{Numeric. Threshold for translocation confidence.}
@@ -57,16 +57,13 @@ Text file or data frames containing internalFrequency data.
 Calculates the internal frequencies of SV in internal cohorts
 }
 \examples{
-\dontrun{
-path <- system.file("extdata", "SoloFile", package="nanotatoR")
-pattern="_hg19.smap"
-smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-smappath = system.file("extdata", smapName, package="nanotatoR")
-win_indel = 10000; win_inv_trans = 50000; perc_similarity = 0.5;
-indelconf = 0.5; invconf = 0.01;transconf = 0.1;limsize=1000;
-internalFrequency(smappath=smappath , buildSVInternalDB=TRUE, soloPath=path,
-solopattern=pattern,outpath=path,input_fmt_INF="Text",win_indel,limsize =limsize,
-win_inv_trans, perc_similarity ,indelconf, invconf ,transconf,
-returnMethod_Internal="dataFrame")
-}
+path <- system.file("extdata", "SoloFile", package = "nanotatoR")
+pattern <- "_hg19.smap"
+smapName <- "F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smappath <- system.file("extdata", smapName, package = "nanotatoR")
+intFreq <- internalFrequency(smappath = smappath, buildSVInternalDB = TRUE, soloPath = path, smapName = 
+smapName, solopattern = pattern, outpath = path, input_fmt_INF = "Text", win_indel = 10000, limsize = 1000, 
+win_inv_trans = 50000, perc_similarity = 0.5, indelconf = 0.5, invconf = 0.01, transconf = 0.1,
+returnMethod_Internal = "dataFrame")
+intFreq[1:2, ]
 }

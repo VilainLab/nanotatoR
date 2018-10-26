@@ -39,8 +39,8 @@ endpos<-smap$RefEndPos
 if (length(grep("SVIndex",names(smap)))>0){
    svid <- smap$SVIndex
  }else{
-svid <- smap$SmapEntryID
-}
+	svid <- smap$SmapEntryID
+	}
 n<-3
 nonOverlapGenes(bed, chrom, startpos, endpos, svid,n)
 }
