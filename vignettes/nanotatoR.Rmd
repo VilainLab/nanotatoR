@@ -50,11 +50,7 @@ path <- system.file("extdata", "SoloFile", package="nanotatoR")
 pattern="_hg19.smap"
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smapName, package="nanotatoR")
-<<<<<<< HEAD
-intFreq<-internalFrequency(smappath = smappath , buildSVInternalDB = TRUE, soloPath= path, smapName=smapName, solopattern = pattern,outpath = path,input_fmt_INF= "Text",win_indel = 10000,limsize= 1000,win_inv_trans= 50000, perc_similarity = 0.5,indelconf = 0.5, invconf = 0.01 ,transconf = 0.1,returnMethod_Internal = "dataFrame")
-=======
 intFreq<-internalFrequency(smappath = smappath , buildSVInternalDB = TRUE, smapName=smapName, soloPath= path, solopattern = pattern,outpath = path,input_fmt_INF= "Text",win_indel = 10000,limsize= 1000,win_inv_trans= 50000, perc_similarity = 0.5 ,indelconf = 0.5, invconf = 0.01, transconf = 0.1, returnMethod_Internal = "dataFrame")
->>>>>>> 22d5a7e30107441979f322351e652aeade111a38
 intFreq[1:2,]
 ```
 
