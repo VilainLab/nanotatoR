@@ -45,18 +45,12 @@ win_indel_DGV = 10000, win_inv_trans_DGV = 50000,perc_similarity_DGV = 0.5,retur
 
 The cohort analysis is designed to provide internal variant frequency, and parental zygosity within the cohort. The function will first merge all of the available individual smaps to form an “internal reference” (**buildSVInternalDB**=*TRUE*) or use an existing file if the internal SV database is already available (**buildSVInternalDB**=*FALSE*). The function requires the paths of the query smap file, the merged internal database file, as well as the following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1). The output can be a (**dataFrame**) or a text file (**Text**).
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 path <- system.file("extdata", "SoloFile", package="nanotatoR")
 pattern="_hg19.smap"
 smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
 smappath = system.file("extdata", smapName, package="nanotatoR")
-win_indel = 10000
-perc_similarity = .5
-indelconf = .5
-invconf = .01
-transconf = .1
-limsize= 1000
-intFreq<-internalFrequency(smappath = smappath , buildSVInternalDB = TRUE, soloPath= path, solopattern = pattern,outpath = path,input_fmt_INF= "Text",win_indel,limsize = limsize,win_inv_trans= 50000, perc_similarity ,indelconf, invconf ,transconf,returnMethod_Internal = "dataFrame")
+intFreq<-internalFrequency(smappath = smappath , buildSVInternalDB = TRUE, soloPath= path, solopattern = pattern,outpath = path,input_fmt_INF= "Text",win_indel = 10000,limsize= 1000,win_inv_trans= 50000, perc_similarity = 0.5 ,indelconf = 0.5, invconf = 0.01, transconf = 0.1, returnMethod_Internal = "dataFrame")
 intFreq[1:2,]
 ```
 
