@@ -80,7 +80,6 @@ makeMergedSVData <- function(path, pattern, outpath) {
 #' @param returnMethod_Internal character. Choice between Text and DataFrame.
 #' @return Text file or data frames containing internalFrequency data.
 #' @examples
-<<<<<<< HEAD
 #' path <- system.file("extdata", "SoloFile", package = "nanotatoR")
 #' pattern <- "_hg19.smap"
 #' smapName <- "F1.1_GM24385_DLE-1_P_trio_hg19.smap"
@@ -90,18 +89,6 @@ makeMergedSVData <- function(path, pattern, outpath) {
 #' win_inv_trans = 50000, perc_similarity = 0.5, indelconf = 0.5, invconf = 0.01, transconf = 0.1,
 #' returnMethod_Internal = "dataFrame")
 #' intFreq[1:2, ]
-=======
-#' \dontrun{
-#' path <- system.file("extdata", "SoloFile", package="nanotatoR")
-#' pattern="_hg19.smap"
-#' smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-#' smappath = system.file("extdata", smapName, package="nanotatoR")
-#' internalFrequency(smappath=smappath , buildSVInternalDB=TRUE, soloPath=path,
-#' solopattern=pattern,outpath=path,input_fmt_INF="Text",win_indel = 10000,limsize=1000,
-#' win_inv_trans = 50000, perc_similarity = 0.5 ,indelconf = 0.5, invconf = 0.01 ,transconf = 0.1,
-#' returnMethod_Internal="dataFrame")
-#' }
->>>>>>> 22d5a7e30107441979f322351e652aeade111a38
 #' @importFrom stats na.omit
 #' @import hash
 #' @import utils
