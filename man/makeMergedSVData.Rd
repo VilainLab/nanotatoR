@@ -4,14 +4,19 @@
 \alias{makeMergedSVData}
 \title{Merges Solo SV files to one common SV file}
 \usage{
-makeMergedSVData(path, pattern, outpath)
+makeMergedSVData(path, pattern, outpath, fname, dbOutput = c("dataframe",
+  "text"))
 }
 \arguments{
 \item{path}{character. Path to the solo files.}
 
 \item{pattern}{character. file name pattern for solo files.}
 
-\item{outpath}{character. path name for the output.}
+\item{outpath}{character. path for output file if dbOutput = text.}
+
+\item{fname}{character. filename if dbOutput = text.}
+
+\item{dbOutput}{character. Output type. Default text and dataframe.}
 }
 \value{
 Text file containing all the solo SMAP files.
@@ -20,7 +25,8 @@ Text file containing all the solo SMAP files.
 Merges Solo SV files to one common SV file
 }
 \examples{
-path <- system.file("extdata", "SoloFile/", package="nanotatoR")
-pattern="_hg19.smap"
-mergedFiles<-makeMergedSVData(path, pattern, outpath=path)
+path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
+pattern <- "_hg19.smap"
+mergedFiles <- makeMergedSVData(path, pattern, outpath = path,
+       dbOutput = "dataframe")
 }

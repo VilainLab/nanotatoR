@@ -5,9 +5,9 @@
 \title{Frequency calculation of variants compared to DGV.}
 \usage{
 DGV_extraction(hgpath, smappath, smap, smap_data,
-  input_fmt_DGV = c("Text", "DataFrame"), win_indel_DGV = 10000,
+  input_fmt_DGV = c("Text", "dataFrame"), win_indel_DGV = 10000,
   win_inv_trans_DGV = 50000, perc_similarity_DGV = 0.5,
-  returnMethod_DGV = c("Text", "dataFrame"), outpath)
+  returnMethod = c("Text", "dataFrame"), outpath, usample = 54946)
 }
 \arguments{
 \item{hgpath}{character. Path to Database of Genomic Variants (DGV)
@@ -22,32 +22,41 @@ Text file.}
 \item{input_fmt_DGV}{character. Choice between text or data frame as
 an input to the DGV frequency calculator.}
 
-\item{win_indel_DGV}{Numeric. Insertion and deletion error window.Default 10000
+\item{win_indel_DGV}{Numeric. Insertion and deletion error window.Default 
+10000
 bases.}
 
 \item{win_inv_trans_DGV}{Numeric. Inversion and translocation error window.
 Default 50000 bases.}
 
-\item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity
+\item{perc_similarity_DGV}{Numeric. ThresholdPercentage similarity 
 of the query SV and reference SV. Default 0.5.}
 
-\item{returnMethod_DGV}{character. Choice between text or data frame as the output.}
+\item{returnMethod}{character. Choice between text or data frame as the
+output.}
 
 \item{outpath}{character. Path where gene lists are saved.}
+
+\item{usample}{Numeric. Number of unique samples.}
 }
 \value{
-Text and character vector containg gene list and terms associated with them
+Text and character vector containg gene list and terms associated 
+with them
         are stored as text files.
 }
 \description{
 Frequency calculation of variants compared to DGV.
 }
 \examples{
-smap="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-smappath = system.file("extdata", smap, package="nanotatoR")
-hgpath=system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", package="nanotatoR")
-win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5
-datDGV<- DGV_extraction (hgpath, smappath,input_fmt_DGV = "Text", smap,
-win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
-perc_similarity_DGV = 0.5,returnMethod_DGV="dataFrame")
+\dontrun{
+smap <- "F1.1_TestSample1_solo_hg19.smap"
+smappath <- system.file("extdata",  package = "nanotatoR")
+hgpath <- system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", 
+package = "nanotatoR")
+win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5,
+usample = 54946
+DGV_extraction (hgpath, input_fmt_DGV = "Text",smap=smap, 
+smappath, win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
+perc_similarity_DGV = 0.5,returnMethod="dataFrame",usample = 54946)
+}
 }

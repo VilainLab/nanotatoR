@@ -16,7 +16,7 @@ Data Frame or text file. Contains the SMAP information.
 Reads SMAP files to extract information
 }
 \examples{
-smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smapName="F1.1_TestSample1_solo_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
 readSMap(smap)
 }

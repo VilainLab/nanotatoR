@@ -40,18 +40,18 @@ information based on type of variants.
 }
 \examples{
 \dontrun{
-terms="Muscle Weakness"
-gene<-gene_list_generation(method="Single", term=terms,
-	returnMethod_GeneList="dataFrame")
-smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-smappath = system.file("extdata", smapName, package="nanotatoR")
-nanotatoR_main(smap, bed, inputfmtBed = c("BNBED"),
-n=3,mergedFiles , buildSVInternalDB=TRUE, soloPath, solopattern,
-input_fmt_INF=c("dataframe"),returnMethod_GeneList=c("dataframe"),
-returnMethod_bedcomp=c("dataframe"),returnMethod_DGV=c("dataframe"),
-returnMethod_Internal=c("dataframe"),input_fmt_DGV=c("dataframe"),
-hgpath, smapName,method=c("Single"), term, thresh=5,
-input_fmt_geneList=c("dataframe"),input_fmt_svMap=c("dataframe"),
-svData,dat_geneList,outpath="",outputFilename="",RZIPpath="")
+terms <- "Muscle Weakness"
+gene <- gene_list_generation(
+  method = "Single", term = terms,
+  returnMethod_GeneList = "dataFrame"
+)
+RzipFile = "zip.exe"
+RZIPpath <- system.file("extdata", RzipFile, package = "nanotatoR")
+smapName <- "F1.1_TestSample1_solo_hg19.smap"
+smappath <- system.file("extdata", smapName, package = "nanotatoR")
+smappath1 <- system.file("extdata", package = "nanotatoR")
+run_bionano_filter(input_fmt_geneList = c("dataframe"), input_fmt_svMap = c("Text"),
+  SVFile = smappath, dat_geneList = gene, outpath = smappath1, outputFilename = "test", 
+  RZIPpath = RZIPpath)
 }
 }

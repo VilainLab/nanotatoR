@@ -4,51 +4,64 @@
 \alias{internalFrequency}
 \title{Calculates the internal frequencies of SV in internal cohorts}
 \usage{
-internalFrequency(mergedFiles, smappath, smapName,
-  buildSVInternalDB = FALSE, smapdata, input_fmt_INF = c("Text",
-  "dataFrame"), soloPath, solopattern, outpath, win_indel = 10000,
-  win_inv_trans = 50000, perc_similarity = 0.5, indelconf = 0.5,
-  invconf = 0.01, limsize = 1000, transconf = 0.1,
-  returnMethod_Internal = c("Text", "dataFrame"))
+internalFrequency(mergedFiles, smappath, smap, buildSVInternalDB = FALSE,
+  smapdata, input_fmt = c("Text", "dataFrame"), path, pattern, outpath,
+  win_indel = 10000, win_inv_trans = 50000, perc_similarity = 0.5,
+  indelconf = 0.5, invconf = 0.01, fname, limsize = 1000,
+  win_indel_parents = 5000, win_inv_trans_parents = 40000,
+  transconf = 0.1, dbOutput = c("dataframe", "text"),
+  returnMethod = c("Text", "dataFrame"))
 }
 \arguments{
 \item{mergedFiles}{character. Path to the merged SV files.}
 
 \item{smappath}{character. path to the query smap file.}
 
-\item{smapName}{character. File name for the smap}
+\item{smap}{character. File name for the smap}
 
-\item{buildSVInternalDB}{boolean. Checking whether the merged solo
+\item{buildSVInternalDB}{boolean. Checking whether the merged solo 
 file database exist.}
 
-\item{smapdata}{character. dataframe containing smap data, if
-input_fmt_INF= dataFrame}
+\item{smapdata}{character. Dataframe if input type chosen as dataframe.}
 
-\item{input_fmt_INF}{character. Choice between Text and DataFrame.}
+\item{input_fmt}{Format in which data is provided as an input to the function.}
 
-\item{soloPath}{character. Path to the solo file database.}
+\item{path}{character. Path to the solo file database.}
 
-\item{solopattern}{character. pattern of the file names to merge.}
+\item{pattern}{character. pattern of the file names to merge.}
 
 \item{outpath}{character. Path to merged SV solo datasets.}
 
-\item{win_indel}{Numeric. Insertion and deletion error window.}
+\item{win_indel}{Numeric. Insertion and deletion error window.
+Default 10000.}
 
-\item{win_inv_trans}{Numeric. Inversion and translocation error window.}
+\item{win_inv_trans}{Numeric. Inversion and translocation error window.
+Default 50000.}
 
-\item{perc_similarity}{Numeric . ThresholdPercentage similarity
-of the query SV and reference SV.}
+\item{perc_similarity}{Numeric . ThresholdPercentage similarity 
+of the query SV and reference SV. Default 0.5.}
 
-\item{indelconf}{Numeric. Threshold for insertion and deletion confidence.}
+\item{indelconf}{Numeric. Threshold for insertion and deletion confidence.
+Default 0.5}
 
-\item{invconf}{Numeric. Threshold for inversion confidence.}
+\item{invconf}{Numeric. Threshold for inversion confidence.Default 0.01.}
 
-\item{limsize}{Numeric. Threshold for size limit for the breakpoint,
-for checking that the breakpint size is valid or not. Default is 1000 bases.}
+\item{fname}{character. Filename in case dbOutput = Text.}
 
-\item{transconf}{Numeric. Threshold for translocation confidence.}
+\item{limsize}{Numeric. Minimum size of SV that can be determined 
+acurately by the Bionano SV caller. Default 1000.}
 
-\item{returnMethod_Internal}{character. Choice between Text and DataFrame.}
+\item{win_indel_parents}{Numeric. Insertion and deletion error window to 
+determine zygosity in case of parents. Default 5000.}
+
+\item{win_inv_trans_parents}{Numeric. Inversion and translocation error 
+window to determine zygosity in case of parents. Default 40000.}
+
+\item{transconf}{Numeric. Threshold for translocation confidence. Default 0.1.}
+
+\item{dbOutput}{character. Output of merged bionano data.}
+
+\item{returnMethod}{character. Choice between Text and DataFrame.}
 }
 \value{
 Text file or data frames containing internalFrequency data.
@@ -59,11 +72,14 @@ Calculates the internal frequencies of SV in internal cohorts
 \examples{
 path <- system.file("extdata", "SoloFile", package = "nanotatoR")
 pattern <- "_hg19.smap"
-smapName <- "F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-smappath <- system.file("extdata", smapName, package = "nanotatoR")
-intFreq <- internalFrequency(smappath = smappath, buildSVInternalDB = TRUE, soloPath = path, smapName = 
-smapName, solopattern = pattern, outpath = path, input_fmt_INF = "Text", win_indel = 10000, limsize = 1000, 
-win_inv_trans = 50000, perc_similarity = 0.5, indelconf = 0.5, invconf = 0.01, transconf = 0.1,
-returnMethod_Internal = "dataFrame")
-intFreq[1:2, ]
+smapName <- "F1.1_TestSample1_solo_hg19.smap"
+smappath <- system.file("extdata",  package = "nanotatoR")
+indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
+internalFrequency(path = path, pattern = pattern,outpath = smappath, 
+dbOutput =c("dataframe"), smappath = smappath ,
+smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, win_inv_trans=50000, 
+perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
+transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
+win_inv_trans_parents=40000,
+returnMethod="dataFrame")
 }

@@ -17,7 +17,8 @@ nonOverlapGenes(bed, chrom, startpos, endpos, svid, n = 3)
 
 \item{svid}{numeric Structural variant identifier (Bionano generated).}
 
-\item{n}{numeric Number of genes to report which are nearest to the breakpoint.
+\item{n}{numeric Number of genes to report which are nearest to the 
+breakpoint.
 Default is 3.}
 }
 \value{
@@ -28,9 +29,10 @@ Distance from the SV covered.
 Calculates Genes that are near to the SV region
 }
 \examples{
-smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
+smapName="F1.1_TestSample1_solo_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
-bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", 
+package="nanotatoR")
 bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 smap<-readSMap(smap)
 chrom<-smap$RefcontigID1
@@ -39,8 +41,8 @@ endpos<-smap$RefEndPos
 if (length(grep("SVIndex",names(smap)))>0){
    svid <- smap$SVIndex
  }else{
-	svid <- smap$SmapEntryID
-	}
+ svid <- smap$SmapEntryID
+ }
 n<-3
 nonOverlapGenes(bed, chrom, startpos, endpos, svid,n)
 }

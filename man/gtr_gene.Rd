@@ -7,16 +7,16 @@
 gtr_gene(terms)
 }
 \arguments{
-\item{terms}{character. Single or Multiple Terms.}
+\item{terms.}{Single or Multiple Terms.}
 }
 \value{
-Dataframe returned containing gene lists in entrezid and Gene
-        Symbols, and terms associated with it
+Dataframe returned containing gene lists in entrezid and Gene 
+Symbols, and terms associated with it
 }
 \description{
 Extracting genes from gtr database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-datgtr<-gtr_gene(term=terms)
+gtr_gene(terms)
 }

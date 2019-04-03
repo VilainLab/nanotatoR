@@ -2,24 +2,29 @@
 % Please edit documentation in R/mainAnnotator.r
 \name{nanotatoR_main}
 \alias{nanotatoR_main}
-\title{Annotation and visualisation of Bionano SV.}
+\title{Annotation of Bionano SV.}
 \usage{
 nanotatoR_main(smap, bed, inputfmtBed = c("BED", "BNBED"), n = 3,
-  mergedFiles, buildSVInternalDB = FALSE, soloPath, solopattern,
+  InternalDBpath, InternalDBpattern, dbOutput_Int, fname_Int, dbOutput_BN,
+  fname_BN, buildSVInternalDB = FALSE, soloPath, solopattern,
+  returnMethod_bedcomp = c("Text", "dataFrame"), mergedFiles_BN,
   win_indel_INF = 10000, win_inv_trans_INF = 50000,
   perc_similarity_INF = 0.5, indelconf = 0.5, invconf = 0.01,
-  transconf = 0.1, limsize = 1000, input_fmt_INF = c("Text",
-  "dataframe"), returnMethod_GeneList = c("Text", "dataframe"),
-  returnMethod_bedcomp = c("Text", "dataframe"),
-  returnMethod_DGV = c("Text", "dataframe"),
-  returnMethod_Internal = c("Text", "dataframe"),
-  input_fmt_DGV = c("Text", "dataframe"), hgpath,
+  transconf = 0.1, returnMethod_DGV = c("Text", "dataFrame"), hgpath,
   win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
-  perc_similarity_DGV = 0.5, smapName, method = c("Single", "Multiple",
-  "Text"), termPath = "", term, thresh = 5,
-  input_fmt_geneList = c("Text", "dataframe"),
-  input_fmt_svMap = c("Text", "dataframe"), svData, dat_geneList,
-  outpath = "", outputFilename = "", RZIPpath = "")
+  perc_similarity_DGV = 0.5, returnMethod_Internal = c("Text",
+  "dataFrame"), input_fmt_DGV = c("Text", "dataFrame"),
+  input_fmt_BN = c("Text", "dataFrame"), input_fmt_INF = c("Text",
+  "dataFrame"), input_fmt_decipher = c("Text", "dataFrame"),
+  input_fmt_svMap = c("Text", "dataFrame"), dat_geneList, decipherpath,
+  input_fmt_geneList = c("Text", "dataFrame"),
+  returnMethod_GeneList = c("Text", "dataFrame"),
+  buildBNInternalDB = FALSE, returnMethod_BNCohort = c("Text",
+  "dataFrame"), mergedFiles_INF, returnMethod_decipher = c("Text",
+  "dataFrame"), method_entrez = c("Single", "Multiple", "Text"),
+  smapName, termPath, term, thresh = 5, limsize = 1000,
+  win_indel_parents = 5000, win_inv_trans_parents = 40000, outpath,
+  outputFilename = "", RZIPpath)
 }
 \arguments{
 \item{smap}{character. Path to SMAP file.}
@@ -29,10 +34,21 @@ nanotatoR_main(smap, bed, inputfmtBed = c("BED", "BNBED"), n = 3,
 \item{inputfmtBed}{character. Choice between Text and DataFrame
 as input for bed file.}
 
-\item{n}{numeric Number of genes to report which are nearest to the breakpoint.
-Default is      3.}
+\item{n}{numeric Number of genes to report which are nearest to 
+the breakpoint.
+Default is   3.}
 
-\item{mergedFiles}{character. Path to the merged SV solo files.}
+\item{InternalDBpath}{character. Path to the BNFile file database.}
+
+\item{InternalDBpattern}{character. pattern of the BNFile names to merge.}
+
+\item{dbOutput_Int}{character. Output of solo bionano data.}
+
+\item{fname_Int}{character. Filename in case dbOutput_Int = Text.}
+
+\item{dbOutput_BN}{character. Output of merged bionano data.}
+
+\item{fname_BN}{character. Filename in case dbOutput_BN = Text.}
 
 \item{buildSVInternalDB}{boolean. Checking whether the merged solo
 file database exist or you need to build it. Default= TRUE.}
@@ -40,6 +56,11 @@ file database exist or you need to build it. Default= TRUE.}
 \item{soloPath}{character. Path to the solo file database.}
 
 \item{solopattern}{character. pattern of the file names to merge.}
+
+\item{returnMethod_bedcomp}{character. Return Methods from the compSmapbed
+function, choice between Text and Dataframe.}
+
+\item{mergedFiles_BN}{character. Path to the merged BN SV files.}
 
 \item{win_indel_INF}{Numeric. Insertion and deletion error window.}
 
@@ -54,26 +75,9 @@ of the query SV and reference SV.}
 
 \item{transconf}{Numeric. Threshold for translocation confidence.}
 
-\item{limsize}{Numeric. Threshold for size limit for the breakpoint,
-for checking that the breakpint size is valid or not. Default is 1000 bases.}
-
-\item{input_fmt_INF}{character. Choice between Text and DataFrame
-for input to INF.}
-
-\item{returnMethod_GeneList}{character. Return Methods from the gene_list_generation
-function, choice between Text and Dataframe.}
-
-\item{returnMethod_bedcomp}{character. Return Methods from the compSmapbed
-function, choice between Text and Dataframe.}
-
-\item{returnMethod_DGV}{character. Return Methods from the DGV_extraction function, choice between
+\item{returnMethod_DGV}{character. Return Methods from 
+the DGV_extraction function, choice between
 Text and Dataframe.}
-
-\item{returnMethod_Internal}{character. Return Methods from the internalFrequency function, choice between
-Text and Dataframe.}
-
-\item{input_fmt_DGV}{character. Choice between Text and DataFrame
-for input to DGV.}
 
 \item{hgpath}{character. Path to Database of Genomic Variants (DGV)
 Text file.}
@@ -85,10 +89,53 @@ Text file.}
 \item{perc_similarity_DGV}{Numeric . ThresholdPercentage similarity
 of the query SV and reference SV.}
 
-\item{smapName}{character. Name of the smap file.}
+\item{returnMethod_Internal}{character. Return Methods 
+from the internalFrequency function, choice between
+Text and Dataframe.}
 
-\item{method}{character. Input Method for terms for entrez. Choices are
-"Single","Multiple" and "Text".}
+\item{input_fmt_DGV}{character. Choice between Text and DataFrame
+for input to DGV.}
+
+\item{input_fmt_BN}{character. Choice of Bionano dataset input
+Text or Dataframe.}
+
+\item{input_fmt_INF}{character. Choice between Text and DataFrame
+for input to INF.}
+
+\item{input_fmt_decipher}{character. Choice of gene list input
+Text or Dataframe.}
+
+\item{input_fmt_svMap}{character. Choice of SVmap input for final step
+Text or Dataframe.}
+
+\item{dat_geneList}{Dataframe Input data containing geneList data.}
+
+\item{decipherpath}{character. Path to DECIPHER. Text file.}
+
+\item{input_fmt_geneList}{character. Choice of gene list input
+Text or Dataframe.}
+
+\item{returnMethod_GeneList}{character. Return Methods from the 
+gene_list_generation
+function, choice between Text and Dataframe.}
+
+\item{buildBNInternalDB}{boolean. Checking whether the merged Bionano
+file database exist or you need to build it. Default= TRUE.}
+
+\item{returnMethod_BNCohort}{character. Return 
+Methods from the Bionano function, choice between
+Text and Dataframe.}
+
+\item{mergedFiles_INF}{character. Path to the merged BN SV files.}
+
+\item{returnMethod_decipher}{character.
+Return Methods from the decipher Frequency function, choice between
+Text and Dataframe.}
+
+\item{method_entrez}{character. Input Method for terms for entrez. Choices 
+are "Single","Multiple" and "Text".}
+
+\item{smapName}{character. Name of the smap file.}
 
 \item{termPath}{character. Path and file name for textfile for terms.}
 
@@ -98,15 +145,14 @@ of the query SV and reference SV.}
 Note if large lists are sent to ncbi, it might fail to get
 processed. Default is 5.}
 
-\item{input_fmt_geneList}{character. Choice of gene list input
-Text or Dataframe.}
+\item{limsize}{Numeric. Minimum size of SV that can be determined 
+accurately by the Bionano SV caller. Default 1000.}
 
-\item{input_fmt_svMap}{character. Choice of gene list input
-Text or Dataframe.}
+\item{win_indel_parents}{Numeric. Insertion and deletion error window to 
+determine zygosity in case of parents. Default 5000.}
 
-\item{svData}{Dataframe Input data containing SV data.}
-
-\item{dat_geneList}{Dataframe Input data containing geneList data.}
+\item{win_inv_trans_parents}{Numeric. Inversion and translocation error 
+window to determine zygosity in case of parents. Default 40000.}
 
 \item{outpath}{Character Directory to the output file.}
 
@@ -119,5 +165,44 @@ Excel file containing the annotated SV map, tabs divided based on
 type of SVs.
 }
 \description{
-Annotation and visualisation of Bionano SV.
+Annotation of Bionano SV.
+}
+\examples{
+terms <- "Muscle Weakness"
+gene <- gene_list_generation(
+  method = "Single", term = terms,
+  returnMethod = "dataFrame"
+)
+mergedFiles <- system.file ("extdata", "BNSOLO2_merged.txt", 
+package = "nanotatoR")
+RzipFile = "zip.exe"
+RZIPpath <- system.file("extdata", RzipFile, package = "nanotatoR")
+smapName <- "F1.1_TestSample1_solo_hg19.smap"
+smappath <- system.file("extdata", smapName, package = "nanotatoR")
+path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
+hgpath <- system.file ("extdata", 
+"GRCh37_hg19_variants_2016-05-15.txt", package = "nanotatoR")
+decipherpath <- system.file("extdata", "population_cnv.txt", package = 
+"nanotatoR")
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", 
+package="nanotatoR")
+pattern <- "_hg19.smap"
+nanotatoR_main(smap = smappath, bed = bedFile,
+ inputfmtBed = c("BNBED"),
+ n = 3,  buildSVInternalDB = TRUE, soloPath = path, solopattern = pattern,
+ input_fmt_INF = c("dataFrame"), buildBNInternalDB = FALSE,
+ returnMethod_bedcomp = c("dataFrame"), returnMethod_DGV = c("dataFrame"),
+ returnMethod_Internal = c("dataFrame"), input_fmt_DGV = c("dataFrame"),
+ hgpath = hgpath, smapName = smapName, limsize=1000, win_indel_parents=5000,
+ decipherpath = decipherpath, dbOutput_Int = "dataframe",
+ win_inv_trans_parents=40000, win_indel_DGV = 10000,
+ input_fmt_geneList = c("dataFrame"), input_fmt_svMap = c("dataFrame"),
+ input_fmt_decipher = "dataFrame",input_fmt_BN = "dataFrame",
+ returnMethod_GeneList = c("dataFrame"),returnMethod_BNCohort = 
+ c("dataFrame"),
+ returnMethod_decipher = c("dataFrame"), mergedFiles_BN = mergedFiles,
+ dat_geneList = gene , method_entrez = "", 
+outpath = smappath, outputFilename = "test",
+ RZIPpath = RZIPpath
+ )
 }

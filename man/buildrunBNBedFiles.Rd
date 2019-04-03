@@ -21,6 +21,7 @@ Data Frame or text file. Contains the gene information.
 Reads BED files to produce bionano Bed files
 }
 \examples{
-bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", 
+package="nanotatoR")
 bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 }
