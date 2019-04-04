@@ -1,7 +1,2 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-<<<<<<< HEAD
-=======
-^\.travis\.yml$
-
->>>>>>> fc10d74fc92866d092212960f7243d2ecdc5e80b
