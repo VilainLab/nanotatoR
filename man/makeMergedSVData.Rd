@@ -29,4 +29,5 @@ path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
 pattern <- "_hg19.smap"
 mergedFiles <- makeMergedSVData(path, pattern, outpath = path,
        dbOutput = "dataframe")
+mergedFiles[1,]
 }

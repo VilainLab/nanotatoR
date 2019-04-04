@@ -9,11 +9,10 @@
 #' @examples
 #' path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 #' pattern <- "_hg19.txt"
-#' makeMergedSmapData(path, pattern, outpath=path,dbOutput = "dataframe")
+#' mergedSmap <- makeMergedSmapData(path, pattern, outpath=path,
+#' dbOutput = "dataframe")
 #' @importFrom stats na.omit 
 #' @export
-
-
 makeMergedSmapData <- function(path, pattern, outpath,fname,
                         dbOutput=c("dataframe","text")) {                                
     setwd(path)
@@ -93,7 +92,7 @@ makeMergedSmapData <- function(path, pattern, outpath,fname,
 #' smappath <- system.file("extdata",  package = "nanotatoR")
 #' win_indel = 10000; win_inv_trans = 50000; perc_similarity = 0.5;
 #' indelconf = 0.5; invconf = 0.01;transconf = 0.1
-#' cohortFrequency(internalBNDB = mergedFiles , smappath , 
+#' cohortFreq<-cohortFrequency(internalBNDB = mergedFiles , smappath , 
 #' smap=smapName, input_fmt ="Text", 
 #' buildBNInternalDB=FALSE, win_indel, win_inv_trans, 
 #' perc_similarity , indelconf, invconf, 
@@ -101,7 +100,6 @@ makeMergedSmapData <- function(path, pattern, outpath,fname,
 #' @importFrom stats na.omit 
 #' @import hash
 #' @export
-
 cohortFrequency <- function(internalBNDB, smappath, smap,
                     buildBNInternalDB=FALSE, smapdata, 
                     input_fmt=c("Text","dataFrame"),
@@ -140,6 +138,7 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
             # dat<-gsub('\t',' ',r10)
             dat4 <- textConnection(dat[g1:length(dat)])
             r1 <- read.table(dat4, sep = "\t", header = TRUE)
+            close(dat4)
         } else{
             stop("column names doesnot Match")
         }
@@ -247,7 +246,7 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                     if (nrow(dat_temp) > 0)
                     {
                         #### print(paste('dat_temp',dim(dat_temp)))
-                        usampid <- as.character(unique(sampid))                      
+                        usampid <- as.character(unique(sampid))
                         for (u in seq_len(length(usampid)))
                         {
                             dat_temp1 <- dat_temp[which(dat_temp$sampid %in% 
@@ -259,18 +258,15 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                 if(length(unique(as.character(zygo)))==1){
                                     if(unique(as.character(zygo)) == 
                                         "homozygous"){
-                                        countfre1 <- countfre1 + 
-                                        (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(
                                         unique(as.character(zygo)) == "Unknown"
                                         ){
-                                        countfre1 <- countfre1 + 
-                                            (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else {
-                                        countfre1 <- countfre1 + 
-                                            (1*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 1
                                     }
                                 }
                                 else{
@@ -279,26 +275,23 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 & 
                                             length(g3)>=1){
-                                        countfre1 <- countfre1 +  
-                                            ((2*length(g1)) + (1*length(g2)) + 
-                                            (2*length(g3)))
+                                        countfre1 <- countfre1 + 2 
+                                            
                                     }
                                     else if(length(g1) == 0 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 +  
+                                        countfre1 <- countfre1 + 2 
                                         ((1*length(g2)) + (2*length(g3)))
                                     }else if(length(g1)>=1 & length(g2)>=1 & 
                                             length(g3) == 0){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2) == 0 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else{
-                                        countfre1 <- countfre1 + 2
+                                        countfre1 <- countfre1 + 0
                                     }
                                 }
                             }else{
@@ -322,7 +315,7 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                     if (nrow(dat_temp) > 0)
                     {
                         #### print(paste('dat_temp',dim(dat_temp)))
-                        usampid <- as.character(unique(sampid_unfiltered))                      
+                        usampid <- as.character(unique(sampid_unfiltered))
                         for (u in seq_len(length(usampid))) {
                             dat_temp1 <- dat_temp[which(
                             dat_temp$sampid_unfiltered %in% usampid[u]), 
@@ -334,39 +327,38 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                 if(length(unique(as.character(zygo))) == 1){
                                     if(unique(as.character(zygo)) == 
                                         "homozygous"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        (2 *(length(as.character(zygo))))
-                                    }else if(unique(as.character(zygo)) == 
-                                    "Unknown"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
-                                    }else {
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        (1 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(unique(as.character(zygo)) == 
+                                        "Unknown"){
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                            
+                                    }
+                                    else {
+                                        countfreunfilt1 <- countfreunfilt1 + 1
+                                        
                                     }
                                 }
                                 else{
                                     g1<-grep("homozygous",as.character(zygo))
-                                    g2<-grep("heterozygous",as.character(zygo))   
+                                    g2<-grep("heterozygous",as.character(zygo))
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 &
                                             length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((2*length(g1)) + (1*length(g2)) 
-                                        + (2*length(g3)))
-                                    }else if(length(g1) == 0 & length(g2)>=1 &
-                                    length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((1*length(g2)) + (2*length(g3)))
-                                    }else if(length(g1)>=1 & length(g2)>=1 & 
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                        
+                                    }
+                                    else if(length(g1) == 0 & length(g2)>=1 &
+                                        length(g3)>=1){
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3) == 0){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2) == 0 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else{
                                         countfreunfilt1 <- countfreunfilt1 + 0
@@ -516,7 +508,7 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                             & (size_internal[ll]>=limsize)
                             & (conf[ll] >= indelconf)){
                             countfre <- c(countfre,1)
-                            sampid<-c(sampid,samp[ll])                     
+                            sampid<-c(sampid,samp[ll])
                             zyg<-c(zyg,zygo[ll])
                             if(as.character(zygo[ll])=="homozygous"){
                                 homozygo<-c(homozygo, as.character(samp[ll]))
@@ -532,12 +524,12 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                         if ((identical(type[ll], "duplication") |
                         identical(type[ll], "duplication_split")| 
                         identical(type[ll], "duplication_inverted")|
-                        identical(type[ll], "insertion"))) {                       
+                        identical(type[ll], "insertion"))) {
                             countfreunfilt <- c(countfreunfilt, 1)
                             sampid_unfiltered<-c(sampid_unfiltered,
                                 as.character(samp[ll]))
                             zyg_unfiltered<-c(zyg_unfiltered, 
-                                as.character(zygo[ll]))                    
+                                as.character(zygo[ll]))
                         } 
                     
                     }
@@ -549,7 +541,7 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                         countfre1 <- 0
                         if (nrow(dat_temp) > 0){
                             #### print(paste('dat_temp',dim(dat_temp)))
-                            usampid <- as.character(unique(sampid))                      
+                            usampid <- as.character(unique(sampid))
                             for (u in seq_len(length(usampid))){
                                 dat_temp1 <- dat_temp[which(dat_temp$sampid 
                                     %in% usampid[u]), ]
@@ -559,16 +551,14 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                     if(length(unique(as.character(zygo)))==1){
                                         if(unique(as.character(zygo)) == 
                                             "homozygous"){
-                                            countfre1 <- countfre1 + 
-                                                (2*length(as.character(zygo)))
+                                            countfre1 <- countfre1 + 2
                                         }
                                         else if(unique(as.character(zygo))==
                                             "Unknown"){
-                                            countfre1 <- countfre1 + 
-                                                (2*length(as.character(zygo)))
-                                        }else {
-                                            countfre1 <- countfre1 + 
-                                                (1*length(as.character(zygo)))
+                                            countfre1 <- countfre1 + 2
+                                        }
+                                        else {
+                                            countfre1 <- countfre1 + 1
                                         }   
                                     }
                                     else{
@@ -579,27 +569,22 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                         g3<-grep("unknown",as.character(zygo))  
                                         if(length(g1)>=1 & length(g2)>=1 & 
                                             length(g3)>=1){
-                                            countfre1 <- countfre1 +  
-                                                ((2*length(g1)) + 
-                                                (1*length(g2)) + (2*length(g3)))
+                                            countfre1 <- countfre1 + 2
                                         }
                                         else if(length(g1)==0 & length(g2)>=1 
                                             & length(g3)>=1){
-                                            countfre1 <- countfre1 + 
-                                            ((1*length(g2)) + (2*length(g3)))
-                                        }else if(length(g1)>=1 & 
+                                            countfre1 <- countfre1 + 2
+                                        }
+                                        else if(length(g1)>=1 & 
                                             length(g2)>=1 & length(g3)==0){
-                                            countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                            countfre1 <- countfre1 + 2
                                         }
                                         else if(length(g1)>=1 & length(g2)==0 & 
                                             length(g3)>=1){
-                                            countfre1 <- countfre1 + 
-                                                ((2*length(g1)) + (2*length(g3)
-                                                ))
+                                            countfre1 <- countfre1 + 2
                                         }
                                         else{
-                                            countfre1 <- countfre1 + 2
+                                            countfre1 <- countfre1 + 0
                                         }
                                     }
                             }else{
@@ -620,7 +605,7 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                         countfreunfilt1 <- 0
                         if (nrow(dat_temp) > 0){    
                             #### print(paste('dat_temp',dim(dat_temp)))
-                            usampid <- as.character(unique(sampid_unfiltered))                      
+                            usampid <- as.character(unique(sampid_unfiltered))
                         for (u in seq_len(length(usampid))) {
                             dat_temp1 <- dat_temp[which(
                                 dat_temp$sampid_unfiltered %in% usampid[u]), ]
@@ -631,15 +616,14 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                 if(length(unique(as.character(zygo)))==1){
                                     if(unique(as.character(zygo))==
                                         "homozygous"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
-                                    }else if(unique(as.character(zygo)) == 
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(unique(as.character(zygo)) == 
                                         "Unknown"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
-                                    }else {
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (1 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else {
+                                        countfreunfilt1 <- countfreunfilt1 + 1
                                     }
                                 }
                                 else{
@@ -648,22 +632,19 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (1*length(g2)) + 
-                                            (2*length(g3)))
-                                    }else if(length(g1)==0 & length(g2)>=1 & 
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(length(g1)==0 & length(g2)>=1 & 
                                             length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((1*length(g2)) + (2*length(g3)))
-                                    }else if(length(g1)>=1 & length(g2)>=1 & 
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 
                                         & length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else{
                                         countfreunfilt1 <- countfreunfilt1 + 0
@@ -899,17 +880,14 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                 if(length(unique(as.character(zygo)))==1){
                                     if(unique(as.character(zygo))=="homozygous")
                                     {
-                                        countfre1 <- countfre1 + 
-                                        (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(unique(as.character(zygo))==
                                         "Unknown"){
-                                        countfre1 <- countfre1 + 
-                                            (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else {
-                                        countfre1 <- countfre1 + 
-                                            (1*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 1
                                     }
                                 }
                                 else{
@@ -918,27 +896,22 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 &
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                        ((2*length(g1)) + (1*length(g2)) + 
-                                        (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)==0 & length(g2)>=1 &
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((1*length(g2)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                        countfre1 <- countfre1 + 
-                                        ((2*length(g1)) + (1*length(g2)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else{
-                                        countfre1 <- countfre1 + 2
+                                        countfre1 <- countfre1 + 0
                                     }
                                 }
                             }
@@ -974,19 +947,17 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                             if (ct >= 1 & nrow (dat_temp1)>= 1)
                             {
                                 if(length(unique(as.character(zygo)))==1){
-                                    if(unique(as.character(zygo))=="homozygous")
+                                    if(unique(as.character(zygo))=="homozygous"
+                                    )
                                     {
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        (2 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 +2 
                                     }
                                     else if(unique(as.character(zygo))==
                                         "Unknown"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 2 
                                     }
                                     else {
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (1 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 1
                                     }
                                 }
                                 else{
@@ -995,24 +966,19 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((2*length(g1)) + 
-                                        (1*length(g2)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)==0 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 +
-                                            ((1*length(g2)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else{
                                         countfreunfilt1 <- countfreunfilt1 + 0

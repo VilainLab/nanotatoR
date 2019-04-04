@@ -107,7 +107,7 @@
 #' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", 
 #' package="nanotatoR")
 #' pattern <- "_hg19.smap"
-#' nanotatoR_main(smap = smappath, bed = bedFile,
+#' nM <- nanotatoR_main(smap = smappath, bed = bedFile,
 #'  inputfmtBed = c("BNBED"),
 #'  n = 3,  buildSVInternalDB = TRUE, soloPath = path, solopattern = pattern,
 #'  input_fmt_INF = c("dataFrame"), buildBNInternalDB = FALSE,

@@ -7,7 +7,7 @@
 gene_extraction(terms)
 }
 \arguments{
-\item{terms.}{Single or Multiple Terms.}
+\item{terms}{Single or Multiple Terms.}
 }
 \value{
 Dataframe returned containing gene lists in entrezid and Gene 
@@ -18,5 +18,5 @@ Extracting genes from gene database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-gene_extraction(terms)
+ge <- gene_extraction(terms)
 }

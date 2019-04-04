@@ -22,7 +22,7 @@
 #' smapName <- "F1.1_TestSample1_solo_hg19.smap"
 #' smappath <- system.file("extdata", package = "nanotatoR")
 #' win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
-#' Decipher_extraction (decipherpath, input_fmt = "Text", smappath, 
+#' decipherext<-Decipher_extraction (decipherpath, input_fmt = "Text", smappath, 
 #' smap= smapName,
 #' win_indel = 10000, perc_similarity = 0.5, returnMethod="dataFrame")
 #' @export
@@ -56,6 +56,7 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
             # dat<-gsub('\t',' ',r1)
             dat4 <- textConnection(dat[g1:length(dat)])
             r1 <- read.table(dat4, sep = "\t", header = TRUE)
+            close(dat4)
         } else
         {
             stop("column names doesnot Match")

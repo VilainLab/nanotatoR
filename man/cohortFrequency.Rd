@@ -66,7 +66,7 @@ smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata",  package = "nanotatoR")
 win_indel = 10000; win_inv_trans = 50000; perc_similarity = 0.5;
 indelconf = 0.5; invconf = 0.01;transconf = 0.1
-cohortFrequency(internalBNDB = mergedFiles , smappath , 
+cohortFreq<-cohortFrequency(internalBNDB = mergedFiles , smappath , 
 smap=smapName, input_fmt ="Text", 
 buildBNInternalDB=FALSE, win_indel, win_inv_trans, 
 perc_similarity , indelconf, invconf, 

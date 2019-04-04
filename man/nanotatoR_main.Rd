@@ -187,7 +187,7 @@ decipherpath <- system.file("extdata", "population_cnv.txt", package =
 bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", 
 package="nanotatoR")
 pattern <- "_hg19.smap"
-nanotatoR_main(smap = smappath, bed = bedFile,
+nM <- nanotatoR_main(smap = smappath, bed = bedFile,
  inputfmtBed = c("BNBED"),
  n = 3,  buildSVInternalDB = TRUE, soloPath = path, solopattern = pattern,
  input_fmt_INF = c("dataFrame"), buildBNInternalDB = FALSE,
@@ -202,7 +202,7 @@ nanotatoR_main(smap = smappath, bed = bedFile,
  c("dataFrame"),
  returnMethod_decipher = c("dataFrame"), mergedFiles_BN = mergedFiles,
  dat_geneList = gene , method_entrez = "", 
-outpath = smappath, outputFilename = "test",
+ outpath = smappath, outputFilename = "test",
  RZIPpath = RZIPpath
  )
 }

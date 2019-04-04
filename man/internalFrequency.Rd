@@ -24,7 +24,8 @@ file database exist.}
 
 \item{smapdata}{character. Dataframe if input type chosen as dataframe.}
 
-\item{input_fmt}{Format in which data is provided as an input to the function.}
+\item{input_fmt}{Format in which data is provided as an input to the 
+function.}
 
 \item{path}{character. Path to the solo file database.}
 
@@ -57,7 +58,8 @@ determine zygosity in case of parents. Default 5000.}
 \item{win_inv_trans_parents}{Numeric. Inversion and translocation error 
 window to determine zygosity in case of parents. Default 40000.}
 
-\item{transconf}{Numeric. Threshold for translocation confidence. Default 0.1.}
+\item{transconf}{Numeric. Threshold for translocation confidence. 
+Default 0.1.}
 
 \item{dbOutput}{character. Output of merged bionano data.}
 
@@ -77,7 +79,8 @@ smappath <- system.file("extdata",  package = "nanotatoR")
 indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
 internalFrequency(path = path, pattern = pattern,outpath = smappath, 
 dbOutput =c("dataframe"), smappath = smappath ,
-smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, win_inv_trans=50000, 
+smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
+win_inv_trans=50000, 
 perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
 transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
 win_inv_trans_parents=40000,

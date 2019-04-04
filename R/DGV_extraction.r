@@ -22,17 +22,15 @@
 #' with them
 #'         are stored as text files.
 #' @examples
-#' \dontrun{
 #' smap <- "F1.1_TestSample1_solo_hg19.smap"
 #' smappath <- system.file("extdata",  package = "nanotatoR")
 #' hgpath <- system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", 
 #' package = "nanotatoR")
-#' win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5,
+#' win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5;
 #' usample = 54946
 #' DGV_extraction (hgpath, input_fmt_DGV = "Text",smap=smap, 
 #' smappath, win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
 #' perc_similarity_DGV = 0.5,returnMethod="dataFrame",usample = 54946)
-#' }
 #' @import utils
 #' @export
 DGV_extraction <- function(hgpath, smappath, smap, smap_data,
@@ -62,6 +60,7 @@ DGV_extraction <- function(hgpath, smappath, smap, smap_data,
             # dat<-gsub('\t',' ',r1)
             dat4 <- textConnection(dat[g1:length(dat)])
             r1 <- read.table(dat4, sep = "\t", header = TRUE)
+            close(dat4)
         } 
         else{
             stop("column names doesnot Match")

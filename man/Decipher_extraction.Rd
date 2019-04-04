@@ -44,7 +44,7 @@ package = "nanotatoR")
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata", package = "nanotatoR")
 win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
-Decipher_extraction (decipherpath, input_fmt = "Text", smappath, 
+decipherext<-Decipher_extraction (decipherpath, input_fmt = "Text", smappath, 
 smap= smapName,
 win_indel = 10000, perc_similarity = 0.5, returnMethod="dataFrame")
 }

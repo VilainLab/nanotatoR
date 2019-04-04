@@ -1,5 +1,3 @@
-#setwd("Z:/bionano/VSVM_Solo")
-
 #' Merges Solo SV files to one common SV file
 #'
 #' @param path  character. Path to the solo files.
@@ -13,11 +11,10 @@
 #' pattern <- "_hg19.smap"
 #' mergedFiles <- makeMergedSVData(path, pattern, outpath = path,
 #'        dbOutput = "dataframe")
+#' mergedFiles[1,]
 #' @importFrom stats na.omit  
 #' @import utils
 #' @export
-
-
 makeMergedSVData <- function(path, pattern, outpath, fname,
                         dbOutput=c("dataframe","text")){
     setwd(path)
@@ -48,6 +45,7 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
             r1 <- cbind(fname1, r1)
             #### print(dim(r1))
             datfinal <- data.frame(rbind(datfinal, r1))
+            close(dat4)
             #### print(dim(datfinal))
         } else
         {
@@ -73,7 +71,8 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' @param smapdata  character. Dataframe if input type chosen as dataframe.
 #' @param buildSVInternalDB  boolean. Checking whether the merged solo 
 #' file database exist.
-#' @param input_fmt Format in which data is provided as an input to the function.
+#' @param input_fmt Format in which data is provided as an input to the 
+#' function.
 #' @param path  character. Path to the solo file database.
 #' @param pattern  character. pattern of the file names to merge.
 #' @param outpath  character. Path to merged SV solo datasets.
@@ -88,7 +87,8 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' @param indelconf  Numeric. Threshold for insertion and deletion confidence.
 #' Default 0.5
 #' @param invconf  Numeric. Threshold for inversion confidence.Default 0.01.
-#' @param transconf  Numeric. Threshold for translocation confidence. Default 0.1.
+#' @param transconf  Numeric. Threshold for translocation confidence. 
+#' Default 0.1.
 #' @param limsize Numeric. Minimum size of SV that can be determined 
 #' acurately by the Bionano SV caller. Default 1000.
 #' @param win_indel_parents  Numeric. Insertion and deletion error window to 
@@ -100,31 +100,20 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' @examples
 #' path <- system.file("extdata", "SoloFile", package = "nanotatoR")
 #' pattern <- "_hg19.smap"
-<<<<<<< HEAD
 #' smapName <- "F1.1_TestSample1_solo_hg19.smap"
 #' smappath <- system.file("extdata",  package = "nanotatoR")
 #' indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
 #' internalFrequency(path = path, pattern = pattern,outpath = smappath, 
 #' dbOutput =c("dataframe"), smappath = smappath ,
-#' smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, win_inv_trans=50000, 
+#' smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
+#' win_inv_trans=50000, 
 #' perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
 #' transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
 #' win_inv_trans_parents=40000,
 #' returnMethod="dataFrame")
 #' @importFrom stats na.omit 
-=======
-#' smapName <- "F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-#' smappath <- system.file("extdata", smapName, package = "nanotatoR")
-#' intFreq <- internalFrequency(smappath = smappath, buildSVInternalDB = TRUE, soloPath = path, smapName = 
-#' smapName, solopattern = pattern, outpath = path, input_fmt_INF = "Text", win_indel = 10000, limsize = 1000, 
-#' win_inv_trans = 50000, perc_similarity = 0.5, indelconf = 0.5, invconf = 0.01, transconf = 0.1,
-#' returnMethod_Internal = "dataFrame")
-#' intFreq[1:2, ]
-#' @importFrom stats na.omit
->>>>>>> fc10d74fc92866d092212960f7243d2ecdc5e80b
 #' @import hash
 #' @export
-
 internalFrequency <- function(mergedFiles, smappath , smap , 
     buildSVInternalDB=FALSE, smapdata, input_fmt=c("Text","dataFrame"), 
     path, pattern, outpath, win_indel=10000, win_inv_trans=50000, 
@@ -155,6 +144,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
             # dat<-gsub('\t',' ',r10)
             dat4 <- textConnection(dat[g1:length(dat)])
             r1 <- read.table(dat4, sep = "\t", header = TRUE)
+            close(dat4)
         } 
         else{
             stop("column names doesnot Match")
@@ -344,15 +334,15 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                             } 
                             else if (patID == 1 & patID1 == 3){
                                 
-                                motherZygosity_exact <- c(motherZygosity_exact, 
+                                motherZygosity_exact <- c(motherZygosity_exact,
                                     NULL)
-                                fatherZygosity_exact <- c(fatherZygosity_exact, 
+                                fatherZygosity_exact <- c(fatherZygosity_exact,
                                     as.character(zygo[ll]))
                             }   
                             else if (patID == patID1){
                                 motherZygosity_exact <- c(motherZygosity_exact,
                                     NULL)
-                                fatherZygosity_exact <- c(fatherZygosity_exact, 
+                                fatherZygosity_exact <- c(fatherZygosity_exact,
                                     NULL)
                             } 
                             else{
@@ -360,7 +350,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                           
                                 motherZygosity_exact <- c(motherZygosity_exact,
                                     NULL)
-                                fatherZygosity_exact <- c(fatherZygosity_exact, 
+                                fatherZygosity_exact <- c(fatherZygosity_exact,
                                     NULL)
                             }
                         } 
@@ -480,48 +470,41 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                             ct <- sum(dat_temp1$countfre)
                             if (ct >= 1 & nrow (dat_temp1)>= 1) {
                                 if(length(unique(as.character(zygo)))==1){
-                                    if(unique(as.character(zygo))=="homozygous")
+                                    if(unique(as.character(zygo) )== 
+                                        "homozygous")
                                     {
-                                        countfre1 <- countfre1 + 
-                                        (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(unique(as.character(zygo))==
                                         "Unknown"){
-                                        countfre1 <- countfre1 + 
-                                        (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else {
-                                        countfre1 <- countfre1 + 
-                                            (1*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 1
                                     }
                                 }
                                 else{
                                     g1<-grep("homozygous",as.character(zygo))
-                                    g2<-grep("heterozygous",as.character(zygo))   
+                                    g2<-grep("heterozygous",as.character(zygo))
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 
                                         & length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                        ((2*length(g1)) + (1*length(g2)) + 
-                                        (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)==0 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((1*length(g2)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else{
-                                        countfre1 <- countfre1 + 2
+                                        countfre1 <- countfre1 + 0
                                     }
                                 }
                             }
@@ -554,7 +537,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                             {
                                 dat_temp1 <- dat_temp[
                                     which
-                                    (dat_temp$svfamid3_unfilt %in% usampid[u]), 
+                                    (dat_temp$svfamid3_unfilt %in% usampid[u]),
                                     ]
                                 zygo<-as.character(dat_temp1$zyg_unfiltered)
                                 ct <- sum(dat_temp1$countfreunfilt)
@@ -564,17 +547,17 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                     {
                                         if(unique(as.character(zygo)) == 
                                             "homozygous"){
-                                            countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
+                                            countfreunfilt1 <- countfreunfilt1  
+                                            + 2
                                         }
                                         else if(unique(as.character(zygo)) == 
                                         "Unknown"){
                                             countfreunfilt1 <- countfreunfilt1 
-                                            + (2 *(length(as.character(zygo))))
+                                            + 2
                                         }
                                         else {
-                                            countfreunfilt1 <- countfreunfilt1 + 
-                                            (1 *(length(as.character(zygo))))
+                                            countfreunfilt1 <- countfreunfilt1 
+                                            + 1
                                         }
                                     }
                                     else{
@@ -586,28 +569,27 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                         if(length(g1)>=1 & length(g2)>=1 
                                             & length(g3)>=1){
                                             countfreunfilt1 <- countfreunfilt1 
-                                            + ((2*length(g1)) + (1*length(g2)) 
-                                            + (2*length(g3)))
+                                            + 2
                                         }
                                         else if(length(g1)==0 & 
                                             length(g2)>=1 & 
                                             length(g3)>=1){
                                             countfreunfilt1 <- countfreunfilt1 
-                                            + ((1*length(g2)) + (2*length(g3)))
+                                            + 2
                                         }
                                         else if(length(g1)>=1 & length(g2)>=1 & 
                                             length(g3)==0){
                                             countfreunfilt1 <- countfreunfilt1 
-                                            + ((2*length(g1)) + (1*length(g2)))
+                                            + 2
                                         }
                                         else if(length(g1)>=1 & length(g2)==0 &
                                             length(g3)>=1){
-                                            countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                            countfreunfilt1 <- countfreunfilt1  
+                                            + 2
                                         }
                                         else{
                                             countfreunfilt1 <- countfreunfilt1 
-                                                + 0
+                                            + 0
                                         }
                                     }
                                 }
@@ -647,7 +629,8 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                         }
                         ###Mother Zygosity
                         motherZygosity1 <- gsub("-", NA, motherZygosity)
-                        motherZygosity1 <- as.character(na.omit(motherZygosity1)
+                        motherZygosity1 <- as.character(na.omit(motherZygosity1
+                            )
                             )
                         if(length(motherZygosity_exact)>0){
                             motherZygosity<-as.character(unique(
@@ -1217,15 +1200,14 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                     if(length(unique(as.character(zygo)))==1){
                                         if(unique(as.character(zygo))==
                                             "homozygous"){
-                                        countfre1 <- countfre1 + 
-                                            (2*length(as.character(zygo)))
-                                    }else if(unique(as.character(zygo))==
+                                        countfre1 <- countfre1 + 2
+                                        }
+                                        else if(unique(as.character(zygo))==
                                         "Unknown"){
-                                        countfre1 <- countfre1 + 
-                                            (2*length(as.character(zygo)))
-                                    }else {
-                                        countfre1 <- countfre1 + 
-                                            (1*length(as.character(zygo)))
+                                            countfre1 <- countfre1 + 2
+                                    }
+                                    else {
+                                        countfre1 <- countfre1 + 1
                                     }
                                 }
                                 else{
@@ -1234,28 +1216,22 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (1*length(g2)) + 
-                                            (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)==0 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                        ((1*length(g2)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                            countfre1 <- countfre1 + 
-                                                ((2*length(g1)) + (1*length(g2))
-                                                )
+                                            countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else{
-                                        countfre1 <- countfre1 + 2
+                                        countfre1 <- countfre1 + 0
                                     }
                                 }
                             }
@@ -1285,26 +1261,24 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                       usampid <- as.character(unique(svfamid3_unfilt))
                       
                         for (u in seq_len(length(usampid))) {
-                            dat_temp1 <- dat_temp[which(dat_temp$svfamid3_unfilt 
-                                %in% usampid[u]), ]
+                            dat_temp1 <- dat_temp[which(
+                                dat_temp$svfamid3_unfilt %in% usampid[u]), ]
                             zygo<-as.character(dat_temp1$zyg_unfiltered)
                             ct <- sum(dat_temp1$countfreunfilt)
                             if (ct >= 1 & nrow (dat_temp1)>= 1)
                             {
                                 if(length(unique(as.character(zygo)))==1){
-                                    if(unique(as.character(zygo))=="homozygous")
+                                    if(unique(as.character(zygo)) == 
+                                        "homozygous")
                                     {
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        (2 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(unique(as.character(zygo))==
                                         "Unknown"){
-                                        countfreunfilt1 <- countfreunfilt1 +
-                                        (2 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else {
-                                        countfreunfilt1 <- countfreunfilt1 +
-                                        (1 *(length(as.character(zygo))))
+                                        countfreunfilt1 <- countfreunfilt1 + 1
                                     }
                                 }
                                 else{
@@ -1313,24 +1287,19 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 &
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((2*length(g1)) + (1*length(g2)) + 
-                                        (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)==0 & length(g2)>=1 &
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((1*length(g2)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((2*length(g1)) + (1*length(g2)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 +
-                                        ((2*length(g1)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else{
                                         countfreunfilt1 <- countfreunfilt1 + 0
@@ -1840,8 +1809,6 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                             svSAMP<-c(svSAMP,as.numeric(ll))
                         } 
                         else{
-                            'countfre <- countfre + 0
-                            svfamid3 <- c(svfamid3, as.character(sv1[[ll]][1]))'
                             motherZygosity <- c(motherZygosity, "-")
                             fatherZygosity <- c(fatherZygosity, "-")
                       
@@ -1884,17 +1851,14 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                 if(length(unique(as.character(zygo))) == 1){
                                     if(unique(as.character(zygo)) 
                                     == "homozygous"){
-                                        countfre1 <- countfre1 + 
-                                        (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(unique(as.character(zygo)) == 
                                         "Unknown"){
-                                        countfre1 <- countfre1 + 
-                                        (2*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else {
-                                        countfre1 <- countfre1 + 
-                                        (1*length(as.character(zygo)))
+                                        countfre1 <- countfre1 + 1
                                     }
                                 }
                                 else{
@@ -1903,29 +1867,21 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                        ((2*length(g1)) + 
-                                        (1*length(g2)) + 
-                                        (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)==0 & 
                                     length(g2)>=1 & 
                                     length(g3)>=1){
-                                        countfre1 <- countfre1 + 
-                                        ((1*length(g2)) + 
-                                        (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & 
                                     length(g2)>=1 & 
                                     length(g3)==0){
-                                        countfre1 <- countfre1 + 
-                                        ((2*length(g1)) + 
-                                        (1*length(g2)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 &
                                     length(g3)>=1){
-                                        countfre1 <- countfre1 + ((2*length(g1))
-                                        + (2*length(g3)))
+                                        countfre1 <- countfre1 + 2
                                     }
                                     else{
                                         countfre1 <- countfre1 + 0
@@ -1963,15 +1919,16 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                             if (ct >= 1 & nrow (dat_temp1)>= 1)
                             {
                                 if(length(unique(as.character(zygo)))==1){
-                                    if(unique(as.character(zygo))=="homozygous"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
-                                    }else if(unique(as.character(zygo))=="Unknown"){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (2 *(length(as.character(zygo))))
-                                    }else {
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            (1 *(length(as.character(zygo))))
+                                    if(unique(as.character(zygo)) ==
+                                        "homozygous"){
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(unique(as.character(zygo)) == 
+                                        "Unknown"){
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else {
+                                        countfreunfilt1 <- countfreunfilt1 + 1
                                     }
                                 }
                                 else{
@@ -1980,23 +1937,19 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                                     g3<-grep("unknown",as.character(zygo))  
                                     if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (1*length(g2)) + 
-                                            (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)==0 & length(g2)>=1 & 
                                     length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                        ((1*length(g2)) + (2*length(g3)))
-                                    }else if(length(g1)>=1 & length(g2)>=1 & 
+                                        countfreunfilt1 <- countfreunfilt1 + 2
+                                    }
+                                    else if(length(g1)>=1 & length(g2)>=1 & 
                                         length(g3)==0){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (1*length(g2)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else if(length(g1)>=1 & length(g2)==0 & 
                                         length(g3)>=1){
-                                        countfreunfilt1 <- countfreunfilt1 + 
-                                            ((2*length(g1)) + (2*length(g3)))
+                                        countfreunfilt1 <- countfreunfilt1 + 2
                                     }
                                     else{
                                         countfreunfilt1 <- countfreunfilt1 + 0

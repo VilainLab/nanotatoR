@@ -40,7 +40,7 @@ readBNBedFiles <- function(BNFile) {
 #' @import stringr
 #' @export
 buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
-                               outdir) {
+        outdir) {
     ## Reading the Bed File
     con <- file(bedFile, "r")
     r10 <- readLines(con, n = -1)
@@ -48,6 +48,7 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
     ## Converting the data to data frame
     dat4 <- textConnection(r10)
     r12 <- read.table(dat4, sep = "\t", header = FALSE)
+    close(dat4)
     ## Extracting data
     # print(dim(r12))
     chrom <- stringr::str_trim(r12[, 1])
@@ -113,7 +114,6 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
 #' readSMap(smap)
 #' @import utils
 #' @export
-
 readSMap <- function(smap) {
     ## reading the smap text file
     con <- file(smap, "r")
@@ -127,6 +127,7 @@ readSMap <- function(smap) {
         # dat<-gsub('\t',' ',r10)
         dat4 <- textConnection(dat[g1:length(dat)])
         r1 <- read.table(dat4, sep = "\t", header = TRUE)
+        close(dat4)
     }  
     else {
         stop("column names doesnot Match")
@@ -361,8 +362,8 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
     # ((bed$Chromosome_End > endpos[ii] & bed$Chromosome_Start >
     # startpos[ii])) & bed$Strand == '-'), ] print(datup);print(datdn)
         if (nrow(datup) > 0 & nrow(datdn) > 0) {      ## Upstream Genes
-           #print("1")
-           datup$diff_up <- abs(round((startpos[ii] - 
+            #print("1")
+            datup$diff_up <- abs(round((startpos[ii] - 
                 datup$Chromosome_Start)/1000,digits=3))
                 dat_up <- datup[order(datup$diff_up), ]
                 dat_up <- dat_up[which(dat_up$diff_up > 0), ]
@@ -430,10 +431,10 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
       
         } 
     else if (nrow(datup) > 0 & nrow(datdn) == 0) {
-      #print("3")
+        #print("3")
       
-      ## Upstream Genes
-      #print("1")
+        ## Upstream Genes
+        #print("1")
         datup$diff_up <- abs(round((startpos[ii] - datup$Chromosome_Start)
            /1000,digits=3))
       

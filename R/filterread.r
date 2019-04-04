@@ -34,8 +34,6 @@
 #' @import hash
 #' @importFrom stats na.omit
 #' @export
-
-
 run_bionano_filter <- function(input_fmt_geneList = c("Text", "dataFrame"),
         input_fmt_svMap = c("Text", "dataFrame"),
         SVFile = NULL, svData, dat_geneList, fileName, outpath,
