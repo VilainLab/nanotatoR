@@ -100,7 +100,6 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' @examples
 #' path <- system.file("extdata", "SoloFile", package = "nanotatoR")
 #' pattern <- "_hg19.smap"
-<<<<<<< HEAD
 #' smapName <- "F1.1_TestSample1_solo_hg19.smap"
 #' smappath <- system.file("extdata",  package = "nanotatoR")
 #' indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
@@ -112,16 +111,6 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' win_inv_trans_parents=40000,
 #' returnMethod="dataFrame")
 #' @importFrom stats na.omit 
-=======
-#' smapName <- "F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-#' smappath <- system.file("extdata", smapName, package = "nanotatoR")
-#' intFreq <- internalFrequency(smappath = smappath, buildSVInternalDB = TRUE, soloPath = path, smapName = 
-#' smapName, solopattern = pattern, outpath = path, input_fmt_INF = "Text", win_indel = 10000, limsize = 1000, 
-#' win_inv_trans = 50000, perc_similarity = 0.5, indelconf = 0.5, invconf = 0.01, transconf = 0.1,
-#' returnMethod_Internal = "dataFrame")
-#' intFreq[1:2, ]
-#' @importFrom stats na.omit
->>>>>>> fc10d74fc92866d092212960f7243d2ecdc5e80b
 #' @import hash
 #' @export
 
