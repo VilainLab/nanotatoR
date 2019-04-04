@@ -1,5 +1,5 @@
 ---
-title: 'nanotatoR: next generation structural variant annotation and classification'
+title: 'nanotatoR: structural variant annotation and classification'
 author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain"
 output: rmarkdown::html_vignette
 vignette: >
