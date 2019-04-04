@@ -52,7 +52,7 @@ perc_similarity_DGV = 0.5,returnMethod="dataFrame",usample = 54946)
 The cohort analysis is designed to provide internal variant frequency, and parental zygosity within the cohort. The function will first merge all of the available individual smaps to form an “internal reference” (**buildSVInternalDB**=*TRUE*) or use an existing file if the internal SV database is already available (**buildSVInternalDB**=*FALSE*). The function requires the paths of the query smap file, the merged internal database file, as well as the following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1 (determined by Bionano Genomics). The output can be a (**dataFrame**) or a text file (**Text**).
 
 ```{r eval=TRUE}
-<<<<<<< HEAD
+
     mergedFiles <- system.file("extdata", "BNSOLO2_merged.txt", 
         package = "nanotatoR")
     smapName <- "F1.1_TestSample1_solo_hg19.smap"
@@ -64,14 +64,6 @@ The cohort analysis is designed to provide internal variant frequency, and paren
             buildBNInternalDB=FALSE, win_indel, win_inv_trans, 
             perc_similarity , indelconf, invconf, 
             transconf,returnMethod="dataFrame")
-=======
-path <- system.file("extdata", "SoloFile", package="nanotatoR")
-pattern="_hg19.smap"
-smapName="F1.1_GM24385_DLE-1_P_trio_hg19.smap"
-smappath = system.file("extdata", smapName, package="nanotatoR")
-intFreq<-internalFrequency(smappath = smappath , buildSVInternalDB = TRUE, smapName=smapName, soloPath= path, solopattern = pattern,outpath = path,input_fmt_INF= "Text",win_indel = 10000,limsize= 1000,win_inv_trans= 50000, perc_similarity = 0.5 ,indelconf = 0.5, invconf = 0.01, transconf = 0.1, returnMethod_Internal = "dataFrame")
-intFreq[1:2,]
->>>>>>> fc10d74fc92866d092212960f7243d2ecdc5e80b
 ```
 
 ##Gene Overlap 
