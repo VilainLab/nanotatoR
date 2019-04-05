@@ -9,7 +9,7 @@
 #' @examples
 #' path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
 #' pattern <- "_hg19.smap"
-#' mergedFiles <- makeMergedSVData(path, pattern, dbOutput = "dataframe")
+#' mergedFiles <- makeMergedSVData(path = path, pattern = pattern, dbOutput = "dataframe")
 #' mergedFiles[1,]
 #' @importFrom stats na.omit  
 #' @import utils
