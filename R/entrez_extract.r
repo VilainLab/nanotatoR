@@ -13,7 +13,7 @@
 #'         are stored as text files.
 #' @examples
 #' terms="Muscle Weakness"
-#' gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
+#' genes <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
 #' @import stats
 #' @import rentrez 
 #' @import utils
@@ -245,7 +245,7 @@ return(dat1)
 #' Symbols, and terms associated with it
 #' @examples
 #' terms="Muscle Weakness"
-#' omim_gene(terms)
+#' ge <- omim_gene(terms)
 #' @import rentrez utils
 #' @importFrom biomaRt useMart
 #' @importFrom biomaRt getBM
@@ -345,7 +345,7 @@ omim_gene<-function(terms){
 #' Symbols, and terms associated with it
 #' @examples
 #' terms="Muscle Weakness"
-#' gtr_gene(terms)
+#' ge <- gtr_gene(terms)
 #' @import rentrez utils
 #' @import httr
 #' @importFrom biomaRt useMart
@@ -427,7 +427,7 @@ gtr_gene<-function(terms){
 #' Symbols, and terms associated with it
 #' @examples
 #' terms="Muscle Weakness"
-#' clinvar_gene(terms)
+#' ge <- clinvar_gene(terms)
 #' @import rentrez utils
 #' @import httr
 #' @importFrom biomaRt useMart
