@@ -9,8 +9,7 @@
 #' @examples
 #' path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 #' pattern <- "_hg19.txt"
-#' mergedSmap <- makeMergedSmapData(path, pattern, outpath=path,
-#' dbOutput = "dataframe")
+#' mergedSmap <- makeMergedSmapData(path, pattern, dbOutput = "dataframe")
 #' @importFrom stats na.omit 
 #' @export
 makeMergedSmapData <- function(path, pattern, outpath,fname,

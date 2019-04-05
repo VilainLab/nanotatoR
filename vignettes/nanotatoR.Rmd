@@ -24,7 +24,7 @@ BiocManager::install("nanotatoR", version = "3.8")
 library("nanotatoR")
 ```
 
-The **nanotatoR** package is compatible with R versions ≥ 3.43.
+The **nanotatoR** package is compatible with R versions ≥ 3.6.
 
 #Package Functionalities
 
@@ -66,7 +66,7 @@ path <- system.file("extdata", "SoloFile", package = "nanotatoR")
 pattern <- "_hg19.smap"
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata",  package = "nanotatoR")
-intFreq <- internalFrequency(path = path, pattern = pattern,outpath = smappath, 
+intFreq <- internalFrequency(path = path, pattern = pattern, 
 dbOutput =c("dataframe"), smappath = smappath ,
 smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
 win_inv_trans=50000, 
