@@ -14,8 +14,8 @@
 #' @export
 makeMergedSmapData <- function(path, pattern, outpath,fname,
                         dbOutput=c("dataframe","text")) {                                
-    setwd(path)
-    allfiles <- list.files(".", pattern)
+    #setwd(path)
+    allfiles <- list.files(path, pattern)
     nam <- c()
     datfinal <- data.frame()
     for (files in seq_along(allfiles)) {
