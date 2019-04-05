@@ -23,7 +23,7 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
     for (ii in seq_along((l)))
     {
         print(l[ii])
-        con <- file(l[ii], "r")
+        con <- file(file.path(path, l[ii]), "r")
         r10 <- readLines(con, n = -1)
         close(con)
         g1 <- grep("RefEndPos", r10)
