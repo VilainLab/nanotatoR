@@ -97,7 +97,7 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' @param returnMethod character. Choice between Text and DataFrame.
 #' @return Text file or data frames containing internalFrequency data.
 #' @examples
-#' path <- system.file("extdata", "SoloFile", package = "nanotatoR")
+#' path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
 #' pattern <- "_hg19.smap"
 #' smapName <- "F1.1_TestSample1_solo_hg19.smap"
 #' smappath <- system.file("extdata",  package = "nanotatoR")
