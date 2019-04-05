@@ -18,5 +18,5 @@ Extracting genes from clinvar database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-clinvar_gene(terms)
+ge <- clinvar_gene(terms)
 }

@@ -82,10 +82,8 @@
 #' @param outpath Character Directory to the output file.
 #' @param outputFilename Character Output filename for the annotated smap.
 #' @param RZIPpath Character. Path for the Rtools zip.exe
-#' @return Excel file containing the annotated SV map, tabs divided based on
-#' type of SVs.
-#' @return Text files containg gene list and terms associated with 
-#' them are stored as text files.
+#' @return Excel file containing the annotated SV map, tabs divided based on type of SVs.
+#' @return Text files containg gene list and terms associated with them are stored as text files.
 #' \dontrun{
 #' @examples
 #' terms <- "Muscle Weakness"
@@ -120,8 +118,7 @@
 #' returnMethod_decipher = c("dataFrame"), mergedFiles_BN = mergedFiles,
 #' dat_geneList = gene , method_entrez = "", 
 #' outpath = smappath, outputFilename = "test",
-#' RZIPpath = RZIPpath
-#'  )
+#' RZIPpath = RZIPpath)
 #' }
 #' @importFrom stats na.omit 
 #' @export
@@ -235,4 +232,3 @@ nanotatoR_main<-function(
         SVFile = NULL,svData = datdecipher,dat_geneList = dat_geneList,
         outpath = outpath,outputFilename = outputFilename,RZIPpath = RZIPpath)
     }
-    

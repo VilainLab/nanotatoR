@@ -72,16 +72,14 @@ Text file or data frames containing internalFrequency data.
 Calculates the internal frequencies of SV in internal cohorts
 }
 \examples{
-path <- system.file("extdata", "SoloFile", package = "nanotatoR")
-pattern <- "_hg19.smap"
+mergedFiles <- system.file("extdata", "nanotatoR_merged.txt", package = "nanotatoR")
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
-smappath <- system.file("extdata",  package = "nanotatoR")
+smappath <- system.file("extdata", package = "nanotatoR")
 indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
-internalFrequency(path = path, pattern = pattern,outpath = smappath, 
-dbOutput =c("dataframe"), smappath = smappath ,
-smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
+internalFrequency(mergedFiles = mergedFiles, smappath = smappath , smap = smapName, 
+buildSVInternalDB=FALSE, win_indel=10000, 
 win_inv_trans=50000, 
-perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
+perc_similarity=0.5, indelconf=0.5, invconf=0.01, 
 transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
 win_inv_trans_parents=40000,
 returnMethod="dataFrame")

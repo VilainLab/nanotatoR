@@ -161,8 +161,7 @@ window to determine zygosity in case of parents. Default 40000.}
 \item{RZIPpath}{Character. Path for the Rtools zip.exe}
 }
 \value{
-Excel file containing the annotated SV map, tabs divided based on
-type of SVs.
+Excel file containing the annotated SV map, tabs divided based on type of SVs.
 }
 \description{
 Annotation of Bionano SV.

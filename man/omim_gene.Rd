@@ -18,5 +18,5 @@ Extracting genes from OMIM database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-omim_gene(terms)
+ge <- omim_gene(terms)
 }

@@ -13,15 +13,15 @@
 #' @importFrom stats na.omit 
 #' @export
 makeMergedSmapData <- function(path, pattern, outpath,fname,
-                        dbOutput=c("dataframe","text")) {                                
-    setwd(path)
-    allfiles <- list.files(".", pattern)
+                        dbOutput=c("dataframe","text")) {
+    #setwd(path)
+    allfiles <- list.files(path, pattern)
     nam <- c()
     datfinal <- data.frame()
     for (files in seq_along(allfiles)) {
         print(files)
         ##### print(dim(dat4))
-        r1 <- read.table(files, header = TRUE)
+        r1 <- read.table(file.path(path,allfiles[files]), header = TRUE)
         print(dim(r1))
         samp<-as.character(r1$sample)
         typ<-as.character(r1$type)
@@ -1120,6 +1120,3 @@ cohortFrequency <- function(internalBNDB, smappath, smap,
         stop("returnMethod Incorrect")
     }
 }
-
-
-

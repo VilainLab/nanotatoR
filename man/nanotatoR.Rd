@@ -8,3 +8,8 @@
 \description{
 Annotation of Bionano data using available databases
 }
+\examples{
+path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
+pattern <- "_hg19.txt"
+mergedSmap <- makeMergedSmapData(path, pattern, dbOutput = "dataframe")
+}

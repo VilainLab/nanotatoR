@@ -4,9 +4,9 @@
 #'
 #' @import knitr
 #' @examples
-#' smap="C:\\Annotator\\Data\\F1_UDN287643_P_Q.S_VAP_SVmerge_trio.txt"
-#' bedFile = "C:\\Annotator\\Data\\Homo_sapiens.Hg19.bed"
-#' compSmapbed(smap,bed, inputfmt="BED')
+#' path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
+#' pattern <- "_hg19.txt"
+#' mergedSmap <- makeMergedSmapData(path, pattern, dbOutput = "dataframe")
 #' @docType package
 #' @name nanotatoR
 #' @import testthat

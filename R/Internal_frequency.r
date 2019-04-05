@@ -9,21 +9,22 @@
 #' @examples
 #' path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
 #' pattern <- "_hg19.smap"
-#' mergedFiles <- makeMergedSVData(path, pattern, dbOutput = "dataframe")
+#' mergedFiles <- makeMergedSVData(path = path, pattern = pattern, 
+#' dbOutput = "dataframe")
 #' mergedFiles[1,]
 #' @importFrom stats na.omit  
 #' @import utils
 #' @export
 makeMergedSVData <- function(path, pattern, outpath, fname,
                         dbOutput=c("dataframe","text")){
-    setwd(path)
-    l <- list.files(".", pattern)
+    #setwd(path)
+    l <- list.files(path, pattern)
     nam <- c()
     datfinal <- data.frame()
     for (ii in seq_along((l)))
     {
         print(l[ii])
-        con <- file(l[ii], "r")
+        con <- file(file.path(path, l[ii]), "r")
         r10 <- readLines(con, n = -1)
         close(con)
         g1 <- grep("RefEndPos", r10)
@@ -97,16 +98,14 @@ makeMergedSVData <- function(path, pattern, outpath, fname,
 #' @param returnMethod character. Choice between Text and DataFrame.
 #' @return Text file or data frames containing internalFrequency data.
 #' @examples
-#' path <- system.file("extdata", "SoloFile", package = "nanotatoR")
-#' pattern <- "_hg19.smap"
+#' mergedFiles <- system.file("extdata", "nanotatoR_merged.txt", package = "nanotatoR")
 #' smapName <- "F1.1_TestSample1_solo_hg19.smap"
-#' smappath <- system.file("extdata",  package = "nanotatoR")
+#' smappath <- system.file("extdata", package = "nanotatoR")
 #' indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
-#' internalFrequency(path = path, pattern = pattern,
-#' dbOutput =c("dataframe"), smappath = smappath ,
-#' smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
+#' internalFrequency(mergedFiles = mergedFiles, smappath = smappath , smap = smapName, 
+#' buildSVInternalDB=FALSE, win_indel=10000, 
 #' win_inv_trans=50000, 
-#' perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
+#' perc_similarity=0.5, indelconf=0.5, invconf=0.01, 
 #' transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
 #' win_inv_trans_parents=40000,
 #' returnMethod="dataFrame")
@@ -2228,6 +2227,3 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
         stop("returnMethod Incorrect")
     }
 }
-
-
-

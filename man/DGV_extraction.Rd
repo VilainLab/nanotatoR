@@ -48,6 +48,7 @@ with them
 Frequency calculation of variants compared to DGV.
 }
 \examples{
+\dontrun{
 smap <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata",  package = "nanotatoR")
 hgpath <- system.file("extdata", "GRCh37_hg19_variants_2016-05-15.txt", 
@@ -57,4 +58,5 @@ usample = 54946
 DGV_extraction (hgpath, input_fmt_DGV = "Text",smap=smap, 
 smappath, win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
 perc_similarity_DGV = 0.5,returnMethod="dataFrame",usample = 54946)
+}
 }

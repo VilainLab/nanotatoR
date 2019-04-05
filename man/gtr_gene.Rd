@@ -18,5 +18,5 @@ Extracting genes from gtr database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
-gtr_gene(terms)
+ge <- gtr_gene(terms)
 }

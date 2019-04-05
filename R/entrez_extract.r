@@ -13,10 +13,11 @@
 #'         are stored as text files.
 #' @examples
 #' terms="Muscle Weakness"
-#' gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
+#' genes <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
 #' @import stats
 #' @import rentrez 
 #' @import utils
+#' @import httr
 #' @export
 gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"), 
         termPath, 
@@ -143,17 +144,20 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 #' terms="Muscle Weakness"
 #' ge <- gene_extraction(terms)
 #' @import rentrez utils
-#' @importFrom biomaRt useMart
-#' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
+#' @import httr
+#' @importFrom AnnotationDbi mapIds
+#' @import org.Hs.eg.db
 #' @export
 gene_extraction<-function(terms){
 ##Initializing values
 geneName<-c()
 Final_terms <-c()
+httr::set_config(httr::config(http_version = 0))
 ##Initialising data to be extracted from ensembl
-ensembl = useMart("ensembl",host = "www.ensembl.org", 
-ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
+'ensembl = useMart("ensembl",host = "www.ensembl.org", 
+ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")'
+
 ##Checking for term size and extracting gene list accordingly
 if (length(terms)>1){ #checking for terms greater than 1
     for(ll in seq_len(length(terms))){
@@ -168,7 +172,7 @@ if (length(terms)>1){ #checking for terms greater than 1
             #print(paste("GeneID length:",length(geneID),sep=""))
             ##uid<-c();geneNam<-c();desc<-c();status<-c()
             #geneNam<-c()
-
+            
             #for(ii in 1:length(geneID)){
             # a<-entrez_summary(db="gene", id=geneID[ii])
             # ##uid<-c(uid,as.character(a$uid))
@@ -179,14 +183,21 @@ if (length(terms)>1){ #checking for terms greater than 1
             # }
             ##extractingthe gene Symbols associated with the gene id from 
             ##Biomart.
-            gene1 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-            "hgnc_symbol"), filters = "entrezgene", 
-            values = geneID, mart = ensembl)
+            gn1 <- mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")
+            gn2 <- mapIds(org.Hs.eg.db, geneID, "ENSEMBL", "ENTREZID")
+            rn <- row.names(data.frame(gn1))
+            rn1 <- row.names(data.frame(gn2))
+            gene1<-data.frame(
+                entrezID = as.numeric(rn),
+                ensemblID = as.character(data.frame(gn2)[,1]),
+                hgnc_symbol = as.character(data.frame(gn1)[,1])
+                )
             gn<-as.character(unique(gene1$hgnc_symbol))
-            gn_1<-gn[gn != ""]
+            gn_1_temp <- gn[gn != ""]
+            gn_1 <- as.character(na.omit(gn_1_temp))
             geneName<-c(geneName,as.character(gn_1))
-            terms_list<-as.character(rep(paste(terms,"_Gene",sep=""),
-            length(gn_1)))
+            terms_list<-as.character(rep(paste(terms[ll],"_Gene",sep=""),
+                length(gn_1)))
             Final_terms<-c(Final_terms,terms_list)
         }
         else{next}
@@ -212,14 +223,22 @@ else if (length(terms)==1){
         # ##status<-c(status,a$status)
         # }
         ##Extracting gene symbols using BiMart
-        gene1 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-        "hgnc_symbol"), filters = "entrezgene", 
-        values = geneID, mart = ensembl)
-        gn<-as.character(unique(gene1$hgnc_symbol))
-        gn_1<-gn[gn != ""]
-        geneName<-c(geneName,as.character(gn_1))
-        terms_list<-as.character(rep(paste(terms,"_Gene",sep=""),length(gn_1)))
-        Final_terms<-c(Final_terms,terms_list)
+        gn1 <- mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")
+            gn2 <- mapIds(org.Hs.eg.db, geneID, "ENSEMBL", "ENTREZID")
+            rn <- row.names(data.frame(gn1))
+            rn1 <- row.names(data.frame(gn2))
+            gene1<-data.frame(
+                entrezID = as.numeric(rn),
+                ensemblID = as.character(data.frame(gn2)[,1]),
+                hgnc_symbol = as.character(data.frame(gn1)[,1])
+                )
+            gn<-as.character(unique(gene1$hgnc_symbol))
+            gn_1_temp <- gn[gn != ""]
+            gn_1 <- as.character(na.omit(gn_1_temp))
+            geneName<-c(geneName,as.character(gn_1))
+            terms_list<-as.character(rep(paste(terms,"_Gene",sep=""),
+                length(gn_1)))
+            Final_terms<-c(Final_terms,terms_list)
     }
     else{
         print ("No genes for term !!")
@@ -242,19 +261,19 @@ return(dat1)
 #' Symbols, and terms associated with it
 #' @examples
 #' terms="Muscle Weakness"
-#' omim_gene(terms)
+#' ge <- omim_gene(terms)
 #' @import rentrez utils
-#' @importFrom biomaRt useMart
-#' @importFrom biomaRt getBM
+#' @importFrom AnnotationDbi mapIds
+#' @import org.Hs.eg.db
 #' @importFrom stats na.omit 
+#' @import httr
 #' @export
 omim_gene<-function(terms){
     ##Initialising variables
     omimGenes<-c()
     Final_terms_OMIM<-c()
+    httr::set_config(httr::config(http_version = 0))
     ##Initialising data to be extracted from ensembl
-    ensembl = useMart("ensembl",host = "www.ensembl.org", 
-            ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
     ####Checking for term size and extracting gene list accordingly
     if (length(terms)>1){
         ##Length of the terms input greater than 1.
@@ -278,17 +297,26 @@ omim_gene<-function(terms){
                 #omimgen<-c(omimgen,as.character(toupper(st[[1]][2])))
                 #}
                 ##Get the Human gene symbols for the extracted Gene IDs
-                gene2 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-                                "hgnc_symbol"), filters = "entrezgene", 
-                        values = final_omim, mart = ensembl)
-                gn2<-as.character(unique(gene2$hgnc_symbol))
-                gn_2<-gn2[gn2 != ""]
-                omimGenes<-c(omimGenes,as.character(gn_2))
-                terms_list<-as.character(rep(paste(terms[ll],
-                "_OMIMGene",sep=""),length(gn_2)))
-                ##Writing it into a data frame
+                gn1 <- mapIds(org.Hs.eg.db, final_omim, "SYMBOL", "ENTREZID")
+                gn2 <- mapIds(org.Hs.eg.db, final_omim, "ENSEMBL", "ENTREZID")
+                rn <- row.names(data.frame(gn1))
+                rn1 <- row.names(data.frame(gn2))
+                gene1<-data.frame(
+                entrezID = as.numeric(rn),
+                ensemblID = as.character(data.frame(gn2)[,1]),
+                hgnc_symbol = as.character(data.frame(gn1)[,1])
+                )
+                gn<-as.character(unique(gene1$hgnc_symbol))
+                gn_1_temp <- gn[gn != ""]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                omimGenes<-c(omimGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms[ll],"_Gene",sep=""),
+                    length(gn_1)))
                 Final_terms_OMIM<-c(Final_terms_OMIM,terms_list)
-            }else{next}        
+            }
+            else{
+                next
+            }        
         }
     }
     else if (length(terms)==1){
@@ -311,14 +339,21 @@ omim_gene<-function(terms){
             #omimgen<-c(omimgen,as.character(toupper(st[[1]][2])))
             #}
             ##Extract Gene Symols throug Bionano 
-            gene2 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-                "hgnc_symbol"), 
-                filters = "entrezgene", values = final_omim, mart = ensembl)
-            gn2<-as.character(unique(gene2$hgnc_symbol))
-            gn_2<-gn2[gn2 != ""]
-            omimGenes<-c(omimGenes,as.character(gn_2))
-            terms_list<-as.character(rep(paste(terms,"_OMIMGene",sep=""),
-                length(gn_2)))
+            gn1 <- mapIds(org.Hs.eg.db, final_omim, "SYMBOL", "ENTREZID")
+            gn2 <- mapIds(org.Hs.eg.db, final_omim, "ENSEMBL", "ENTREZID")
+            rn <- row.names(data.frame(gn1))
+            rn1 <- row.names(data.frame(gn2))
+            gene1<-data.frame(
+                entrezID = as.numeric(rn),
+                ensemblID = as.character(data.frame(gn2)[,1]),
+                hgnc_symbol = as.character(data.frame(gn1)[,1])
+            )
+            gn<-as.character(unique(gene1$hgnc_symbol))
+            gn_1_temp <- gn[gn != ""]
+            gn_1 <- as.character(na.omit(gn_1_temp))
+            omimGenes<-c(omimGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms,"_Gene",sep=""),
+                length(gn_1)))
             Final_terms_OMIM<-c(Final_terms_OMIM,terms_list)
         }
         else{
@@ -340,10 +375,11 @@ omim_gene<-function(terms){
 #' Symbols, and terms associated with it
 #' @examples
 #' terms="Muscle Weakness"
-#' gtr_gene(terms)
+#' ge <- gtr_gene(terms)
 #' @import rentrez utils
-#' @importFrom biomaRt useMart
-#' @importFrom biomaRt getBM
+#' @import httr
+#' @importFrom AnnotationDbi mapIds
+#' @import org.Hs.eg.db
 #' @importFrom stats na.omit 
 #' @export
 gtr_gene<-function(terms){
@@ -351,8 +387,7 @@ gtr_gene<-function(terms){
     gtrGenes<-c()
     Final_terms_GTR<-c()
     ##Initialising data to be extracted from ensembl
-    ensembl = useMart("ensembl",host = "www.ensembl.org", 
-            ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
+    httr::set_config(httr::config(http_version = 0))
     ####Checking for term size and extracting gene list accordingly
     if (length(terms)>1){
         for(ll in seq_len(length(terms))){##if term length greater than 1
@@ -366,17 +401,27 @@ gtr_gene<-function(terms){
                 #gtrGenes<-c(gtrGenes,n$testtargetlist)
                 #}
                 ##Extracting gene symbols through Biomart
-                gene3 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-                    "hgnc_symbol"), 
-                    filters = "entrezgene", values = gtrgeneID, mart = ensembl)
-                gn3<-as.character(unique(gene3$hgnc_symbol))
-                gn_3<-gn3[gn3 != ""]
-                gtrGenes<-c(gtrGenes,as.character(gn_3))
-                terms_list<-as.character(rep(paste(terms[ll],
-                    "_GTRGene",sep=""),length(gn_3)))
-                Final_terms_GTR<-c(Final_terms_GTR,terms_list)
+                gn1 <- mapIds(org.Hs.eg.db, gtrgeneID, "SYMBOL", "ENTREZID")
+                gn2 <- mapIds(org.Hs.eg.db, gtrgeneID, "ENSEMBL", "ENTREZID")
+                rn <- row.names(data.frame(gn1))
+                rn1 <- row.names(data.frame(gn2))
+                gene1<-data.frame(
+                    entrezID = as.numeric(rn),
+                    ensemblID = as.character(data.frame(gn2)[,1]),
+                    hgnc_symbol = as.character(data.frame(gn1)[,1])
+                )
+                gn<-as.character(unique(gene1$hgnc_symbol))
+                gn_1_temp <- gn[gn != ""]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                gtrGenes<-c(gtrGenes,as.character(gn_1))
+                    terms_list<-as.character(rep(paste(terms[ll],"_Gene",sep=""),
+                    length(gn_1)))
+                Final_terms_GTR <- c(Final_terms_GTR,terms_list)
                 
-            }else{next}
+            }
+            else{
+                next
+            }
         }
     }
     else if (length(terms)==1){##For single terms
@@ -390,15 +435,22 @@ gtr_gene<-function(terms){
             #gtrGenes<-c(gtrGenes,n$testtargetlist)
             #}
             ##Extracting gene symbols from Biomart
-            gene3 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-                    "hgnc_symbol"), 
-                    filters = "entrezgene", values = gtrgeneID, mart = ensembl)
-            gn3<-as.character(unique(gene3$hgnc_symbol))
-            gn_3<-gn3[gn3 != ""]
-            gtrGenes<-c(gtrGenes,as.character(gn_3))
-            terms_list<-as.character(rep(paste(terms,"_GTRGene",sep=""),
-                length(gn_3)))
-            Final_terms_GTR<-c(Final_terms_GTR,terms_list)
+            gn1 <- mapIds(org.Hs.eg.db, gtrgeneID, "SYMBOL", "ENTREZID")
+            gn2 <- mapIds(org.Hs.eg.db, gtrgeneID, "ENSEMBL", "ENTREZID")
+            rn <- row.names(data.frame(gn1))
+            rn1 <- row.names(data.frame(gn2))
+            gene1<-data.frame(
+                entrezID = as.numeric(rn),
+                ensemblID = as.character(data.frame(gn2)[,1]),
+                hgnc_symbol = as.character(data.frame(gn1)[,1])
+            )
+            gn<-as.character(unique(gene1$hgnc_symbol))
+            gn_1_temp <- gn[gn != ""]
+            gn_1 <- as.character(na.omit(gn_1_temp))
+            gtrGenes <- c(gtrGenes,as.character(gn_1))
+            terms_list<-as.character(rep(paste(terms , "_Gene",sep=""),
+                length(gn_1)))
+            Final_terms_GTR <- c(Final_terms_GTR,terms_list)
             
         }
         else{
@@ -420,10 +472,11 @@ gtr_gene<-function(terms){
 #' Symbols, and terms associated with it
 #' @examples
 #' terms="Muscle Weakness"
-#' clinvar_gene(terms)
+#' ge <- clinvar_gene(terms)
 #' @import rentrez utils
-#' @importFrom biomaRt useMart
-#' @importFrom biomaRt getBM
+#' @import httr
+#' @importFrom AnnotationDbi mapIds
+#' @import org.Hs.eg.db
 #' @importFrom stats na.omit 
 #' @export
 clinvar_gene<-function(terms){
@@ -431,8 +484,7 @@ clinvar_gene<-function(terms){
     clinvarGenes<-c()
     Final_terms_Clinvar<-c()
     ##Initialising the database
-    ensembl = useMart("ensembl",host = "www.ensembl.org", 
-            ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
+    httr::set_config(httr::config(http_version = 0))
     if (length(terms)>1){
         for(ll in seq_len(length(terms))){
             ##Extracting data from Clinvar
@@ -455,16 +507,22 @@ clinvar_gene<-function(terms){
                 #clinvargen<-c(clinvargen,as.character(t$genes$symbol))
                 #}
                 ##Extracting gene symbols through biomart
-                gene4 = getBM(attributes = c("entrezgene", "ensembl_gene_id",
-                                "hgnc_symbol"), filters = "entrezgene", 
-                        values = final_clinvar, mart = ensembl)
-                gn4<-as.character(unique(gene4$hgnc_symbol))
-                gn_4<-gn4[gn4 != ""]
-                clinvarGenes<-c(clinvarGenes,as.character(gn_4))
-                terms_list<-as.character(rep(paste(terms[ll],"_ClinVarGene",
-                    sep=""),
-                                length(gn_4)))
-                Final_terms_Clinvar<-c(Final_terms_Clinvar,terms_list)
+                gn1 <- mapIds(org.Hs.eg.db, final_clinvar, "SYMBOL", "ENTREZID")
+                gn2 <- mapIds(org.Hs.eg.db, final_clinvar, "ENSEMBL", "ENTREZID")
+                rn <- row.names(data.frame(gn1))
+                rn1 <- row.names(data.frame(gn2))
+                gene1<-data.frame(
+                    entrezID = as.numeric(rn),
+                    ensemblID = as.character(data.frame(gn2)[,1]),
+                    hgnc_symbol = as.character(data.frame(gn1)[,1])
+                )
+                gn<-as.character(unique(gene1$hgnc_symbol))
+                gn_1_temp <- gn[gn != ""]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                clinvarGenes <- c(clinvarGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms [ll] , 
+                    "_Gene",sep=""), length(gn_1)))
+                Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
             }
             else{
                 next
@@ -492,14 +550,21 @@ clinvar_gene<-function(terms){
             #clinvargen<-c(clinvargen,as.character(t$genes$symbol))
             #}
             ##Extracting gene symbol through biomart
-            gene4 = getBM(attributes = c("entrezgene", "ensembl_gene_id", 
-                "hgnc_symbol"), 
-                filters = "entrezgene", values = final_clinvar, mart = ensembl)
-            gn4<-as.character(unique(gene4$hgnc_symbol))
-            gn_4<-gn4[gn4 != ""]
-            clinvarGenes<-c(clinvarGenes,as.character(gn_4))
-            terms_list<-as.character(rep(paste(terms,"_ClinVarGene",sep=""),
-                length(gn_4)))
+            gn1 <- mapIds(org.Hs.eg.db, final_clinvar, "SYMBOL", "ENTREZID")
+            gn2 <- mapIds(org.Hs.eg.db, final_clinvar, "ENSEMBL", "ENTREZID")
+            rn <- row.names(data.frame(gn1))
+            rn1 <- row.names(data.frame(gn2))
+            gene1<-data.frame(
+                entrezID = as.numeric(rn),
+                ensemblID = as.character(data.frame(gn2)[,1]),
+                hgnc_symbol = as.character(data.frame(gn1)[,1])
+            )
+            gn<-as.character(unique(gene1$hgnc_symbol))
+            gn_1_temp <- gn[gn != ""]
+            gn_1 <- as.character(na.omit(gn_1_temp))
+            clinvarGenes<-c(clinvarGenes,as.character(gn_1))
+            terms_list<-as.character(rep(paste(terms , "_Gene",sep=""),
+                length(gn_1)))
             Final_terms_Clinvar<-c(Final_terms_Clinvar,terms_list)
         }
         else{
@@ -515,8 +580,6 @@ clinvar_gene<-function(terms){
     #print(paste("clinvarGenes GeneName length:",length(clinvarGenes),sep=""))
     return(dat4)
 }
-
-
 
 
 
