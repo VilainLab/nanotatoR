@@ -51,7 +51,7 @@ DGV_extraction <- function(hgpath, smappath, smap, smap_data,
     ##Checking if the input format is dataframe or Text
     if (input_fmt_DGV == "Text") {
         ##Pattern matching needs to be done to remove #
-        con <- file(file.path(smappath, smap, sep = ""), "r")
+        con <- file(file.path(smappath, smap), "r")
         r10 <- readLines(con, n = -1)
         close(con)
         datfinal <- data.frame()
