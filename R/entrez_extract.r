@@ -146,11 +146,8 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 #' @import rentrez utils
 #' @importFrom stats na.omit 
 #' @import httr
-<<<<<<< HEAD
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
-=======
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
 #' @export
 gene_extraction<-function(terms){
 ##Initializing values
@@ -381,13 +378,8 @@ omim_gene<-function(terms){
 #' ge <- gtr_gene(terms)
 #' @import rentrez utils
 #' @import httr
-<<<<<<< HEAD
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
-=======
-#' @importFrom biomaRt useMart
-#' @importFrom biomaRt getBM
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
 #' @importFrom stats na.omit 
 #' @export
 gtr_gene<-function(terms){
@@ -396,11 +388,6 @@ gtr_gene<-function(terms){
     Final_terms_GTR<-c()
     ##Initialising data to be extracted from ensembl
     httr::set_config(httr::config(http_version = 0))
-<<<<<<< HEAD
-=======
-    ensembl = useMart("ensembl",host = "www.ensembl.org", 
-            ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
     ####Checking for term size and extracting gene list accordingly
     if (length(terms)>1){
         for(ll in seq_len(length(terms))){##if term length greater than 1
@@ -488,13 +475,8 @@ gtr_gene<-function(terms){
 #' ge <- clinvar_gene(terms)
 #' @import rentrez utils
 #' @import httr
-<<<<<<< HEAD
 #' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
-=======
-#' @importFrom biomaRt useMart
-#' @importFrom biomaRt getBM
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
 #' @importFrom stats na.omit 
 #' @export
 clinvar_gene<-function(terms){
@@ -503,11 +485,6 @@ clinvar_gene<-function(terms){
     Final_terms_Clinvar<-c()
     ##Initialising the database
     httr::set_config(httr::config(http_version = 0))
-<<<<<<< HEAD
-=======
-    ensembl = useMart("ensembl",host = "www.ensembl.org", 
-            ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
     if (length(terms)>1){
         for(ll in seq_len(length(terms))){
             ##Extracting data from Clinvar
