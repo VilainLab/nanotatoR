@@ -27,6 +27,5 @@ Merges Bionano SV files to one common SV file
 \examples{
 path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 pattern <- "_hg19.txt"
-mergedSmap <- makeMergedSmapData(path, pattern, outpath=path,
-dbOutput = "dataframe")
+mergedSmap <- makeMergedSmapData(path, pattern, dbOutput = "dataframe")
 }
