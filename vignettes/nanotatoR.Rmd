@@ -99,9 +99,9 @@ Generates a list of genes involved with the patient's phenotype and overlaps it 
 The input to the function is a term, which can be provided as a single character input (**method**="Single"), or a vector of terms (**method**="Multiple") or as a text file (**method**="Text"). The output can be selected as a (**dataFrame**) or a text file (**Text**).
 
 ```{r eval=TRUE}
-    terms="Muscle Weakness"
-    gene <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
-    gene[1:10,]
+ terms="Muscle Weakness"
+ gene <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
+ gene[1:10,]
 ```
 
 
