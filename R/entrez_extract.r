@@ -17,6 +17,7 @@
 #' @import stats
 #' @import rentrez 
 #' @import utils
+#' @import httr
 #' @export
 gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"), 
         termPath, 
@@ -146,11 +147,13 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 #' @importFrom biomaRt useMart
 #' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
+#' @import httr
 #' @export
 gene_extraction<-function(terms){
 ##Initializing values
 geneName<-c()
 Final_terms <-c()
+httr::set_config(httr::config(http_version = 0))
 ##Initialising data to be extracted from ensembl
 ensembl = useMart("ensembl",host = "www.ensembl.org", 
 ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
@@ -247,11 +250,13 @@ return(dat1)
 #' @importFrom biomaRt useMart
 #' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
+#' @import httr
 #' @export
 omim_gene<-function(terms){
     ##Initialising variables
     omimGenes<-c()
     Final_terms_OMIM<-c()
+    httr::set_config(httr::config(http_version = 0))
     ##Initialising data to be extracted from ensembl
     ensembl = useMart("ensembl",host = "www.ensembl.org", 
             ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
@@ -342,6 +347,7 @@ omim_gene<-function(terms){
 #' terms="Muscle Weakness"
 #' gtr_gene(terms)
 #' @import rentrez utils
+#' @import httr
 #' @importFrom biomaRt useMart
 #' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
@@ -351,6 +357,7 @@ gtr_gene<-function(terms){
     gtrGenes<-c()
     Final_terms_GTR<-c()
     ##Initialising data to be extracted from ensembl
+    httr::set_config(httr::config(http_version = 0))
     ensembl = useMart("ensembl",host = "www.ensembl.org", 
             ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
     ####Checking for term size and extracting gene list accordingly
@@ -422,6 +429,7 @@ gtr_gene<-function(terms){
 #' terms="Muscle Weakness"
 #' clinvar_gene(terms)
 #' @import rentrez utils
+#' @import httr
 #' @importFrom biomaRt useMart
 #' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
@@ -431,6 +439,7 @@ clinvar_gene<-function(terms){
     clinvarGenes<-c()
     Final_terms_Clinvar<-c()
     ##Initialising the database
+    httr::set_config(httr::config(http_version = 0))
     ensembl = useMart("ensembl",host = "www.ensembl.org", 
             ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")
     if (length(terms)>1){
