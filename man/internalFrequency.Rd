@@ -77,7 +77,7 @@ pattern <- "_hg19.smap"
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata",  package = "nanotatoR")
 indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
-internalFrequency(path = path, pattern = pattern,outpath = smappath, 
+internalFrequency(path = path, pattern = pattern, 
 dbOutput =c("dataframe"), smappath = smappath ,
 smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
 win_inv_trans=50000, 
