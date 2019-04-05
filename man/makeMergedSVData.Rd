@@ -27,11 +27,7 @@ Merges Solo SV files to one common SV file
 \examples{
 path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
 pattern <- "_hg19.smap"
-<<<<<<< HEAD
 mergedFiles <- makeMergedSVData(path = path, pattern = pattern, 
 dbOutput = "dataframe")
-=======
-mergedFiles <- makeMergedSVData(path, pattern, dbOutput = "dataframe")
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
 mergedFiles[1,]
 }
