@@ -70,7 +70,7 @@ intFreq <- internalFrequency(path = path, pattern = pattern,
 dbOutput =c("dataframe"), smappath = smappath ,
 smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
 win_inv_trans=50000, 
-perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
+perc_similarity=0.5, indelconf=0.5, invconf=0.01, 
 transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
 win_inv_trans_parents=40000,
 returnMethod="dataFrame")
