@@ -17,7 +17,8 @@ Imports:
     stringr,
     knitr,
     testthat,
-    utils
+    utils,
+    httr
 Suggests:
     rmarkdown,
     yaml
