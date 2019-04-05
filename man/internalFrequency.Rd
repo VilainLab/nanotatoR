@@ -76,8 +76,14 @@ mergedFiles <- system.file("extdata", "nanotatoR_merged.txt", package = "nanotat
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata", package = "nanotatoR")
 indelconf = 0.5; invconf = 0.01;transconf = 0.1;input_fmt="Text";
+<<<<<<< HEAD
 internalFrequency(mergedFiles = mergedFiles, smappath = smappath , smap = smapName, 
 buildSVInternalDB=FALSE, win_indel=10000, 
+=======
+internalFrequency(path = path, pattern = pattern, 
+dbOutput =c("dataframe"), smappath = smappath ,
+smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
+>>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
 win_inv_trans=50000, 
 perc_similarity=0.5, indelconf=0.5, invconf=0.01, 
 transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",

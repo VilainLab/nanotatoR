@@ -29,7 +29,7 @@
 #' package = "nanotatoR")
 #' win_indel_DGV=10000;win_inv_trans_DGV=50000;perc_similarity_DGV=0.5;
 #' usample = 54946
-#' DGV_extraction (hgpath, input_fmt_DGV = "Text",smap=smap, 
+#' dgv <- DGV_extraction (hgpath, input_fmt_DGV = "Text",smap=smap, 
 #' smappath, win_indel_DGV = 10000, win_inv_trans_DGV = 50000,
 #' perc_similarity_DGV = 0.5,returnMethod="dataFrame",usample = 54946)
 #' }
@@ -51,7 +51,7 @@ DGV_extraction <- function(hgpath, smappath, smap, smap_data,
     ##Checking if the input format is dataframe or Text
     if (input_fmt_DGV == "Text") {
         ##Pattern matching needs to be done to remove #
-        con <- file(file.path(smappath, smap, sep = ""), "r")
+        con <- file(file.path(smappath, smap), "r")
         r10 <- readLines(con, n = -1)
         close(con)
         datfinal <- data.frame()

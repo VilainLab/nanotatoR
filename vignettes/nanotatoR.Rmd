@@ -62,15 +62,13 @@ perc_similarity , indelconf, invconf, transconf,returnMethod="dataFrame")
 The cohort analysis is designed to provide internal variant frequency, and parental zygosity within the cohort. The function will first merge all of the available individual smaps to form an “internal reference” (**buildSVInternalDB**=*TRUE*) or use an existing file if the internal SV database is already available (**buildSVInternalDB**=*FALSE*). The function requires the paths of the query smap file, the merged internal database file, as well as the following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1 (determined by Bionano Genomics). The output can be a (**dataFrame**) or a text file (**Text**).
 
 ```{r eval=TRUE}
-path <- system.file("extdata", "SoloFile", package = "nanotatoR")
-pattern <- "_hg19.smap"
+mergedFiles <- system.file("extdata", "nanotatoR_merged.txt", package = "nanotatoR")
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata",  package = "nanotatoR")
-intFreq <- internalFrequency(path = path, pattern = pattern, 
-dbOutput =c("dataframe"), smappath = smappath ,
-smap = smapName, buildSVInternalDB=TRUE, win_indel=10000, 
+intFreq <- internalFrequency(mergedFiles = mergedFiles, smappath = smappath ,
+smap = smapName, buildSVInternalDB=FALSE, win_indel=10000, 
 win_inv_trans=50000, 
-perc_similarity=0.5, indelconf=0.5, invconf=0.01, fname= "Solo",
+perc_similarity=0.5, indelconf=0.5, invconf=0.01, 
 transconf=0.1, limsize=1000, win_indel_parents=5000,input_fmt="Text",
 win_inv_trans_parents=40000,
 returnMethod="dataFrame")
@@ -99,9 +97,9 @@ Generates a list of genes involved with the patient phenotype and overlaps it wi
 The input to the function is a term, which can be provided as a single character input (**method**="Single"), or a vector of terms (**method**="Multiple") or as a text file (**method**="Text"). The output can be selected as a (**dataFrame**) or a text file (**Text**).
 
 ```{r eval=TRUE}
-    terms="Muscle Weakness"
-    gene <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
-    gene[1:10,]
+ terms="Muscle Weakness"
+ gene <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
+ gene[1:10,]
 ```
 
 
