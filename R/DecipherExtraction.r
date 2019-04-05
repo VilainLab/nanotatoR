@@ -111,7 +111,7 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
         datf <- c()
         for (nn in seq_len(length(rf))) # for (nn in 1:20)
         {
-            print(paste('nn:',nn)) 
+            #print(paste('nn:',nn)) 
             if (variantType2[nn] == "deletion")
             {
                 dat2 <- dat[which((dat$start <= rf[nn] & 
