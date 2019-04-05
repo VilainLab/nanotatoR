@@ -21,7 +21,7 @@ makeMergedSmapData <- function(path, pattern, outpath,fname,
     for (files in seq_along(allfiles)) {
         print(files)
         ##### print(dim(dat4))
-        r1 <- read.table(file.path(path,files), header = TRUE)
+        r1 <- read.table(file.path(path,allfiles[files]), header = TRUE)
         print(dim(r1))
         samp<-as.character(r1$sample)
         typ<-as.character(r1$type)
