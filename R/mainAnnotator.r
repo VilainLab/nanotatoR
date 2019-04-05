@@ -84,15 +84,12 @@
 #' @param RZIPpath Character. Path for the Rtools zip.exe
 #' @return Excel file containing the annotated SV map, tabs divided based on
 #' type of SVs.
-#' @return Text files containg gene list 
-#' and terms associated with them are stored as text files.
+#' @return Text files containg gene list and terms associated with 
+#' them are stored as text files.
 #' \dontrun{
 #' @examples
 #' terms <- "Muscle Weakness"
-#' gene <- gene_list_generation(
-#'   method = "Single", term = terms,
-#'   returnMethod = "dataFrame"
-#' )
+#' gene <- gene_list_generation(method = "Single", term = terms, returnMethod = "dataFrame")
 #' mergedFiles <- system.file ("extdata", "BNSOLO2_merged.txt", 
 #' package = "nanotatoR")
 #' RzipFile = "zip.exe"
@@ -102,29 +99,30 @@
 #' path <- system.file("extdata", "SoloFile/", package = "nanotatoR")
 #' hgpath <- system.file ("extdata", 
 #' "GRCh37_hg19_variants_2016-05-15.txt", package = "nanotatoR")
-#' decipherpath <- system.file("extdata", "population_cnv.txt", package = 
+#' decipherpath <- system.file("extdata", "population_cnv.txt", package =
 #' "nanotatoR")
 #' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", 
 #' package="nanotatoR")
 #' pattern <- "_hg19.smap"
 #' nM <- nanotatoR_main(smap = smappath, bed = bedFile,
-#'  inputfmtBed = c("BNBED"),
-#'  n = 3,  buildSVInternalDB = TRUE, soloPath = path, solopattern = pattern,
-#'  input_fmt_INF = c("dataFrame"), buildBNInternalDB = FALSE,
-#'  returnMethod_bedcomp = c("dataFrame"), returnMethod_DGV = c("dataFrame"),
-#'  returnMethod_Internal = c("dataFrame"), input_fmt_DGV = c("dataFrame"),
-#'  hgpath = hgpath, smapName = smapName, limsize=1000, win_indel_parents=5000,
-#'  decipherpath = decipherpath, dbOutput_Int = "dataframe",
-#'  win_inv_trans_parents=40000, win_indel_DGV = 10000,
-#'  input_fmt_geneList = c("dataFrame"), input_fmt_svMap = c("dataFrame"),
-#'  input_fmt_decipher = "dataFrame",input_fmt_BN = "dataFrame",
-#'  returnMethod_GeneList = c("dataFrame"),returnMethod_BNCohort = 
-#'  c("dataFrame"),
-#'  returnMethod_decipher = c("dataFrame"), mergedFiles_BN = mergedFiles,
-#'  dat_geneList = gene , method_entrez = "", 
-#'  outpath = smappath, outputFilename = "test",
-#'  RZIPpath = RZIPpath
+#' inputfmtBed = c("BNBED"),
+#' n = 3,  buildSVInternalDB = TRUE, soloPath = path, solopattern = pattern,
+#' input_fmt_INF = c("dataFrame"), buildBNInternalDB = FALSE,
+#' returnMethod_bedcomp = c("dataFrame"), returnMethod_DGV = c("dataFrame"),
+#' returnMethod_Internal = c("dataFrame"), input_fmt_DGV = c("dataFrame"),
+#' hgpath = hgpath, smapName = smapName, limsize=1000, win_indel_parents=5000,
+#' decipherpath = decipherpath, dbOutput_Int = "dataframe",
+#' win_inv_trans_parents=40000, win_indel_DGV = 10000,
+#' input_fmt_geneList = c("dataFrame"), input_fmt_svMap = c("dataFrame"),
+#' input_fmt_decipher = "dataFrame",input_fmt_BN = "dataFrame",
+#' returnMethod_GeneList = c("dataFrame"),returnMethod_BNCohort = 
+#' c("dataFrame"),
+#' returnMethod_decipher = c("dataFrame"), mergedFiles_BN = mergedFiles,
+#' dat_geneList = gene , method_entrez = "", 
+#' outpath = smappath, outputFilename = "test",
+#' RZIPpath = RZIPpath
 #'  )
+#' }
 #' @importFrom stats na.omit 
 #' @export
 nanotatoR_main<-function(

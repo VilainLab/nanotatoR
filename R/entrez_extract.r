@@ -16,7 +16,6 @@
 #' gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
 #' @import stats
 #' @import rentrez 
-#' @import biomaRt
 #' @import utils
 #' @export
 gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"), 
@@ -143,7 +142,9 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 #' @examples
 #' terms="Muscle Weakness"
 #' ge <- gene_extraction(terms)
-#' @import rentrez biomaRt utils
+#' @import rentrez utils
+#' @importFrom biomaRt useMart
+#' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
 #' @export
 gene_extraction<-function(terms){
@@ -242,7 +243,9 @@ return(dat1)
 #' @examples
 #' terms="Muscle Weakness"
 #' omim_gene(terms)
-#' @import rentrez biomaRt utils
+#' @import rentrez utils
+#' @importFrom biomaRt useMart
+#' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
 #' @export
 omim_gene<-function(terms){
@@ -338,7 +341,9 @@ omim_gene<-function(terms){
 #' @examples
 #' terms="Muscle Weakness"
 #' gtr_gene(terms)
-#' @import rentrez biomaRt utils
+#' @import rentrez utils
+#' @importFrom biomaRt useMart
+#' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
 #' @export
 gtr_gene<-function(terms){
@@ -416,7 +421,9 @@ gtr_gene<-function(terms){
 #' @examples
 #' terms="Muscle Weakness"
 #' clinvar_gene(terms)
-#' @import rentrez biomaRt utils
+#' @import rentrez utils
+#' @importFrom biomaRt useMart
+#' @importFrom biomaRt getBM
 #' @importFrom stats na.omit 
 #' @export
 clinvar_gene<-function(terms){
