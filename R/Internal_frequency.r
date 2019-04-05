@@ -16,8 +16,8 @@
 #' @export
 makeMergedSVData <- function(path, pattern, outpath, fname,
                         dbOutput=c("dataframe","text")){
-    setwd(path)
-    l <- list.files(".", pattern)
+    #setwd(path)
+    l <- list.files(path, pattern)
     nam <- c()
     datfinal <- data.frame()
     for (ii in seq_along((l)))
