@@ -13,11 +13,7 @@
 #' @importFrom stats na.omit 
 #' @export
 makeMergedSmapData <- function(path, pattern, outpath,fname,
-<<<<<<< HEAD
             dbOutput=c("dataframe","text")) {
-=======
-        dbOutput=c("dataframe","text")) {
->>>>>>> f5d2e464f6f6d8b4085af6266d6775b21c53dc3d
     #setwd(path)
     allfiles <- list.files(path, pattern)
     nam <- c()
