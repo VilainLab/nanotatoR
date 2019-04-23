@@ -19,12 +19,8 @@ Imports:
     utils,
     AnnotationDbi,
     httr,
-<<<<<<< HEAD
     org.Hs.eg.db,
     rtracklayer
-=======
-    org.Hs.eg.db
->>>>>>> f5d2e464f6f6d8b4085af6266d6775b21c53dc3d
 Suggests:
     rmarkdown,
     yaml
