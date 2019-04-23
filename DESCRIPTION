@@ -17,13 +17,10 @@ Imports:
     knitr,
     testthat,
     utils,
-<<<<<<< HEAD
     AnnotationDbi,
     httr,
-    org.Hs.eg.db
-=======
-    httr
->>>>>>> ab9172aa496eb1ed70471d1db59b1372402d6f7c
+    org.Hs.eg.db,
+    rtracklayer
 Suggests:
     rmarkdown,
     yaml

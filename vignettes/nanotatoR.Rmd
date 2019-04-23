@@ -40,7 +40,7 @@ decipherpath <- system.file("extdata", "population_cnv.txt", package = "nanotato
 smapName <- "F1.1_TestSample1_solo_hg19.smap"
 smappath <- system.file("extdata", package = "nanotatoR")
 win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
-decipherext<-Decipher_extraction (decipherpath, input_fmt = "Text", smappath, 
+decipherext<-Decipher_extraction(decipherpath, input_fmt = "Text", smappath, 
 smap= smapName,
 win_indel = 10000, perc_similarity = 0.5, returnMethod="dataFrame")
 ```
@@ -85,7 +85,7 @@ The function requires an input BED file (**inputfmt**=*BED*) or Bionano complian
 ```{r eval=TRUE}
 smapName="F1.1_TestSample1_solo_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
-bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed", package="nanotatoR")
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19_BN_bed.txt", package="nanotatoR")
 outpath <- system.file("extdata",  package="nanotatoR")
 datcomp <- compSmapbed(smap, bed=bedFile, inputfmtBed =  "BNBED", n = 3, returnMethod_bedcomp = c("dataFrame"))
 datcomp[1,]

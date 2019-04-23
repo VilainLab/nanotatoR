@@ -3,16 +3,16 @@
 #' @param BNFile  character. Path to Bionano Bed File.
 #' @return Data Frame Contains the gene information.
 #' @examples
-#' BNFile <- system.file("extdata", 
-#'  "Homo_sapiens.GRCH19_BN.bed", package="nanotatoR")
+#' BNFile <- system.file("extdata", "Homo_sapiens.Hg19_BN_bed.txt", 
+#' package="nanotatoR")
 #' bed<-readBNBedFiles(BNFile)
 #' @import utils
 #' @export
 readBNBedFiles <- function(BNFile) {
     ## Reading the Bed File 
     ## Converting the data to data frame
-    ## r12<-read.table(dat4,sep='\t',header=FALSE) Extracting data
-    r12 <- read.table(BNFile, header = TRUE)
+    r12<-read.table(BNFile,sep=' ',header=FALSE) 
+    ##Extracting data
     chrom <- r12[, 1]
     chromstart <- r12[, 2]
     chromend <- r12[, 3]
@@ -38,24 +38,38 @@ readBNBedFiles <- function(BNFile) {
 #' bed<-buildrunBNBedFiles(bedFile,returnMethod="dataFrame")
 #' @import utils
 #' @import stringr
+#' @importFrom rtracklayer import
 #' @export
 buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
         outdir) {
     ## Reading the Bed File
-    con <- file(bedFile, "r")
+    'con <- file(bedFile, "r")
     r10 <- readLines(con, n = -1)
     close(con)
     ## Converting the data to data frame
     dat4 <- textConnection(r10)
     r12 <- read.table(dat4, sep = "\t", header = FALSE)
+    close(dat4)'
+    ## Reading the Bed File
+    a <- rtracklayer::import(con = bedFile, format = "bed", 
+        extraCols = c(strands="factor"))
+    ## Converting the data to data frame
+    'dat4 <- textConnection(r10)
+    r12 <- read.table(dat4, sep = "\t", header = FALSE)
     close(dat4)
     ## Extracting data
-    # print(dim(r12))
-    chrom <- stringr::str_trim(r12[, 1])
-    chromstart <- stringr::str_trim(r12[, 2])
-    chromend <- stringr::str_trim(r12[, 3])
-    gene <- stringr::str_trim(as.character(r12[, 4]))
-    strand <- stringr::str_trim(as.character(r12[, 5]))
+    # print(dim(r12))'
+    chrom <- as.character(a@seqnames)
+    bp <- as.character(a@ranges) 
+    st<- strsplit(bp, split = "-")
+    chromstart <- c()
+    chromend <- c()
+    for (ki in seq_along(st)){
+        chromstart <-c(chromstart,as.numeric(st[[ki]][1]))
+        chromend <-c(chromend,as.numeric(st[[ki]][2]))
+    }
+    gene <- as.character(a$name)
+    strand <- as.character(a$strands)
     ## Changing the chromosome Start Name
     chrom1 <- gsub("chr", "", x = chrom)
     ## Male and Female chromosome association
@@ -83,14 +97,22 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
     if (returnMethod == "Text") {
         if (length(grep("\\\\", bedFile)) >= 1) {
             st <- strsplit(bedFile, split = "\\\\")
-            fname <- st[[1]][4]
+            g1 <- grep("*.bed",st[[1]])
+            fname <- st[[1]][g1]
             st1 <- strsplit(fname, split = ".bed")
-            fname1 <- paste(st1[[1]][1], "_BN.bed", sep = "")
+            fname1 <- paste(st1[[1]][1], "_BN_bed.txt", sep = "")
         } 
+        else if (length(grep("/", bedFile)) >= 1) {
+            st <- strsplit(bedFile, split = "/")
+            g1 <- grep("*.bed",st[[1]])
+            fname <- st[[1]][g1]
+            st1 <- strsplit(fname, split = ".bed")
+            fname1 <- paste(st1[[1]][1], "_BN_bed.txt", sep = "")
+        }
         else {
             fname <- bedFile
             st1 <- strsplit(fname, split = ".bed")
-            fname1 <- paste(st1[[1]][1], "_BN.bed", sep = "")
+            fname1 <- paste(st1[[1]][1], "_BN_bed.txt", sep = "")
         }
         write.table(
             dat1, paste(outdir, "/", fname1, sep = ""),
@@ -367,12 +389,12 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
                 datup$Chromosome_Start)/1000,digits=3))
                 dat_up <- datup[order(datup$diff_up), ]
                 dat_up <- dat_up[which(dat_up$diff_up > 0), ]
-                genes_up <- dat_up$Gene[1:n]
-                strands_up <- dat_up$Strand[1:n]
-                diff_up <- dat_up$diff_up[1:n]
+                genes_up <- dat_up$Gene[seq(n)]
+                strands_up <- dat_up$Strand[seq(n)]
+                diff_up <- dat_up$diff_up[seq(n)]
                 genesUP <- c()
                 ### Storing the gene, strand and distance information in vectors
-            for (k in 1:n){
+            for (k in seq(n)){
                 pas <- paste(
                     genes_up[k], "(", strands_up[k], ":", diff_up[k],
                 ")", sep = "")
@@ -388,12 +410,12 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
         
             dat_dn <- datdn[order(datdn$diff_dn), ]
             dat_dn <- dat_dn[which(dat_dn$diff_dn > 0), ]
-            genes_dn <- dat_dn$Gene[1:n]
-            strands_dn <- dat_dn$Strand[1:n]
-            diff_dn <- dat_dn$diff_dn[1:n]
+            genes_dn <- dat_dn$Gene[seq(n)]
+            strands_dn <- dat_dn$Strand[seq(n)]
+            diff_dn <- dat_dn$diff_dn[seq(n)]
             genesDN <- c()
             ### Storing the gene, strand and distance information in vectors
-            for (k in 1:n){
+            for (k in seq(n)){
                 pas <- paste(
                     genes_dn[k], "(", strands_dn[k], ":", diff_dn[k],
                     ")", sep = "")
@@ -413,12 +435,12 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
         
             dat_dn <- datdn[order(datdn$diff_dn), ]
             dat_dn <- dat_dn[which(dat_dn$diff_dn > 0), ]
-            genes_dn <- dat_dn$Gene[1:n]
-            strands_dn <- dat_dn$Strand[1:n]
-            diff_dn <- dat_dn$diff_dn[1:n]
+            genes_dn <- dat_dn$Gene[seq(n)]
+            strands_dn <- dat_dn$Strand[seq(n)]
+            diff_dn <- dat_dn$diff_dn[seq(n)]
             genesDN <- c()
             ### Storing the gene, strand and distance information in vectors
-            for (k in 1:n){
+            for (k in seq(n)){
                 pas <- paste(
                    genes_dn[k], "(", strands_dn[k], ":", diff_dn[k],
                    ")", sep = "")
@@ -440,12 +462,12 @@ nonOverlapGenes <- function(bed, chrom, startpos, endpos, svid,
       
         dat_up <- datup[order(datup$diff_up), ]
         dat_up <- dat_up[which(dat_up$diff_up > 0), ]
-        genes_up <- dat_up$Gene[1:n]
-        strands_up <- dat_up$Strand[1:n]
-        diff_up <- dat_up$diff_up[1:n]
+        genes_up <- dat_up$Gene[seq(n)]
+        strands_up <- dat_up$Strand[seq(n)]
+        diff_up <- dat_up$diff_up[seq(n)]
         genesUP <- c()
         ### Storing the gene, strand and distance information in vectors
-        for (k in 1:n){
+        for (k in seq(n)){
             pas <- paste(
                 genes_up[k], "(", strands_up[k], ":", diff_up[k],
                 ")", sep = ""
@@ -497,7 +519,7 @@ dat4 <- data.frame(SVID, Upstream_nonOverlapGenes_dist_kb = gnsInf_UP,
 #' @examples
 #' smapName="F1.1_TestSample1_solo_hg19.smap"
 #' smap = system.file("extdata", smapName, package="nanotatoR")
-#' bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed",
+#' bedFile <- system.file("extdata", "Homo_sapiens.Hg19_BN_bed.txt",
 #' package="nanotatoR")
 #' outpath <- system.file("extdata",  package="nanotatoR")
 #' datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BNBED", n = 3, 

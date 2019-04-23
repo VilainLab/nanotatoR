@@ -35,7 +35,7 @@ Extracts gene information from bed files
 \examples{
 smapName="F1.1_TestSample1_solo_hg19.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
-bedFile <- system.file("extdata", "Homo_sapiens.Hg19.bed",
+bedFile <- system.file("extdata", "Homo_sapiens.Hg19_BN_bed.txt",
 package="nanotatoR")
 outpath <- system.file("extdata",  package="nanotatoR")
 datcomp<-compSmapbed(smap, bed=bedFile, inputfmtBed =  "BNBED", n = 3, 
