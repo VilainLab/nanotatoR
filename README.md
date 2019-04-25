@@ -2,10 +2,6 @@
 title: 'nanotatoR: structural variant annotation and classification'
 author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain"
 output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{nanotatoR}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
 ---
 
 # Introduction
