@@ -342,7 +342,15 @@
 #' current_ctrl_dup_hg19_anonymize
 #'
 #' A subset of the Bionano internal control data set of 204 patients, for duplication.
-#' This was downloaded from bionano support database.
+#' The Bionano genomic reference database can be downloaded using the following 
+#' command wget http://bnxinstall.com/solve/Solve3.3_10252018.tar.gz , followed by 
+#' decompressing it using the tar -xvzf Solve3.3_10252018.tar.gz. 
+#' The folder containing the database is in the config file 
+#' which can be found in the folowing directory 
+#' $PWD/Solve3.3_10252018/VariantAnnotation/10252018/config/. 
+#' The reference files are named  based on the variant type and reference genome. 
+#' For example: current_ctrl_dup_hg19_anonymize.txt, 
+#' would be the duplication reference variant file for hg19 reference genome.
 #'
 #' @format A data frame with 199 rows and 10 variables:
 #' \describe{
@@ -363,6 +371,7 @@
 #' A subset of the Bionano internal control data set of 204 patients, for insertions
 #' and duplications.
 #' This was downloaded from bionano support database.
+#' See Vignettes or duplication data header for download instruction.
 #'
 #' @format A data frame with 200 rows and 10 variables:
 #' \describe{
@@ -380,8 +389,8 @@
 "current_ctrl_ins_del_hg19_anonymize.txt"
 #' current_ctrl_inv_hg19_anonymize
 #'
-#' A subset of the Bionano internal control data set of 204 patients, for inversions
 #' This was downloaded from bionano support database.
+#' See Vignettes or duplication data header for download instruction.
 #'
 #' @format A data frame with 200 rows and 11 variables:
 #' \describe{
@@ -402,6 +411,7 @@
 #'
 #' A subset of the Bionano internal control data set of 204 patients, for translocations
 #' This was downloaded from bionano support database.
+#' See Vignettes or duplication data header for download instruction.
 #'
 #' @format A data frame with 200 rows and 10 variables:
 #' \describe{
