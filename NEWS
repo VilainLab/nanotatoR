@@ -1,3 +1,13 @@
+---
+title: "Untitled"
+author: "Surajit Bhattacharya"
+date: "April 25, 2019"
+output: html_document
+---
+
+nanotatoR v1.00
+==============
+
 Changes:
 
 * Annotation for variants identified by Bionano SV caller for Optical mapping data.
