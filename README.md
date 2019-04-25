@@ -1,7 +1,7 @@
 ---
 title: 'nanotatoR: structural variant annotation and classification'
 author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain"
-output: rmarkdown::html_vignette
+output: rmarkdown::html
 ---
 
 # Introduction
