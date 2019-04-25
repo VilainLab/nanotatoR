@@ -45,6 +45,7 @@ smap= smapName,
 win_indel = 10000, perc_similarity = 0.5, returnMethod="dataFrame")
 ```
 Other than **DGV** and **DECIPHER**, nanotatoR can also take as input a data set of variants created by Bionano Genomics comprising of 204 samples. Input parameters are similar to that of **DECIPHER**, with an addition of following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1 (determined by Bionano Genomics).
+Note: The Bionano genomic reference database can be downloaded using the following command wget http://bnxinstall.com/solve/Solve3.3_10252018.tar.gz , followed by decompressing it using the tar -xvzf Solve3.3_10252018.tar.gz. The folder containing the database is in the config file which can be found in the folowing directory $PWD//data/Suro/Solve3.3_10252018/VariantAnnotation/10252018/config/. The reference files are named  based on the variant type and reference genome. For example: current_ctrl_dup_hg19_anonymize.txt, would be the duplication reference variant file for hg19 reference genome.
 
 ```{r eval=TRUE}
 mergedFiles <- system.file("extdata", "BNSOLO2_merged.txt", package = "nanotatoR")
