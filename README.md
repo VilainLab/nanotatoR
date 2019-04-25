@@ -1,6 +1,6 @@
 
-#nanotatoR: structural variant annotation and classification
-#author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain"
+**nanotatoR: structural variant annotation and classification**
+**author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain**
 
 # Introduction
 Short-read sequencing (**SRS**) is the predominant technique of DNA sequencing used for clinical diagnosis. It utilizes flowcells covered with millions of surface-bound oligonucleotides that allow parallel sequencing of hundreds of millions of independent short reads. However, as the average sequencing read length is approximately 150 bp, large structural variants (**SVs**) and copy number variants (**CNVs**) are challenging to observe. This creates a diagnostic gap between the clinical phenotypes and the underlying genetic mechanisms in the field of biomedical sciences. Novel technologies such as optical genome mapping and long-read sequencing have partially addressed the issues of SV and CNV detection; however, the identification of pathogenic variants among thousands of called SVs/CNVs throughout the genome has proven to be challenging as the analytical pipelines available for single nucleotide variants are not applicable to SV analysis. Thus, we have built an R-based annotation package “nanotatoR” specifically for structural variants to provide a multitude of critical functional annotations for large genomic variations.
