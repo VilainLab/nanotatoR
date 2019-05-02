@@ -684,6 +684,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                 else if (nrow(dat2) == 1){
                     # dgv_match=TRUE Calculating percentage similarity
                     countfre <- 0;countfreunfilt<-0
+                    svfam1 <- dat2$SVIdentifier
                     conf <- dat2$Confidence
                     size_internal <- dat2$Size
                     BSPQI_status_DB <- as.character(
@@ -1389,6 +1390,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                     }
                     else if (nrow(dat2) == 1){ 
                         # dgv_match=TRUE Calculating percentage similarity
+                        svfam1 <- dat2$SVIdentifier
                         countfre <- 0;countfreunfilt<-0
                         size_internal <- dat2$Size
                         conf <- dat2$Confidence
@@ -2033,6 +2035,7 @@ internalFrequency <- function(mergedFiles, smappath , smap ,
                 else if (nrow(dat2) == 1)
                 {
                     ## dgv_match=TRUE Calculating percentage similarity
+                    svfam1 <- dat2$SVIdentifier
                     countfre<-0;countfreunfilt<-0
                     chrom2<-dat2$RefcontigID2
                     svv <- strsplit(as.character(svfam1), split = "_")
