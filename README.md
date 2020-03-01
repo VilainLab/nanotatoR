@@ -1,19 +1,9 @@
----
-title: 'nanotatoR: structural variant annotation and classification'
-author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{nanotatoR}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
----
+
+**nanotatoR: structural variant annotation and classification**
+**author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain**
 
 # Introduction
-<<<<<<< HEAD
-Short-read sequencing (**SRS**) is the predominant technique of DNA sequencing used for clinical diagnosis. It utilizes flowcells covered with millions of surface-bound oligonucleotides that allow parallel sequencing of hundreds of millions of independent short reads. However, as the average sequencing read length is approximately 150 bp, large structural variants (**SVs**) and copy number variants (**CNVs**) are challenging to observe. This creates a diagnostic gap between the clinical phenotypes and the underlying genetic mechanisms in the field of biomedical sciences. Novel technologies such as optical genome mapping and long-read sequencing have partially addressed the issues of SV and CNV detection; however, the identification of pathogenic variants among thousands of called SVs/CNVs throughout the genome has proven to be challenging as the analytical pipelines available for single nucleotide variants are not applicable to SV analysis. Thus, we have built an R-based annotation package "nanotatoR" specifically for structural variants to provide a multitude of critical functional annotations for large genomic variations.
-=======
 Short-read sequencing (**SRS**) is the predominant technique of DNA sequencing used for clinical diagnosis. It utilizes flowcells covered with millions of surface-bound oligonucleotides that allow parallel sequencing of hundreds of millions of independent short reads. However, as the average sequencing read length is approximately 150 bp, large structural variants (**SVs**) and copy number variants (**CNVs**) are challenging to observe. This creates a diagnostic gap between the clinical phenotypes and the underlying genetic mechanisms in the field of biomedical sciences. Novel technologies such as optical genome mapping and long-read sequencing have partially addressed the issues of SV and CNV detection; however, the identification of pathogenic variants among thousands of called SVs/CNVs throughout the genome has proven to be challenging as the analytical pipelines available for single nucleotide variants are not applicable to SV analysis. Thus, we have built an R-based annotation package “nanotatoR” specifically for structural variants to provide a multitude of critical functional annotations for large genomic variations.
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 
 #Package Installation
 
@@ -28,11 +18,7 @@ BiocManager::install("nanotatoR", version = "3.8")
 library("nanotatoR")
 ```
 
-<<<<<<< HEAD
-The **nanotatoR** package is compatible with R versions ??? 3.6.
-=======
 The **nanotatoR** package is compatible with R versions ≥ 3.6.
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 
 #Package Functionalities
 
@@ -40,13 +26,8 @@ Given a list of structural variants with chromosome number, SV type, and variant
 
 ##Structural Variant Frequency
 
-<<<<<<< HEAD
-Genomic variant frequencies are one of the most important filtration characteristics for identification of rare, possibly pathogenic, variants. NanotatoR uses the Database of Genomic Variants (**DGV**) and DECIPHER (**DECIPHER**), publicly available reference control database, to estimate structural variant frequencies in the general population. Compared with the traditional single nucleotide variant frequency calculations, frequency estimates for structural variants pose larger difficulty due to the much higher breakpoint variability between "same" structural variants. In order to provide accurate estimates of population frequencies, nanotatoR recognizes five categories of SVs: insertions, deletions, duplications, inversions and translocations (e.g. "gains" of DNA material are considered as "insertions/duplications" and "losses" of DNA material as "deletions"). In order for two SVs to be considered as "same", nanotatoR, by default, checks whether they belong to the same category (e.g. deletion), have greater than 50% size similarity and the SV breakpoints (start and end positions) are within 10 kbp from each other. Currently the 50% size similarity cutoff is not applied for duplications, inversions and translocations as the sizes for these structural variants are not computed by most SV callers; however, a breakpoint cutoff of 50 kbp is applied in order to identify matching variants (note: duplication breakpoint cutoff is 10 kbp). Default breakpoint cutoffs and percent similarity determined by Bionano Genomics (see the references). 
-In order for the natotatoR to estimate SV frequencies it requires the following input files: DECIPHER reference file(**decipherpath**) and "smap" file containing structural variant information generated via default Bionano Genomics Solve/Tools Pipelines for optical mapping-based SV calling (**smappath**). The default input parameters for SV breakpoints and percent similarities are as follows: insertions/duplications/deletions (**win_indel**) of 10,000 bases, inversions and translocations (**win_inv_trans**) of 50,000 bases and percentage similarity (**perc_similarity**) of 0.5 or 50%. The output from this function can be of 2 types: an R object (**dataFrame**) or a text file (**Text**).
-=======
 Genomic variant frequencies are one of the most important filtration characteristics for identification of rare, possibly pathogenic, variants. NanotatoR uses the Database of Genomic Variants (**DGV**) and DECIPHER (**DECIPHER**), publicly available reference control database, to estimate structural variant frequencies in the general population. Compared with the traditional single nucleotide variant frequency calculations, frequency estimates for structural variants pose larger difficulty due to the much higher breakpoint variability between “same” structural variants. In order to provide accurate estimates of population frequencies, nanotatoR recognizes five categories of SVs: insertions, deletions, duplications, inversions and translocations (e.g. “gains” of DNA material are considered as “insertions/duplications” and “losses” of DNA material as “deletions”). In order for two SVs to be considered as “same”, nanotatoR, by default, checks whether they belong to the same category (e.g. deletion), have greater than 50% size similarity and the SV breakpoints (start and end positions) are within 10 kbp from each other. Currently the 50% size similarity cutoff is not applied for duplications, inversions and translocations as the sizes for these structural variants are not computed by most SV callers; however, a breakpoint cutoff of 50 kbp is applied in order to identify matching variants (note: duplication breakpoint cutoff is 10 kbp). Default breakpoint cutoffs and percent similarity determined by Bionano Genomics (see the references). 
 In order for the natotatoR to estimate SV frequencies it requires the following input files: DECIPHER reference file(**decipherpath**) and “smap” file containing structural variant information generated via default Bionano Genomics Solve/Tools Pipelines for optical mapping-based SV calling (**smappath**). The default input parameters for SV breakpoints and percent similarities are as follows: insertions/duplications/deletions (**win_indel**) of 10,000 bases, inversions and translocations (**win_inv_trans**) of 50,000 bases and percentage similarity (**perc_similarity**) of 0.5 or 50%. The output from this function can be of 2 types: an R object (**dataFrame**) or a text file (**Text**).
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 
 ```{r eval=TRUE}
 decipherpath <- system.file("extdata", "population_cnv.txt", package = "nanotatoR")
@@ -73,11 +54,7 @@ perc_similarity , indelconf, invconf, transconf,returnMethod="dataFrame")
 
 ##Cohort Analysis
 
-<<<<<<< HEAD
-The cohort analysis is designed to provide internal variant frequency, and parental zygosity within the cohort. The function will first merge all of the available individual smaps to form an "internal reference" (**buildSVInternalDB**=*TRUE*) or use an existing file if the internal SV database is already available (**buildSVInternalDB**=*FALSE*). The function requires the paths of the query smap file, the merged internal database file, as well as the following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1 (determined by Bionano Genomics). The output can be a (**dataFrame**) or a text file (**Text**).
-=======
 The cohort analysis is designed to provide internal variant frequency, and parental zygosity within the cohort. The function will first merge all of the available individual smaps to form an “internal reference” (**buildSVInternalDB**=*TRUE*) or use an existing file if the internal SV database is already available (**buildSVInternalDB**=*FALSE*). The function requires the paths of the query smap file, the merged internal database file, as well as the following parameters: confidence score threshold for insertion and deletion (**indelconf**; Default is 0.5), inversion (**invconf**; Default is 0.01) and translocation (**transconf**; Default is 0.1 (determined by Bionano Genomics). The output can be a (**dataFrame**) or a text file (**Text**).
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 
 ```{r eval=TRUE}
 mergedFiles <- system.file("extdata", "nanotatoR_merged.txt", package = "nanotatoR")
@@ -111,11 +88,7 @@ datcomp[1,]
 
 ##Entrez Extract
 
-<<<<<<< HEAD
-Generates a list of genes involved with the patient phenotype and overlaps it with gene names that span structural variants. The user provided, phenotypic key words are used to generate gene lists from selected databases such as ClinVar, OMIM, GTR and Gene Registry. The generated lists are used to prioritize structural variants that occur in genes known to be associated with patient's phenotype.
-=======
 Generates a list of genes involved with the patient phenotype and overlaps it with gene names that span structural variants. The user provided, phenotypic key words are used to generate gene lists from selected databases such as ClinVar, OMIM, GTR and Gene Registry. The generated lists are used to prioritize structural variants that occur in genes known to be associated with patient’s phenotype.
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 The input to the function is a term, which can be provided as a single character input (**method**="Single"), or a vector of terms (**method**="Multiple") or as a text file (**method**="Text"). The output can be selected as a (**dataFrame**) or a text file (**Text**).
 
 ```{r eval=TRUE}
@@ -192,11 +165,7 @@ RZIPpath = RZIPpath)
 
 #References
 
-<<<<<<< HEAD
-1. Hayk Barseghyan, Wilson Tang, Richard T. Wang, Miguel Almalvez, Eva Segura, Matthew S. Bramble, Allen Lipson, Emilie D. Douine, Hane Lee, Emmanu�le C. D�lot, Stanley F. Nelson and Eric Vilain.Next-generation mapping: a novel approach for detection of pathogenic structural variants with a potential utility in clinical diagnosis. Genome Medicine 2017 9:90. https://doi.org/10.1186/s13073-017-0479-0
-=======
 1. Hayk Barseghyan, Wilson Tang, Richard T. Wang, Miguel Almalvez, Eva Segura, Matthew S. Bramble, Allen Lipson, Emilie D. Douine, Hane Lee, Emmanuèle C. Délot, Stanley F. Nelson and Eric Vilain.Next-generation mapping: a novel approach for detection of pathogenic structural variants with a potential utility in clinical diagnosis. Genome Medicine 2017 9:90. https://doi.org/10.1186/s13073-017-0479-0
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 
 2. Winter, D. J.  rentrez: an R package for the NCBI eUtils API The R Journal 2017 9(2):520-526
 
@@ -204,13 +173,6 @@ RZIPpath = RZIPpath)
 
 4. Hadley Wickham. stringr: Simple, Consistent Wrappers for Common String Operations. 2018. R package version 1.3.1. https://CRAN.R-project.org/package=stringr
 
-<<<<<<< HEAD
-5. Bionano Genomics. Theory Of Operation - Structural Variant Calling. https://bionanogenomics.com/wp-content/uploads/2018/04/30110-Bionano-Solve-Theory-of-Operation-Structural-Variant-Calling.pdf
-
-6. Bionano Genomics. Theory of Operation - Variant Annotation Pipeline. https://bionanogenomics.com/wp-content/uploads/2018/04/30190-Bionano-Solve-Theory-of-Operation-Variant-Annotation-Pipeline.pdf
-=======
 5. Bionano Genomics. Theory Of Operation – Structural Variant Calling. https://bionanogenomics.com/wp-content/uploads/2018/04/30110-Bionano-Solve-Theory-of-Operation-Structural-Variant-Calling.pdf
 
 6. Bionano Genomics. Theory of Operation - Variant Annotation Pipeline. https://bionanogenomics.com/wp-content/uploads/2018/04/30190-Bionano-Solve-Theory-of-Operation-Variant-Annotation-Pipeline.pdf
-
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06

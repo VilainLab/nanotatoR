@@ -4,6 +4,7 @@
 \alias{gtr_gene}
 \title{Extracting genes from gtr database NCBI.}
 \usage{
+<<<<<<< HEAD
 gtr_gene(terms, gtr, url_gtr, downloadGTR)
 }
 \arguments{
@@ -13,6 +14,12 @@ gtr_gene(terms, gtr, url_gtr, downloadGTR)
 
 \item{downloadGTR}{boolean If TRUE, download the gtr database.
 Default FALSE.}
+=======
+gtr_gene(terms)
+}
+\arguments{
+\item{terms}{Single or Multiple Terms.}
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 }
 \value{
 Dataframe returned containing gene lists in entrezid and Gene 
@@ -23,5 +30,9 @@ Extracting genes from gtr database NCBI.
 }
 \examples{
 terms="Muscle Weakness"
+<<<<<<< HEAD
 ge <- gtr_gene(terms,gtr = "Y:/Suro/nanotatoRDatabases/gtr_07162019.txt")
+=======
+ge <- gtr_gene(terms)
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 }

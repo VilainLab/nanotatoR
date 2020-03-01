@@ -4,6 +4,7 @@
 \alias{gene_list_generation}
 \title{Extracting genes for phenotype/diseases from NCBI.}
 \usage{
+<<<<<<< HEAD
 gene_list_generation(
   method_entrez = c("Single", "Multiple", "Text"),
   termPath,
@@ -20,6 +21,11 @@ gene_list_generation(
   downloadGTR = FALSE,
   url_gtr
 )
+=======
+gene_list_generation(method_entrez = c("Single", "Multiple", "Text"),
+  termPath, term, outpath, thresh = 5, returnMethod = c("Text",
+  "dataFrame"))
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 }
 \arguments{
 \item{method_entrez}{character. Input Method for terms. Choices are 
@@ -36,6 +42,7 @@ Note if large lists are sent to ncbi, it might fail to get
 processed. Default is 5.}
 
 \item{returnMethod}{Method of returning output. Options, Text or data.frame.}
+<<<<<<< HEAD
 
 \item{omim}{character. omim2gene file name and location.}
 
@@ -54,6 +61,8 @@ processed. Default is 5.}
 \item{url_gtr}{character. url for GTR.}
 
 \item{url_clinvar}{character. url for clinvar.}
+=======
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 }
 \value{
 Text files containg gene list and terms associated with them
@@ -64,6 +73,7 @@ Extracting genes for phenotype/diseases from NCBI.
 }
 \examples{
 terms="Muscle Weakness"
+<<<<<<< HEAD
 genes <- gene_list_generation(
      method_entrez = c("Single"), 
      term = terms,
@@ -71,4 +81,7 @@ genes <- gene_list_generation(
 	omim = "Y:/Suro/nanotatoRDatabases/mim2gene.txt", 
 	downloadClinvar = TRUE, 
 	gtr = "Y:/Suro/nanotatoRDatabases/gtr_07162019.txt")
+=======
+genes <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 }

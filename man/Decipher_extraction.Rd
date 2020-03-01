@@ -4,6 +4,7 @@
 \alias{Decipher_extraction}
 \title{Frequency calculation of variants compared to DGV.}
 \usage{
+<<<<<<< HEAD
 Decipher_extraction(
   decipherpath,
   smappath,
@@ -38,12 +39,44 @@ processed. Default is 5.}
 }
 \value{
 Text and character vector containg gene list and terms associated with them
+=======
+Decipher_extraction(decipherpath, smappath, smap, smap_data,
+  input_fmt = c("Text", "dataFrame"), win_indel = 10000,
+  perc_similarity = 0.5, returnMethod = c("Text", "dataFrame"))
+}
+\arguments{
+\item{decipherpath}{character. Path to DECIPHER
+Text file.}
+
+\item{smappath}{character. path to the query smap file.}
+
+\item{smap}{character. File name for the smap.}
+
+\item{smap_data}{character. Dataframe if input type chosen as dataframe.}
+
+\item{input_fmt}{character. Choice between text or data frame as
+an input to the DGV frequency calculator.}
+
+\item{win_indel}{Numeric. Insertion and deletion error window.
+Default 10000.}
+
+\item{perc_similarity}{Numeric . ThresholdPercentage similarity 
+of the query SV and reference SV. Default 0.5.}
+
+\item{returnMethod}{character. Choice between text or data frame as the 
+output.}
+}
+\value{
+Text and character vector containg gene list and terms associated 
+with them
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
         are stored as text files.
 }
 \description{
 Frequency calculation of variants compared to DGV.
 }
 \examples{
+<<<<<<< HEAD
 \dontrun{
 decipherpath="Z:/Suro/Annotator/Data/population_cnv.txt"
 smappath="Z:/Suro/Annotator/Data/";
@@ -52,4 +85,14 @@ win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
 DGV_extraction (hgpath, smappath, win_indel = 10000, win_inv_trans = 50000,
 perc_similarity = 0.5,returnMethod="dataFrame")
 }
+=======
+decipherpath <- system.file("extdata", "population_cnv.txt", 
+package = "nanotatoR")
+smapName <- "F1.1_TestSample1_solo_hg19.smap"
+smappath <- system.file("extdata", package = "nanotatoR")
+win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
+decipherext<-Decipher_extraction (decipherpath, input_fmt = "Text", smappath, 
+smap= smapName,
+win_indel = 10000, perc_similarity = 0.5, returnMethod="dataFrame")
+>>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 }
