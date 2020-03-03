@@ -48,7 +48,7 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
     close(con)
     ## Converting the data to data frame
     dat4 <- textConnection(r10)
-    r12 <- read.table(dat4, sep = "\t", header = FALSE)
+    r12 <- read.table(dat4, sep = " ", header = FALSE)
     ## Extracting data
     # print(dim(r12))
     chrom <- stringr::str_trim(r12[, 1])
@@ -92,8 +92,7 @@ buildrunBNBedFiles <- function(bedFile, returnMethod = c("Text", "dataFrame"),
         }
         write.table(
             dat1, paste(outdir, "/", fname1, sep = ""),
-            row.names = FALSE, col.names = FALSE
-        )
+            row.names = FALSE)
     } else if (returnMethod == "dataFrame") {
         return(dat1)
     } else {
@@ -473,6 +472,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
 					start_adj1 <- startpos[ii] + bperrorinvtrans
 				    end_adj <- endpos[ii] + bperrorinvtrans
 					end_adj1 <- endpos[ii] - bperrorinvtrans
+					
 			        dat9 <- dat10[which(
 					    (dat10$Chromosome_Start <= start_adj 
 					    & dat10$Chromosome_End >= start_adj1)
@@ -491,7 +491,12 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
 						| (dat10$Chromosome_End >= end_adj
 					    & (dat10$Chromosome_Start >= end_adj1 
 						& dat10$Chromosome_Start <= end_adj))), ]
-					dat11 <- rbind(dat8, dat9)
+					if(startpos[ii] != endpos[ii]){
+					    dat11 <- rbind(dat8, dat9)
+					}else{
+					    dat11 <- dat9
+						
+					}
 				    if (nrow(dat11) > 1) {
                         ## Extracting strand and chromosome start information
                         chromos <- dat11$Chromosome
@@ -655,7 +660,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                             }
                             else {
                                 geneInfo <- c(geneInfo, paste(
-                                    gen1[k], "(", strnd[k], ":",
+                                    gen1 , "(", strnd , ":",
                                     percentage, ")", sep = ""
                                 ))
                             }
@@ -695,149 +700,14 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
 					    & (dat15$Chromosome_Start >= end_adj1 
 						& dat15$Chromosome_Start <= end_adj))), ]
 					#dat11 <- rbind(dat8, dat9)
+					if(startpos[ii] != endpos[ii]){
+					    dat8 <- dat8
+						dat9 <- dat9
+					}else{
+					    dat8 <- dat9
+					
+					}
 					if (nrow(dat8) > 1 & nrow(dat9) > 1) {
-                        ## Extracting strand and chromosome start information
-						print("1st chromosome")
-                        chromos1 <- dat9$Chromosome
-                        chromStart1 <- dat9$Chromosome_Start
-                        chromEnd1 <- dat9$Chromosome_End
-                        gen1 <- dat9$Gene
-                        strnd1 <- dat9$Strand
-                        genMid1 <- dat9$geneMid
-						print("2nd chromosome")
-						chromos2 <- dat8$Chromosome
-                        chromStart2 <- dat8$Chromosome_Start
-                        chromEnd2 <- dat8$Chromosome_End
-                        gen2 <- dat8$Gene
-                        strnd2 <- dat8$Strand
-                        genMid2 <- dat8$geneMid
-                        geneInfo <- c()
-						## Calculating the coverage of the gene
-                        for (k in seq_len(length(gen1)))
-                        {
-                            ##Checking if orientation of the gene and calculating 
-                            ##length based on that
-                            if(chromStart1[k]>=chromEnd1[k]){
-                                lengthgene1 <- chromStart1[k] - chromEnd1[k]
-                            }else{
-                                lengthgene1 <- chromEnd1[k]-chromStart1[k]
-                            }
-							
-                            lengthbp1 <- start_adj1 - start_adj
-							lengthbp2 <- end_adj - end_adj1
-                            # print(paste('distfromStart:',distfromStart),sep='')
-                            # print(paste('distfromEnd:',distfromEnd),sep='') Checking for
-                            # partial/complete inclusion in the SV
-                            if ((chromStart1[k] >= start_adj & chromEnd1[k] <= start_adj1)) {
-                                percentage <- 100
-                            } 
-                            else if ((chromStart1[k] < start_adj 
-                                & chromEnd1[k] > start_adj1) 
-                                & (lengthgene1 > lengthbp1)) {
-                                percentage <- round(abs(((start_adj1 - start_adj) / (chromEnd1[k]-chromStart1[k])) * 100), digits = 2)
-                            } 
-							
-                            else if (((chromStart1[k] < start_adj) 
-                                        & (chromEnd1[k] > start_adj) 
-                                        & (chromEnd1[k] <= start_adj1))) {
-                                            distfromStart <- chromEnd1[k] - start_adj
-                                            percentage <- round(abs((
-                                            distfromStart / (chromEnd1[k] - chromStart1[k])) * 100), 
-                                            digits = 2)
-                            } 
-							else if (((chromStart2[k] < end_adj1) 
-                                        & (chromEnd2[k] > end_adj1) 
-                                        & (chromEnd2[k] <= end_adj))) {
-                                            distfromStart <- chromEnd2[k] - end_adj1
-                                            percentage <- round(abs((
-                                            distfromStart / (chromEnd2[k] - chromStart2[k])) * 100), 
-                                            digits = 2)
-                            } 
-                            else if (((chromStart1[k] >= start_adj) 
-                                        & (chromStart1[k] < start_adj1
-                                        & chromEnd1[k] > start_adj1))) {
-                                            distfromEnd <- start_adj1 - chromStart1[k]
-                                            percentage <- round(abs((
-                                                distfromEnd / (chromEnd1[k] - chromStart1[k])) * 100), digits = 2)
-                            } 
-							else if (((chromStart2[k] >= end_adj1) 
-                                        & (chromStart2[k] < end_adj
-                                        & chromEnd2[k] > end_adj))) {
-                                            distfromEnd <- end_adj - chromStart2[k]
-                                            percentage <- round(abs((
-                                                distfromEnd / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
-                            }
-                            else {
-                                percentage <- "NA"
-                            }
-                            if (is.na(percentage)) {
-                                geneInfo <- "-"
-                            }
-                            else {
-                                geneInfo <- c(geneInfo, paste(
-                                    gen1[k], "(", strnd1[k], ":",
-                                    percentage, ")", sep = ""
-                                ))
-                            }
-                        }
-						
-						for (k in seq_len(length(gen2)))
-                        {
-                            ##Checking if orientation of the gene and calculating 
-                            ##length based on that
-                            if(chromStart2[k]>=chromEnd2[k]){
-                                lengthgene2 <- chromStart2[k] - chromEnd2[k]
-                            }else{
-                                lengthgene2 <- chromEnd2[k]-chromStart2[k]
-                            }
-                            #lengthbp1 <- start_adj1 - start_adj
-							lengthbp2 <- end_adj - end_adj1
-                            # print(paste('distfromStart:',distfromStart),sep='')
-                            # print(paste('distfromEnd:',distfromEnd),sep='') Checking for
-                            # partial/complete inclusion in the SV
-                            if ((chromStart2[k] >= end_adj1 & chromEnd2[k] <= end_adj)) {
-                                percentage <- 100
-                            } 
-                            else if ((chromStart2[k] < end_adj1
-                                & chromEnd2[k] > end_adj) 
-                                & (lengthgene > lengthbp2)) {
-                                percentage <- round(abs(
-								    ((end_adj - end_adj1) / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
-                            } 
-                            else if (((chromStart2[k] < end_adj1) 
-                                        & (chromEnd2[k] > end_adj1) 
-                                        & (chromEnd2[k] <= end_adj))) {
-                                            distfromStart <- chromEnd2[k] - end_adj1
-                                            percentage <- round(abs((
-                                            distfromStart / (chromEnd2[k] - chromStart2[k])) * 100), 
-                                            digits = 2)
-                            } 
-                            else if (((chromStart2[k] >= end_adj1) 
-                                        & (chromStart2[k] < end_adj
-                                        & chromEnd2[k] > end_adj))) {
-                                            distfromEnd <- end_adj - chromStart2[k]
-                                            percentage <- round(abs((
-                                                distfromEnd / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
-                            }
-                            else {
-                                percentage <- "NA"
-                            }
-                            if (is.na(percentage)) {
-                                geneInfo <- "-"
-                            }
-                            else {
-                                geneInfo <- c(geneInfo, paste(
-                                    gen2[k], "(", strnd2[k], ":",
-                                    percentage, ")", sep = ""
-                                ))
-                            }
-                        }
-                        geneInfo1 <- paste(geneInfo, collapse = ";")
-                        #print(geneInfo1)
-                        gnsInf <- c(gnsInf, str_squish(str_trim((geneInfo1),side="both")))
-                        # print(paste("1:",ii,":",svid[ii],sep=""))
-                        SVID <- c(SVID, svid[ii])
-                    } else if (nrow(dat8) > 1 & nrow(dat9) > 1) {
                         ## Extracting strand and chromosome start information
 						print("1st chromosome")
                         chromos1 <- dat9$Chromosome
@@ -1378,7 +1248,7 @@ nonOverlapGenes <- function(bed, chrom, startpos,
                 if (nrow(datup) > 0 & nrow(datdn) > 0) {
                     ## Upstream Genes
                 #print("1")
-                    datup$diff_up <- abs(round((start_adj - datup$Chromosome_Start)/1000,digits=3))
+                    datup$diff_up <- abs(round((start_adj - datup$Chromosome_End)/1000,digits=3))
                     
                     dat_up <- datup[order(datup$diff_up), ]
                     dat_up <- dat_up[which(dat_up$diff_up > 0), ]
@@ -1660,7 +1530,12 @@ nonOverlapGenes <- function(bed, chrom, startpos,
 #' @param bed    Text. Normal Bed files or Bionano Bed file.
 #' @param inputfmtBed character Whether the bed input is UCSC bed or Bionano bed.
 #' Note: extract in bed format to be read by bedsv:
-#' awk '{print $1,$4,$5,$18,$7}' gencode.v19.annotation.gtf >HomoSapienGRCH19.bed
+#' awk '{
+#'  if($3 == "gene" && $13 == "gene_status") 
+#'    print $1,$4,$5,$16,$7
+#'  else if ($3 == "gene" && $13 == "gene_name")
+#'    print $1,$4,$5,$14,$7
+#'    }' gencode.v33.annotation.gtf >HomoSapienGRCH19.bed
 #' @param outpath    character Path for the output files.
 #' @param n    numeric Number of genes to report which are nearest to the
 #' breakpoint. Default is        3.

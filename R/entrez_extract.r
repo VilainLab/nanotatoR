@@ -5,7 +5,6 @@
 #' @param termPath  character. Path and file name for textfile.
 #' @param term  character. Single or Multiple Terms.
 #' @param outpath character. Path where gene lists are saved.
-<<<<<<< HEAD
 #' @param omim character. omim2gene file name and location.
 #' @param clinvar character. clinvar file name and location.
 #' @param gtr character. gtr file name and location.
@@ -15,8 +14,6 @@
 #' @param downloadGTR logical. Downloads the GTR database if TRUE.
 #' @param url_gtr character. url for GTR.
 #' @param url_clinvar character. url for clinvar.
-=======
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 #' @param thresh integer. Threshold for the number of terms sent to entrez.
 #'                Note if large lists are sent to ncbi, it might fail to get
 #'                processed. Default is 5.
@@ -25,7 +22,6 @@
 #'         are stored as text files.
 #' @examples
 #' terms="Muscle Weakness"
-<<<<<<< HEAD
 #' genes <- gene_list_generation(
 #'      method_entrez = c("Single"), 
 #'      term = terms,
@@ -33,33 +29,22 @@
 #'		omim = "Y:/Suro/nanotatoRDatabases/mim2gene.txt", 
 #'		downloadClinvar = TRUE, 
 #'		gtr = "Y:/Suro/nanotatoRDatabases/gtr_07162019.txt")
-=======
-#' genes <- gene_list_generation(method="Single", term=terms, returnMethod="dataFrame")
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
+
 #' @import stats
 #' @import rentrez 
 #' @import utils
 #' @import httr
-<<<<<<< HEAD
 #' @import tidyverse
-=======
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
 #' @export
 gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"), 
         termPath, 
         term, outpath, thresh=5, 
-<<<<<<< HEAD
         returnMethod=c("Text","dataFrame"), omim, clinvar, gtr,
         removeClinvar = FALSE, removeGTR = FALSE, 
 		downloadClinvar = FALSE, downloadGTR = FALSE,
 		url_gtr){
     
-=======
-        returnMethod=c("Text","dataFrame")){
-        
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
-    #setwd(path)
-    thresh=5
+
     ##Checking for whether the input method is commandline (Single or Multiple)
     ## or from Text
     if (method_entrez == "Single"){
@@ -67,20 +52,10 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
     }
     else if (method_entrez == "Multiple"){
         terms<- as.character(term)
-<<<<<<< HEAD
-       
-    }
-    else if (method_entrez == "Text"){
-        r<-read.csv(termPath)
-        print(termPath)   
-        terms<-as.character(r$Terms)
-=======
-        terms<- as.character(term) 
     }
     else if (method_entrez == "Text"){
         r<-read.csv(termPath)
         terms<-as.character(r$Term)
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
     }
     else{
         stop("method_entrez of Input Incorrect!!!")
@@ -93,7 +68,6 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
     if(length(terms)>=thresh){
         ##Diving the number of genes to be given as an
         ##input based on the threshold.
-<<<<<<< HEAD
         terms_1<-as.character(terms[1:thresh])
         terms_2<-as.character(terms[thresh:length(terms)])
         ##Extracting genes from the databases
@@ -126,19 +100,6 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
         g_c_1<-clinvar_gene(terms_2, 
 		    downloadClinvar = downloadClinvar)
 		}
-=======
-        terms_1<-as.character(terms[seq(thresh)])
-        terms_2<-as.character(terms[thresh:seq_len(length(terms))])
-        ##Extracting genes from the databases
-        g<-gene_extraction(terms_1)
-        g_1<-gene_extraction(terms_2)
-        g_o<-omim_gene(terms_1)
-        g_o_1<-omim_gene(terms_2)
-        g_g<-gtr_gene(terms_1)
-        g_g_1<-gtr_gene(terms_2)
-        g_c<-clinvar_gene(terms_1)
-        g_c_1<-clinvar_gene(terms_2)
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
         ##Collating output from all the datasets
         Genes<-c(as.character(g$geneName),as.character(g_1$geneName),
             as.character(g_o$omimGenes),as.character(g_o_1$omimGenes),
@@ -152,7 +113,6 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             as.character(g_g_1$Final_terms_GTR),
             as.character(g_c$Final_terms_Clinvar),
             as.character(g_c_1$Final_terms_Clinvar))
-<<<<<<< HEAD
 		ClinicalSig <- c(as.character(rep("-",length(g$Final_terms))),
 		    as.character(rep("-",length(g_1$Final_terms))),
 			as.character(rep("-",length(g_o$Final_terms_OMIM))),
@@ -190,43 +150,26 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 		}
         
         
-=======
-    ##Writing genes and terms in a dataset
-    dat<-data.frame(Genes,Terms)
-    }
-    else{
-        ##Extracting genes from the databases
-        g<-gene_extraction(terms)
-        #print(dim(g))
-        g_o<-omim_gene(terms)
-        g_g<-gtr_gene(terms)
-        g_c<-clinvar_gene(terms)
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
-        ##Collating output from all the datasets
+       ##Collating output from all the datasets
         Genes<-c(as.character(g$geneName),as.character(g_g$gtrGenes),
             as.character(g_o$omimGenes),as.character(g_c$clinvarGenes))
         Terms<-c(as.character(g$Final_terms),
             as.character(g_g$Final_terms_GTR),
             as.character(g_o$Final_terms_OMIM),
             as.character(g_c$Final_terms_Clinvar))
-<<<<<<< HEAD
 		ClinicalSig <- c(as.character(rep("-",length(g$Final_terms))),
 		    as.character(rep("-",length(g_o$Final_terms_OMIM))),
 			as.character(rep("-",length(g_g$Final_terms_GTR))),
 			as.character(g_c$clinicalSig))
 		##Writing genes and terms in a dataset
         dat<-data.frame(Genes, Terms, ClinicalSig)
-=======
-        ##Writing genes and terms in a dataset
-        dat<-data.frame(Genes,Terms)
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
+
     }
     ##We write out all the genes and terms from the 
     ##different databases into a$description
     ##single dataframe
     gene1<-c()
     term1<-c()
-<<<<<<< HEAD
 	csig <- c()
 	if(nrow(dat) > 0){
 	    Genes <- as.character(dat$Genes)
@@ -274,26 +217,7 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 	}
     ##Write the final dataframe
     dat_Final<-data.frame(Genes=gene1,Terms=term1, ClinicalSignificance = csig)
-=======
-    uqGenes<-as.character(unique(na.exclude(Genes)))
-    for(ii in seq_along(uqGenes)){
-        idx<-which(dat$Genes %in% uqGenes[ii])
-        if(length(idx)>1){
-            gene1<-c(gene1,as.character(uqGenes[ii]))
-            tt<-as.character(Terms[idx])
-            pa<-paste(tt,collapse=",")
-            term1<-c(term1,as.character(pa))
-        }
-        else{
-            gene1<-c(gene1,as.character(uqGenes[ii]))
-            term1<-c(term1,as.character(Terms[idx]))
- 
-        }
-    }
-    ##Write the final dataframe
-    dat_Final<-data.frame(Genes=gene1,Terms=term1)
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
-
+    
     #final_genes<-unique(final_genes)
     ##Make the filename and write the data into a text file
     if(returnMethod=="Text"){
@@ -310,7 +234,6 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
     else{
         stop ("Return Method Incorrect")
     }
-<<<<<<< HEAD
     if (removeClinvar == TRUE){
         file.remove(clinvar)
     }else{
@@ -321,8 +244,6 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
     }else{
         print("keeping the GTR files")
     }
-=======
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
     return(dat_Final)
 }
 #' Extracting genes from gene database NCBI.

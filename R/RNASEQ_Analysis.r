@@ -20,7 +20,7 @@ RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
                         outpath="",outFileName=""){ 
     #library(biomaRt)
     setwd(RNASeqDir)
-    l<-list.files(pattern="*.genes.results")
+    l <- list.files(path = RNASeqDir, pattern="*.genes.results", full.name = TRUE)
     len<-length(l)
     #dat<-listDatasets(ensembl)
     #g1<-grep("sscrofa",listDatasets(ensembl)$dataset)
