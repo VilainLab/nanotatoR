@@ -68,111 +68,6 @@ for (ii in seq_len(length(ogene))) {
     opagt <- paste(opagt, collapse = ";")
 	opagcs <- as.character(unique(clinsig))
     opagcs <- paste(opagcs, collapse = ";")
-#' Getting the data from annotated smaps to extract SV
-#' information based on type of variants.
-#'
-#' @param input_fmt_geneList character. Choice of gene list input
-#'        Text or Dataframe.
-#' @param input_fmt_svMap  character. Choice of gene list input
-#'        Text or Dataframe.
-#' @param SVFile  character. SV file name.
-#' @param svData Dataframe Input data containing SV data.
-#' @param dat_geneList Dataframe Input data containing geneList data.
-#' @param fileName Character Name of file containing Gene List data.
-#' @param outpath Character Directory to the output file.
-#' @param outputFilename Character Output filename.
-#' @param RZIPpath Character Path for the Rtools Zip package.
-#' @return Excel file containing the annotated SV map, tabs divided based on
-#' type of SVs.
-#' @examples
-#' \dontrun{
-#' terms <- "Muscle Weakness"
-#' gene <- gene_list_generation(
-#'   method = "Single", term = terms,
-#'   returnMethod_GeneList = "dataFrame"
-#' )
-#' RzipFile = "zip.exe"
-#' RZIPpath <- system.file("extdata", RzipFile, package = "nanotatoR")
-#' smapName <- "F1.1_TestSample1_solo_hg19.smap"
-#' smappath <- system.file("extdata", smapName, package = "nanotatoR")
-#' smappath1 <- system.file("extdata", package = "nanotatoR")
-#' run_bionano_filter(input_fmt_geneList = c("dataframe"), input_fmt_svMap = c("Text"),
-#'   SVFile = smappath, dat_geneList = gene, outpath = smappath1, outputFilename = "test", 
-#'   RZIPpath = RZIPpath)
-#' }
-#' @import openxlsx
-#' @import hash
-#' @importFrom stats na.omit
-#' @export
-run_bionano_filter <- function(input_fmt_geneList = c("Text", "dataFrame"),
-        input_fmt_svMap = c("Text", "dataFrame"),
-        SVFile = NULL, svData, dat_geneList, fileName, outpath,
-        outputFilename = "", RZIPpath) {
-    # library(openxlsx)
-    # library(hash)
-    # setwd(path)##change the directory to your working directory
-    Sys.setenv("R_ZIPCMD" = RZIPpath)
-    ## GeneList Input Format
-    if (input_fmt_geneList == "Text") {
-        rr <- read.table(fileName, header = TRUE)
-    }
-    else if (input_fmt_geneList == "dataFrame") {
-        rr <- dat_geneList
-    }
-    else {
-        stop("Dataframe Incorrect!!")
-    }
-    ha <- hash()
-    .set(ha, keys = rr$Genes, values = rr$Terms)
-
-    pg <- as.character(rr$Genes)
-    gen <- paste("^", pg, "$", sep = "")
-    # ll<-list.files(pattern="txt")
-    if (input_fmt_svMap == "Text") {
-        r <- read.table(SVFile, sep = "\t", header = TRUE)
-    }
-    else if (input_fmt_svMap == "dataFrame") {
-        r <- svData
-    }
-    else {
-        stop("Input Formats Incorrect")
-    }
-    ogene <- as.character(r$OverlapGenes_strand_perc)
-    upgene <- as.character(r$Upstream_nonOverlapGenes_dist_kb)
-    dngene <- as.character(r$Downstream_nonOverlapGenes_dist_kb)
-    # nogene<-c(upgene,dngene)
-    pagene <- c()
-    pagene_term <- c()
-    nopageneup <- c()
-    nopageneup_term <- c()
-    nopagenedn <- c()
-    nopagenedn_term <- c()
-    ### OverlapGene
-    for (ii in seq_len(length(ogene))) {
-        dd <- grep(";", ogene[ii])
-        gene_Terms <- c()
-        if (length(dd) > 0) {
-            st <- strsplit(ogene[ii], ";")
-            gen2 <- as.character(unlist(st))
-            opag <- c()
-
-            for (l in seq_len(length(gen2))) {
-                st1 <- st <- strsplit(gen2[l], "\\(")
-                gen2[l] <- st1[[1]][1]
-                pa <- paste("^", gen2[l], "$", sep = "")
-                gg <- grep(pa, gen, fixed = TRUE)
-                if (length(gg) > 0) {
-                    opag <- c(opag, as.character(gen2[l]))
-                    val1 <- hash::values(ha, keys = gen2[l])
-                    gene_Terms <- c(gene_Terms, as.character(val1))
-                }
-                else {
-                    opag <- c(opag, "-")
-                }
-            }
-            opag <- as.character(unique(opag))
-            opagt <- as.character(unique(gene_Terms))
-            opagt <- paste(opagt, collapse = ";")
         if (length(opag) > 1) {
             opagpa <- paste(opag, collapse = ";")
             ff <- grep("-", opagpa)
@@ -316,58 +211,6 @@ for (jj in seq_len(length(upgene))) {
     else {
         st1 <- st <- strsplit(upgene[jj], "\\(")
         upgene[jj] <- st1[[1]][1]
-        }
-    }
-}
-    ### Non-OverlapUpGene
-    for (jj in seq_len(length(upgene))) {
-        dd1 <- grep(";", upgene[jj])
-        gene_Terms_no <- c()
-        if (length(dd1) > 0) {
-            st1 <- strsplit(upgene[jj], ";")
-            gen3 <- as.character(unlist(st1))
-            nopag <- c()
-
-            for (l in seq_len(length(gen3))) {
-                st1 <- st <- strsplit(gen3[l], "\\(")
-                gen3[l] <- st1[[1]][1]
-                pa1 <- paste("^", gen3[l], "$", sep = "")
-                gg2 <- grep(pa1, gen, fixed = TRUE)
-                if (length(gg2) > 0) {
-                    nopag <- c(nopag, as.character(gen3[l]))
-                    val2 <- hash::values(ha, keys = gen3[l])
-                    gene_Terms_no <- c(gene_Terms_no, as.character(val2))
-                }
-                else {
-                    nopag <- c(nopag, "-")
-                }
-            }
-        nopag <- as.character(unique(nopag))
-        nopagt <- as.character(unique(gene_Terms_no))
-        nopagt <- paste(nopagt, collapse = ";")
-        if (length(nopag) > 1) {
-            nopagpa <- paste(nopag, collapse = ";")
-            ff <- grep("-", nopagpa)
-            if (length(ff) > 0) {
-                nopagpa <- gsub("-", "", nopagpa)
-                nopagpa <- gsub(";;", ";", nopagpa)
-                nopagpa <- gsub("^;", ";", nopagpa)
-                nopageneup <- c(nopageneup, nopagpa)
-                nopageneup_term <- c(nopageneup_term, nopagt)
-            }
-            else {
-                nopageneup <- c(nopageneup, nopagpa)
-                nopageneup_term <- c(nopageneup_term, nopagt)
-            }
-        }
-        else {
-            nopageneup <- c(nopageneup, nopag)
-            nopageneup_term <- c(nopageneup_term, nopagt)
-        }
-    }
-    else {
-        st1 <- st <- strsplit(upgene[ii], "\\(")
-        upgene[ii] <- st1[[1]][1]
         pa <- paste("^", upgene[jj], "$", sep = "")
         gg <- grep(pa, gen, fixed = TRUE)
         if (length(gg) > 0) {
@@ -726,12 +569,8 @@ dat13 <- dat3[which(((dat3$Found_in_self_BSPQI_molecules == "yes"
 					& dat3$Found_in_parents_BSSSI_molecules == "-"))), ]
 dat14 <- rbind(dat12, dat13)
 
-'gg <- grep("inversion", as.character(data$Type))
-dat8 <- data[gg, ]'
-dat8 <- data[which(data$Type %in% "inversion"
-	        | data$Type %in% "inversion_partial"
-			| data$Type %in% "inversion_paired"
-			| data$Type %in% "inversion_repeat"), ]
+gg <- grep("inversion", as.character(data$Type))
+dat8 <- data[gg, ]
 dat8 <- dat8[which(((dat8$Found_in_self_BSPQI_molecules == "yes"
                     & dat8$Found_in_self_BSSSI_molecules == "yes") 
 					| (dat8$Found_in_self_BSPQI_molecules == "no" 
@@ -825,7 +664,14 @@ datOvrLap <- rbind(datovrlapPG,datnonovrlapUPPG,datnonovrlapDNPG)
 #"indel_mother"= dat12, "indel father"= dat13, "indel_cmpdHET"=dat14, "inv"= dat8, "trans"=dat7, "mismatch"=dat6,
 # "all_PG_OV"=data, "all_PG_Non_OV"= data)
 # st1<-strsplit(SVFile,".txt")[[1]][1]
+
 }
 
 
-
+### Running the code
+### Copy this 1 line at a time without the hash (#)
+### Warning1: Don't remove the # from before the command from filterread.r
+### Warning2: give the fullpath with filename for theR code
+# source("Z:\\bionano\\Test_R_Codes\\filterread.r")##path of where the Rcode is
+#
+# run_bionano_filter(path,SVFile,fileName)

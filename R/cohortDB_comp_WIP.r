@@ -96,7 +96,6 @@ makeInternalDatabase <- function(path, pattern, outpath,fname,
 #' win_indel, win_inv_trans, perc_similarity , indelconf, invconf , 
 #' transconf,returnMethod="dataFrame")
 #' @importFrom stats na.omit 
-#' @import stats
 #' @export
 
 cohortFrequency <- function(internalBNDB, smappath , smap , 

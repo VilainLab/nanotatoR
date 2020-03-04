@@ -50,8 +50,6 @@
 #' @param outpath character. Path where gene lists are saved.
 #' @param input_fmt character. Choice between text or data frame as 
 #' an input to the DGV frequency calculator.
-#' @param perc_similarity_parents  Numeric . ThresholdPercentage similarity 
-#' for parent zygosity calculation. Default threshold 0.9.
 #' @param smap_data Dataset containing smap data.
 #' @param thresh integer. Threshold for the number of terms sent to entrez.
 #'                Note if large lists are sent to ncbi, it might fail to get
@@ -66,10 +64,6 @@
 #' @param dat_geneList Dataframe Input data containing geneList data.
 #' @param fileName Character Name of file containing Gene List data.
 #' @param outpath Character Directory to the output file.
-#' @param outputType Variants in excel tabs or in different csv files.
-#'        Options Excel or csv.
-#' @param fileprefix Prefix to use for each of the files in the directory.
-#' @param directoryName Directory name where individual SV files will be stored.
 #' @param outFileName Character Output filename.
 #' @return Excel file containing the annotated SV map, tabs divided based on
 #' type of SVs.
@@ -87,7 +81,7 @@ nanotatoR_main_TrioDLE<-function(
 	buildSVInternalDB=FALSE, path, pattern, 
 	win_indel_INF = 10000, win_inv_trans_INF = 50000, 
 	perc_similarity_INF= 0.5, indelconf = 0.5, invconf = 0.01, 
-	transconf = 0.1, perc_similarity_parents = 0.9,
+	transconf = 0.1,
 	hgpath, win_indel_DGV = 10000, win_inv_trans_DGV = 50000, 
     perc_similarity_DGV = 0.5,
 	method_entrez=c("Single","Multiple","Text"), smapName,termPath, 
@@ -104,41 +98,37 @@ nanotatoR_main_TrioDLE<-function(
 	pattern_Sibling = NA,
 	outpath,outputFilename="", 
 	termListPresent = TRUE,
-	InternaldatabasePresent = TRUE,
-	outputType = c("Excel", "csv"),
-	directoryName, fileprefix)
+	InternaldatabasePresent = TRUE)
 	{
     print("####PipeLine Starts####")
-	#print("####PipeLine Starts####")
-    start_time <- Sys.time()
 	if(termListPresent == TRUE){
-	
+	start_time <- Sys.time()
 	
 	dat_geneList <- tryCatch(
 	    gene_list_generation(
-	        method_entrez = method_entrez, 
-            termPath = termPath,
-            term = term,		
+	        method_entrez = c("Text"), 
+            termPath = termPath, 
             thresh = 5, 
             returnMethod = c("dataFrame"), omim = omim, 
-			gtr = gtr, clinvar = clinvar,
-            removeGTR = FALSE,removeClinvar = FALSE,
+			clinvar = clinvar, url_clinvar = url_clinvar,
+			removeClinvar = FALSE, removeGTR = FALSE, 
 			downloadClinvar = FALSE, downloadGTR = FALSE,
-			url_gtr = "ftp://ftp.ncbi.nlm.nih.gov/pub/GTR/data/test_condition_gene.txt"
-			),
+			url_gtr = url_gtr, url_clinvar = url_clinvar),
 			error = function(e) {
 				    print(paste("gene_list_generation fails"))
 					return (NA)
 			}
 			)
-	} else{ dat_geneList <- NULL}
-	#start_time <- Sys.time()
-	end_time <- Sys.time()
-    print(paste("Time taken to run gene_list_generation is:" , end_time-start_time))
+	} 
+	else{ dat_geneList <- NULL}
 	start_time <- Sys.time()
-	datcompSmap <- tryCatch(compSmapbed(smap=smap,
+	end_time <- Sys.time()
+    print(paste("Time taken to run gene_list_generation is:" , start_time-end_time))
+	start_time <- Sys.time()
+	datcompSmap <- tryCatch(
+	    compSmapbed(smap=smap,
+	        EnzymeType = "DLE",
 	        bed=bed, 
-			EnzymeType = "DLE",
 			inputfmt = "BNBED",
 			n = 3,
 			returnMethod = "dataFrame", 
@@ -148,7 +138,7 @@ nanotatoR_main_TrioDLE<-function(
 					return (NA)
 			})
 	end_time <- Sys.time()
-    print(paste("Time taken to run compSmapbed is:" , end_time-start_time))
+    print(paste("Time taken to run compSmapbed is:" , start_time-end_time))
 	start_time <- Sys.time()
 	datDGV <- tryCatch(
 	    DGV_extraction(
@@ -166,12 +156,11 @@ nanotatoR_main_TrioDLE<-function(
 			}
 			)
 	end_time <- Sys.time()
-    print(paste("Time taken to run DGV_extraction is:" , end_time-start_time))
+    print(paste("Time taken to run DGV_extraction is:" , start_time-end_time))
 	dim(datDGV)
 	start_time <- Sys.time()
 	if(buildSVInternalDB==FALSE){
-	datInf <- tryCatch(
-	    internalFrequencyTrio_Dyad(
+	datInf <- tryCatch(internalFrequency_DLE(
 	    mergedFiles = mergedFiles , 
 		buildSVInternalDB = FALSE, 
 		smapdata = datDGV, 
@@ -187,59 +176,60 @@ nanotatoR_main_TrioDLE<-function(
 		returnMethod="dataFrame", 
 		indexfile = indexfile),
 		error = function(e) {
-				    print(paste("internalFrequency cannot work"))
-					return (datDGV)
+		    print(paste("internalFrequency cannot work"))
+			return (datDGV)
 			}
 			)
 	} else{
     datInf <- tryCatch(
-	        internalFrequencyTrio_Dyad(
-	        buildSVInternalDB = TRUE, 
-			path = path, 
-			pattern = pattern, 
-			outpath = outpath, 
-			smap=smap,
-            smapdata = datDGV, 
-			input_fmt = "dataFrame",
-			limsize = limsize, 
-			win_indel = win_indel_INF, 
-            win_inv_trans = win_inv_trans_INF, 
-			perc_similarity = perc_similarity_INF, 
-			indelconf = indelconf, 
-			invconf = invconf, 
-			transconf = transconf, 
-            returnMethod=c("dataFrame"), 
-			indexfile = indexfile),
-			error = function(e) {
+	        internalFrequency_DLE(
+	            buildSVInternalDB = TRUE, 
+			    path = path, 
+			    pattern = pattern, 
+			    outpath = outpath, 
+			    smap=smap,
+                smapdata = datDGV, 
+			    smapName = smapName, 
+			    input_fmt = "dataFrame",
+			    limsize = limsize, 
+			    win_indel = win_indel_INF, 
+                win_inv_trans = win_inv_trans_INF, 
+			    perc_similarity = perc_similarity_INF, 
+			    indelconf = indelconf, 
+			    invconf = invconf, 
+			    transconf = transconf, 
+                returnMethod=c("dataFrame"), 
+			    indexfile = indexfile),
+			    error = function(e) {
 				    print(paste("internalFrequency cannot work"))
 					return (datDGV)
-			}
+			    }
 			)
     
 }
      end_time <- Sys.time()
-     print(paste("Time taken to run internalFrequency is:" , end_time-start_time))
+     print(paste("Time taken to run internalFrequency is:" , start_time-end_time))
 	 dim(datInf)
 	start_time <- Sys.time()
 if(buildBNInternalDB==FALSE){
-        datchort <- tryCatch(
-		cohortFrequency(
-		internalBNDB = internalBNDB, 
-		buildBNInternalDB = FALSE, 
-		smapdata = datInf, 
-		input_fmt = c("dataFrame"), 
-		win_indel = win_indel_INF, 
-		win_inv_trans = win_inv_trans_INF, 
-		perc_similarity = perc_similarity_INF, 
-		indelconf = indelconf, 
-		invconf = invconf, 
-		limsize = limsize,
-		transconf = transconf,
-		returnMethod = c("dataFrame")),
-		error = function(e) {
-				    print(paste("cohortFrequency cannot work"))
-					return (datInf)
-			}
+    datchort <- tryCatch(
+	cohortFrequency(
+	internalBNDB = internalBNDB, 
+	buildBNInternalDB = FALSE, 
+	smapdata = datInf, 
+	input_fmt = c("dataFrame"), 
+	win_indel = win_indel_INF, 
+	win_inv_trans = win_inv_trans_INF, 
+	perc_similarity = perc_similarity_INF, 
+	indelconf = indelconf, 
+	invconf = invconf, 
+	limsize = limsize,
+	transconf = transconf,
+	returnMethod = c("dataFrame")),
+	error = function(e) {
+	    print(paste("cohortFrequency cannot work"))
+		return (datInf)
+		}
 		)
 } else{
     datchort <- tryCatch(
@@ -267,7 +257,7 @@ if(buildBNInternalDB==FALSE){
 }
     
 	end_time <- Sys.time()
-     print(paste("Time taken to run cohortFrequency is:" , end_time-start_time))
+     print(paste("Time taken to run cohortFrequency is:" , start_time-end_time))
 	 dim(datchort)
 start_time <- Sys.time()
 datdecipher <- tryCatch(
@@ -285,43 +275,42 @@ datdecipher <- tryCatch(
 		)
 		
 end_time <- Sys.time()
-print(paste("Time taken to run Decipher_extraction is:" , end_time-start_time))
+print(paste("Time taken to run Decipher_extraction is:" , start_time-end_time))
 dim(datdecipher)
 
 start_time <- Sys.time()
 if(RNASeqDatasetPresent == TRUE){
 if(RNAseqcombo==TRUE){
-    RNASeqData <- tryCatch(RNAseqcombine(RNASeqDir = RNASeqDir, 
-	            returnMethod="dataFrame"),
+    RNASeqData <- tryCatch(RNAseqcombine_solo(RNASeqDir = RNASeqDir, 
+	     returnMethod="dataFrame"),
 	error = function(e) {
 	    print(paste("RNAseqcombine cannot work"))
 		return (NA)
 		}
 	)
     datRNASeq <- tryCatch(
-        SmapRNAseqquery(
+        SmapRNAseqquery_solo(
 		input_fmt_SV = "dataFrame", 
 		smapdata = datdecipher, 
 		smappath = smappath, 
 		input_fmt_RNASeq = "dataFrame", 
 		RNASeqData = RNASeqData, 
 		outputfmt = "datFrame",
-		EnzymeType = "Dual",
 		pattern_Proband = pattern_Proband),
-	    error = function(e) {
-	        print(paste("RNAseqcombine cannot work"))
-		    return (datdecipher)
+	error = function(e) {
+	    print(paste("RNAseqcombine cannot work"))
+		return (datdecipher)
 		}
 	)
-}else{
+}
+else{
     datRNASeq <- tryCatch(
-        SmapRNAseqquery(
+        SmapRNAseqquery_solo(
 		input_fmt_SV = "dataFrame", 
 		smapdata = datdecipher, 
 		smappath = smappath, 
 		input_fmt_RNASeq = "Text",
 		RNASeqPATH = RNASeqDir,
-		EnzymeType = "Dual",
 		outputfmt = "datFrame",
 		pattern_Proband = pattern_Proband),
 	error = function(e) {
@@ -331,7 +320,7 @@ if(RNAseqcombo==TRUE){
 	)
 }
 end_time <- Sys.time()
-print(paste("Time taken to run SmapRNAseqquery is:" , end_time-start_time))
+print(paste("Time taken to run SmapRNAseqquery is:" , start_time-end_time))
 start_time <- Sys.time()
 'r3 <-read.csv("C:/Annotator/Data/RNASeq_F1.1.csv")
 datRNASeq <- cbind(datdecipher, r3[, 2:ncol(r3)])
@@ -339,41 +328,36 @@ datRNASeq[is.na(datRNASeq)]<-"-"
 datRNASeq[is.na(datRNASeq$Type2)]<-"-\"
 #dat_geneList<-read.table("C:/Annotator/Data/F3.1_UDN992683_GeneList.txt",header=TRUE,sep=" ")'
 tryCatch( 
-run_bionano_filter_Trio_DLE(
+run_bionano_filter(
 input_fmt_geneList = "dataFrame", 
 input_fmt_svMap = "dataFrame", 
 SVFile = NULL,
 svData = datRNASeq, 
 dat_geneList = dat_geneList,
 outpath = outpath,
-outputType = "Excel",
 outputFilename = outputFilename,
-RZIPpath = RZIPpath, primaryGenesPresent = TRUE),
+RZIPpath = RZIPpath),
 error = function(e) {
 	    print(paste("run_bionano_filter cannot work"))
 		return (datRNASeq)
 		}
 	)
-end_time <- Sys.time()
-print(paste("Time taken to run run_bionano_filter is:" , end_time-start_time))
 } else{
 tryCatch( 
-run_bionano_filter_Trio_DLE(
+run_bionano_filter(
 input_fmt_geneList = "dataFrame", 
 input_fmt_svMap = "dataFrame", 
 SVFile = NULL,
 svData = datdecipher, 
 dat_geneList = dat_geneList,
 outpath = outpath,
-outputType = "Excel",
 outputFilename = outputFilename,
-RZIPpath = RZIPpath, primaryGenesPresent = TRUE),
+RZIPpath = RZIPpath),
 error = function(e) {
 	    print(paste("run_bionano_filter cannot work"))
 		return (datdecipher)
 		}
 	)}
 end_time <- Sys.time()
-print(paste("Time taken to run run_bionano_filter is:" , end_time-start_time))
-
+print(paste("Time taken to run run_bionano_filter is:" , start_time-end_time))
 }

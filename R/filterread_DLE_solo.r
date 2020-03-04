@@ -262,7 +262,6 @@ for (jj in seq_len(length(upgene))) {
 #' @import hash
 #' @importFrom stats na.omit
 #' @export
-
 nonOverlappingDNGenes <- function(rr, dngene){
 nopagenedn <- c()
 nopagenedn_term <- c()
@@ -396,8 +395,6 @@ for (jj in seq_len(length(dngene))) {
 #' @import hash
 #' @importFrom stats na.omit
 #' @export
-
-
 run_bionano_filter_singleLabel_singleton <- function(
     input_fmt_geneList = c("Text", "dataFrame"),
     input_fmt_svMap = c("Text", "dataFrame"),
