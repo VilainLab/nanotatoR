@@ -14,4 +14,3 @@
 #' @import grDevices
 #' @import knitr
 NULL
-# > [1] '_PACKAGE'
