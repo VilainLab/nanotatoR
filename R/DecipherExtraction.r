@@ -1,32 +1,35 @@
-#' Frequency calculation of variants compared to DGV.
+#' Frequency calculation of variants compared to Decipher.
 #'
-#' @param hgpath  character. Path to Database of Genomic Variants (DGV)
-#'                Text file.
-#' @param smappath  character. Path and file name for textfile.
-#' @param terms  character. Single or Multiple Terms.
+#' @param decipherpath  character. Decipher Text file.
 #' @param outpath character. Path where gene lists are saved.
-#' @param input_fmt character. Choice between text or data frame as
-#' an input to the DGV frequency calculator.
 #' @param smap_data Dataset containing smap data.
-#' @param thresh integer. Threshold for the number of terms sent to entrez.
-#'                Note if large lists are sent to ncbi, it might fail to get
-#'                processed. Default is 5.
-#' @param returnMethod character. Choice between text or data frame as the output.
-#' @return Text and character vector containg gene list and terms associated with them
-#'         are stored as text files.
+#' @param smap character Filepath for smap.
+#' @param win_indel character indel window. Default 10000.
+#' @param perc_similarity  Numeric . ThresholdPercentage similarity 
+#' of the query SV and reference SV.
+#' @param EnzymeType  boolean . Options SE and SVMerge.
+#' @param input_fmt_SV  boolean . Options SE and SVMerge.
+#' @param returnMethod character. Choice between 
+#' text or data frame as the output.
+#' @return dataframe containing decipher data.
+#' are stored as text files.
 #' @examples
-#' \dontrun{
-#' decipherpath="Z:/Suro/Annotator/Data/population_cnv.txt"
-#' smappath="Z:/Suro/Annotator/Data/";
-#' smap="F1.1_UDN287643_P_Q.S_VAP_SVmerge_trio_original2.txt";
-#' win_indel=10000;win_inv_trans=50000;perc_similarity=0.5
-#' DGV_extraction (hgpath, smappath, win_indel = 10000, win_inv_trans = 50000,
-#' perc_similarity = 0.5,returnMethod="dataFrame")
-#' }
+#' decipherpath = system.file("extdata", "population_cnv.txt", package="nanotatoR")
+#' smappath=system.file("extdata", "GM24385_Ason_DLE1_VAP_trio5.smap", package="nanotatoR")
+#' datdecipher <- Decipherfrequency (decipherpath = decipherpath, 
+#' smap = smappath, win_indel = 10000,
+#' EnzymeType= "SE",
+#' perc_similarity = 0.5,returnMethod="dataFrame", 
+#' input_fmt_SV = "Text")
+#' datdecipher[1,]
 #' @export
-Decipher_extraction <- function(decipherpath, smappath, smap, smap_data, 
-    input_fmt = c("Text", "dataFrame"), win_indel = 10000, perc_similarity = 0.5, 
-    returnMethod = c("Text", "dataFrame"))
+Decipherfrequency  <- function(decipherpath, smap, 
+    smap_data, 
+    win_indel = 10000, perc_similarity = 0.5, 
+    returnMethod = c("Text", "dataFrame"),
+    input_fmt_SV = c("Text", "dataFrame"),
+    EnzymeType = c("SVMerge", "SE"),
+	outpath)
     {
     # S='F' Change the window for Inversion/translocation 50000
     print("###Calculating Decipher Frequency###")
@@ -38,62 +41,41 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
     datfinal <- data.frame()
     # varaccl<-length(unique(varacc)) close(con) Checking if the input
     # format is dataframe or Text
-     if(input_fmt == "Text"){
-			con <- file(smap, "r")
-			r10 <- readLines(con, n = -1)
-			close(con)
-			# datfinal<-data.frame()
-			g1 <- grep("RawConfidence", r10)
-			g2 <- grep("RefStartPos", r10)
-			'gg1 <- grep("# BSPQI Sample", r10)
-			stt <- strsplit(r10[gg1], split = ":")
-			fname_temp <- stt[[1]][2]
-			
-			if(length(grep("UDN*", fname_temp)) ==1){
-				###UDN
-				stt1 <- strsplit(fname_temp, split = "_P_BspQI_assembly*")
-				fname <- stt1[[1]][1]
-			} else{
-				###DSD
-				stt1 <- strsplit(fname_temp, split = "_BspQI_assembly*")
-				fname <- stt1[[1]][1]
-			}
-			
-			stt1 <- strsplit(fname_temp, split = "_BspQI_assembly*")
-			fname <- stt1[[1]][1]'
-			
-			
-			#print (paste0("SampleName:", fname))
-		if (g1 == g2) {
-			dat <- gsub("#h ", "", as.character(r10))
-			# dat<-gsub('\t',' ',r10)
-			dat4 <- textConnection(dat[g1:length(dat)])
-			r1 <- read.table(dat4, sep = "\t", header = TRUE)
-			close(dat4)
-		} else {
-		stop("column names doesnot Match")
-		}
-		Samp <- as.character(unique(r1$Sample))
-		st1 <- strsplit(Samp, split = "*_DLE")
-		SampleID <- st1[[1]][1]
-		r1 <- cbind(SampleID = rep(str_squish(as.character(SampleID)), times = nrow(r1)), r1)
-		}
-		else if(input_fmt == "dataFrame"){
-			r1<-smap_data
-		}
-		else{
-			stop("Input Format incorrect")
-		}
+    if(input_fmt_SV=="dataFrame"){
+        smapdata = smap_data
+        if(EnzymeType == "SVMerge"){
+            #smapdata <- readSMap(smap, input_fmt_smap = "Text")
+            SVID<-smapdata$SVIndex
+        }
+        else{
+            #smapdata <- readSMap_DLE(smap, input_fmt_smap)
+            SVID<-smapdata$SmapEntryID
+        }
+    }
+    else if(input_fmt_SV=="Text"){
+        if(EnzymeType == "SVMerge"){
+            smapdata <- readSMap(smap, input_fmt_smap = "Text")
+            SVID<-smapdata$SVIndex
+        }
+        else{
+            smapdata <- readSMap_DLE(smap, input_fmt_smap = "Text")
+            SVID<-smapdata$SmapEntryID
+        }
+    }
+    else{
+        stop("Input format for SMAP Incorrect")
+    }
+    r1 <- smapdata
     ## Checking Sex male/female and assigning chromosome number accordingly
-    chro <- length(unique(r1$RefcontigID1))
-    chro1 <- c(1:chro)
+    chro <- (unique(r1$RefcontigID1))
+    #chro1 <- c(1:chro)
     dataFinal <- c()
     ## Extracting Data for 1 chromosome at a time and comparing Make change
     ## in XY
     
-    for (ii in 1:length(chro1)) # for (ii in 1:20) for (ii in 1)
+    for (ii in seq_along(chro)) # for (ii in 1:20) for (ii in 1)
     {
-        # print(paste('Chromosome:', chro1[ii])) Extracting data from DGV
+        # print(paste('Chromosome:', chro[ii])) Extracting data from DGV
         # dataset print(paste('ii:',ii))
         if (ii == 23)
         {
@@ -103,7 +85,7 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
             kk <- "Y"
         } else
         {
-            kk <- chro1[ii]
+            kk <- chro[ii]
         }
         dat <- r[which(r$chr == kk), ]
         # variantType1<-dat$variantsubtype Changing the variant terms in DGV to
@@ -112,7 +94,7 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
         # dat$variantsubtype) dat$variantsubtype <- gsub('gain+loss',
         # 'insertion+deletion', dat$variantsubtype) variantType1 <-
         # dat$variantsubtype Extracting data from SVmap
-        dat1 <- r1[which(r1$RefcontigID1 == chro1[ii]), ]
+        dat1 <- r1[which(r1$RefcontigID1 == chro[ii]), ]
         ## Adding the windows to the breakpoints
         rf <- dat1$RefStartPos
         rf_wb_ind <- rf - win_indel
@@ -142,16 +124,16 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
                   # type <- dat2$variantsubtype
                   del_freq <- as.numeric(dat2$deletion_frequency)
                   del_samp <- as.numeric(dat2$sample_size)
-				  dat2$size_dec <- dat2$end - dat2$start
-				  dat2$perc_ref_query <- as.numeric(dat2$size_dec)/size1
-				  dat2$perc_query_ref <- size1/as.numeric(dat2$size_dec)
+                  dat2$size_dec <- dat2$end - dat2$start
+                  dat2$perc_ref_query <- as.numeric(dat2$size_dec)/size1
+                  dat2$perc_query_ref <- size1/as.numeric(dat2$size_dec)
                   type = c()
                   freq = c()
                   samp_size = c()
                   # print(paste('nrow(dat2):',nrow(dat2),sep=''))
                   for (ll in 1:nrow(dat2))
                   {
-				     
+                     
                     size_dec <- dat2$end[ll] - dat2$start[ll]
                     #perc <- (size1/size_dec)
                     
@@ -183,11 +165,11 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
                   del_freq <- as.numeric(dat2$deletion_frequency)
                   del_samp <- as.numeric(dat2$sample_size)
                   size_dec <- dat2$end - dat2$start
-				  perc_ref_query <- as.numeric(size_dec)/size1
-				  perc_query_ref <- size1/as.numeric(size_dec)
+                  perc_ref_query <- as.numeric(size_dec)/size1
+                  perc_query_ref <- size1/as.numeric(size_dec)
                   # ctr=ctr+1
                   if ((perc_ref_query >= perc_similarity & perc_query_ref >= perc_similarity)
- 				  & (del_freq > 0))
+                   & (del_freq > 0))
                   {
                     # print(paste('del_freq:',del_freq,sep=''))
                     freq <- round(del_freq, 2)
@@ -228,9 +210,9 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
                   ins_freq <- as.numeric(dat2$duplication_frequency)
                   ins_samp <- as.numeric(dat2$sample_size)
                   dat2$size_dec <- dat2$end - dat2$start
-				  dat2$perc_ref_query <- as.numeric(dat2$size_dec)/size1
-				  dat2$perc_query_ref <- size1/as.numeric(dat2$size_dec)
-				  type = c()
+                  dat2$perc_ref_query <- as.numeric(dat2$size_dec)/size1
+                  dat2$perc_query_ref <- size1/as.numeric(dat2$size_dec)
+                  type = c()
                   freq = c()
                   samp_size = c()
                   for (ll in 1:nrow(dat2))
@@ -269,11 +251,11 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
                   ins_freq <- as.numeric(dat2$duplication_frequency)
                   ins_samp <- as.numeric(dat2$sample_size)
                   size_dec <- dat2$end - dat2$start
-				  perc_ref_query <- as.numeric(size_dec)/size1
-				  perc_query_ref <- size1/as.numeric(size_dec)
+                  perc_ref_query <- as.numeric(size_dec)/size1
+                  perc_query_ref <- size1/as.numeric(size_dec)
                   # ctr=ctr+1
                   if ((perc_ref_query >= perc_similarity & perc_query_ref >= perc_similarity)
-     			  & (ins_freq > 0))	
+                   & (ins_freq > 0))    
                   {
                     # print(paste('ins_freq:',ins_freq,sep=''))
                     freq <- round(ins_freq, 2)
@@ -316,8 +298,9 @@ Decipher_extraction <- function(decipherpath, smappath, smap, smap_data,
         st1 <- strsplit(smap, ".txt")
         fname <- st1[[1]][1]
         row.names(dataFinal) <- c()
-        write.table(dataFinal, paste(smappath, fname, "_Decipher.txt", 
-            sep = ""), sep = "\t", row.names = FALSE)
+		filename <- paste(fname, "_Decipher.txt", sep = "") 
+        write.table(dataFinal, file.path(outpath, filename), 
+		sep = "\t", row.names = FALSE)
     } else if (returnMethod == "dataFrame")
     {
         return(dataFinal)
