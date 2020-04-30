@@ -156,7 +156,7 @@ internalFrequency_solo <- function(mergedFiles,
     .set(ha, keys = as.character(datf1$famid), 
         values = as.character(datf1$Freq))
     ## Checking Sex male/female and assigning chromosome number accordingly
-    chro1 <- (unique(r1$RefcontigID1))
+    chro1 <- sort(unique(r1$RefcontigID1))
     #chro1 <- c(1:chro)
     dataFinal <- c()
     for (ii in seq_along(chro1))
@@ -209,8 +209,7 @@ internalFrequency_solo <- function(mergedFiles,
         #print(indexfile)
         if(buildSVInternalDB == FALSE){
             famindexfile <-read.csv(indexfile)
-        }
-        else{
+        }else{
             famindexfile <- read.csv(file.path(
                 mergedKeyoutpath = mergedKeyoutpath, 
                 mergedKeyFname = mergedKeyFname
@@ -265,7 +264,8 @@ internalFrequency_solo <- function(mergedFiles,
             if ((variantType2[nn] == "deletion" | 
                 variantType2[nn] == "insertion")){ 
                         
-                dat2 <-dat[which((dat$RefStartPos >= rf_wb_ind[nn] & dat$RefEndPos <= re_wf_ind[nn])),]
+                dat2 <-dat[which((dat$RefStartPos >= rf_wb_ind[nn] 
+                    & dat$RefEndPos <= re_wf_ind[nn])),]
                 #print(nrow(dat2))
                 size1 <- size_bn[nn]
                 ## Calculating Internal Frequency
@@ -273,7 +273,8 @@ internalFrequency_solo <- function(mergedFiles,
                 {
                     dat2$perc_ref_query <- as.numeric(dat2$Size)/size1
                     dat2$perc_query_ref <- size1/as.numeric(dat2$Size)
-                    stt12 <- str_split(as.character(dat2$nanoID), pattern = "\\.")
+                    stt12 <- str_split(as.character(dat2$nanoID), 
+                        pattern = "\\.")
                     famid <- c(); relnid <- c()
                     
                     'for(ee in seq_along(stt12)){
@@ -329,7 +330,8 @@ internalFrequency_solo <- function(mergedFiles,
                         | (dat2$Found_in_self_BSPQI_molecules == "-" 
                         & dat2$Found_in_self_BSSSI_molecules == "yes")
                         | (dat2$Found_in_SE_self_molecules == "yes"))
-                        & ((dat2$Type1 =="insertion" & dat2$Type2 =="insertion") 
+                        & ((dat2$Type1 =="insertion" 
+                        & dat2$Type2 =="insertion") 
                         | (dat2$Type1 =="insertion" & is.na(dat2$Type2)) 
                         | (is.na(dat2$Type1) & dat2$Type2 =="insertion") 
                         | (dat2$Type1 == "deletion" & dat2$Type2 == "deletion") 
@@ -338,8 +340,7 @@ internalFrequency_solo <- function(mergedFiles,
                         | (dat2$Type1 == "-" 
                         & dat2$Type2 == "-" & dat2$Type == "deletion")
                         | (dat2$Type1 == "-" 
-                        & dat2$Type2 == "-" & dat2$Type == "insertion")
-                        | (dat2$Type == "insertion" | dat2$Type == "deletion"))),]
+                        & dat2$Type2 == "-" & dat2$Type == "insertion"))),]
                     dat2UnfilteredFrequency <- dat2[which((
                         dat2$perc_ref_query >= perc_similarity & 
                         dat2$perc_query_ref >= perc_similarity)
@@ -542,12 +543,14 @@ internalFrequency_solo <- function(mergedFiles,
                         group_by(.data$nanoID) %>%
                         summarise (Homozygotes = sum(.data$Homozygo)))
                         cntHomozygotes <- sum(dat2Homozygotes$Homozygo)
-                        dat2Homozygotes [,2] <- ifelse(dat2Homozygotes[,2] > 0, 2, 0)
+                        dat2Homozygotes [,2] <- ifelse(
+                            dat2Homozygotes[,2] > 0, 2, 0)
                         dat2Heterozygotes <- data.frame(dat2Frequency %>% 
                             mutate(Heterozygo = .data$Zygosity == "heterozygous") %>%
                         group_by(.data$nanoID) %>%
                         summarise (Heterozygotes = sum(.data$Heterozygo)))
-                        dat2Heterozygotes [,2] <- ifelse(dat2Heterozygotes[,2] > 0, 1, 0)
+                        dat2Heterozygotes [,2] <- ifelse(
+                            dat2Heterozygotes[,2] > 0, 1, 0)
                         dat2Unknown <- data.frame(dat2Frequency %>% 
                             mutate(Unknown = .data$Zygosity == "unknown") %>%
                         group_by(.data$nanoID) %>%
@@ -557,8 +560,9 @@ internalFrequency_solo <- function(mergedFiles,
                         Homozygote = dat2Homozygotes[,2],
                         Heterozygotes = dat2Heterozygotes[,2], 
                         Unknown = dat2Unknown[,2])
-                        row.names(dat2filtFreq) <- as.character(dat2Homozygotes[,1])
-                        dat2filtFreq$RowSum <- ifelse((dat2filtFreq$Heterozygotes ==1 
+                        row.names(dat2filtFreq) <- as.character(
+						    dat2Homozygotes[,1])
+                        dat2filtFreq$RowSum <- ifelse((dat2filtFreq$Heterozygotes == 1 
                             & (dat2filtFreq$Homozygote == 0 
                             & dat2filtFreq$Unknown == 0)), 1, 2)
                         filtFreq <- sum(dat2filtFreq$RowSum)
@@ -696,7 +700,7 @@ internalFrequency_solo <- function(mergedFiles,
                         datf <- rbind(datf, data1)
                 }  
                 else if (nrow(dat2) == 1){
-				    #print(dat2)
+                    #print(dat2)
                     # dgv_match=TRUE Calculating percentage similarity
                     countfre <- 0;countfreunfilt<-0
                     conf <- dat2$Confidence
@@ -760,8 +764,7 @@ internalFrequency_solo <- function(mergedFiles,
                         (typ1=="deletion" & is.na(typ2)) | 
                         (is.na(typ1) & typ2=="deletion")
                         | (typ1=="-" & typ2=="-" & type == "deletion")
-                        | (typ1=="-" & typ2=="-" & type == "insertion")
-                        | (type == "insertion" | type == "deletion"))){
+                        | (typ1=="-" & typ2=="-" & type == "insertion"))){
                         #print("not in a family")
                         if(as.character(zygo)=="homozygous"){
                             countfre <- 2
@@ -951,11 +954,7 @@ internalFrequency_solo <- function(mergedFiles,
                                 | (dat2$Type1 == "-" & dat2$Type2 == "-" 
                                 & dat2$Type == "duplication")
                                 | (dat2$Type1 == "-" & dat2$Type2 == "-" 
-                                & dat2$Type == "duplication_split")
-                                |((as.character(dat2$Type) == "duplication") |
-                                 (as.character(dat2$Type) == "duplication_split") |
-                                 (as.character(dat2$Type) == "duplication_inverted")
-                            ))
+                                & dat2$Type == "duplication_split"))
                             & ((dat2$Fail_BSPQI_assembly_chimeric_score == "pass" & 
                             dat2$Fail_BSSSI_assembly_chimeric_score == "pass") 
                             | (dat2$Fail_BSPQI_assembly_chimeric_score == "fail" 
@@ -996,8 +995,7 @@ internalFrequency_solo <- function(mergedFiles,
                         | (dat2$Type1 =="insertion" & is.na(dat2$Type2)) 
                         | (is.na(dat2$Type1) & dat2$Type2 =="insertion") 
                         | (dat2$Type1 == "-" 
-                        & dat2$Type2 == "-" & dat2$Type == "insertion")
-                        | (dat2$Type == "insertion"))),]
+                        & dat2$Type2 == "-" & dat2$Type == "insertion"))),]
                     dat2UnfilteredFrequency <- dat2[which(((
                         as.character(dat2$Type) == "duplication") |
                         (as.character(dat2$Type) == "duplication_split") |
@@ -1282,10 +1280,7 @@ internalFrequency_solo <- function(mergedFiles,
                         (is.na(typ1) & typ2=="duplication_inverted")
                         | (typ1 == "-" & typ2 == "-" & type == "duplication")
                         | (typ1 == "-" & typ2 == "-" & type == "duplication_inverted")
-                        | (typ1 == "-" & typ2 == "-" & type == "duplication_split")
-                        | (identical(type, "duplication") |
-                        identical(type, "duplication_split")| 
-                        identical(type, "duplication_inverted")))){
+                        | (typ1 == "-" & typ2 == "-" & type == "duplication_split"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -1308,7 +1303,8 @@ internalFrequency_solo <- function(mergedFiles,
                         } 
                         else if (((identical(type, "insertion"))) & 
                         !(identical(svfamid1, svfamid)) & 
-                        (perc_ref_query >= perc_similarity & perc_query_ref >= perc_similarity) &
+                        (perc_ref_query >= perc_similarity 
+                        & perc_query_ref >= perc_similarity) &
                         ((BSPQI_status_DB == "yes" &
                         BSSSI_status_DB == "yes") |
                         (BSPQI_status_DB == "no" & 
@@ -1325,8 +1321,7 @@ internalFrequency_solo <- function(mergedFiles,
                         ((typ1=="insertion" & typ2=="insertion") |
                         (typ1=="insertion" & is.na(typ2)) | 
                         (is.na(typ1) & typ2=="insertion")
-                        | (typ1 == "-" & typ2 == "-" & type == "insertion")
-                        |(type == "insertion"))){
+                        | (typ1 == "-" & typ2 == "-" & type == "insertion"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -1424,8 +1419,8 @@ internalFrequency_solo <- function(mergedFiles,
                         (dat$RefEndPos <= re[nn] & dat$RefEndPos >= re_wb_ind[nn]))
                         ), ]
                     size1 <- size_bn[nn]
-                    dat2$perc_ref_query <- 0
-                    dat2$perc_query_ref <- 0
+                    dat2$perc_ref_query <- rep(0, nrow(dat2))
+                    dat2$perc_query_ref <- rep(0, nrow(dat2))
                 }else {
                     dat2 <-dat[which((dat$RefStartPos >= rf_wb_ind[nn] 
                         & dat$RefEndPos <= re_wf_ind[nn])),]
@@ -1454,7 +1449,7 @@ internalFrequency_solo <- function(mergedFiles,
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
                                 & (dat2$patID == 1 & dat2$RelationID == 2)),]
-						dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) 
+                        dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) 
                                 & (dat2$RefEndPos==re[nn])) 
                                 & (dat2$perc_ref_query >= perc_similarity_parents 
                                 & dat2$perc_query_ref >= perc_similarity_parents)
@@ -1462,8 +1457,8 @@ internalFrequency_solo <- function(mergedFiles,
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
                                 & (dat2$patID == 1 & dat2$RelationID == 3)),]
-						dat2MomRange <- dat2[which(((
-						    dat2$RefStartPos >= rf_wb_int_parents[nn]) 
+                        dat2MomRange <- dat2[which(((
+                            dat2$RefStartPos >= rf_wb_int_parents[nn]) 
                             & (dat2$RefEndPos <= re_fb_int_parents[nn]))  
                             & (dat2$RefcontigID2 == chromo2[nn]) 
                             & (dat2$perc_ref_query >= perc_similarity_parents 
@@ -1473,7 +1468,7 @@ internalFrequency_solo <- function(mergedFiles,
                             & (dat2$patID == 1 & dat2$RelationID == 2)),]
                             
                         dat2DadRange <- dat2[which(((
-						    dat2$RefStartPos >= rf_wb_int_parents[nn]) 
+                            dat2$RefStartPos >= rf_wb_int_parents[nn]) 
                             & (dat2$RefEndPos <= re_fb_int_parents[nn]))  
                             & (dat2$RefcontigID2 == chromo2[nn]) 
                             & (dat2$perc_ref_query >= perc_similarity_parents 
@@ -1481,10 +1476,10 @@ internalFrequency_solo <- function(mergedFiles,
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
                             & (dat2$patID == 1 & dat2$RelationID == 3)),]'
-						dat2UnfilteredFrequency <-  dat2[which((
-						    (dat2$RefcontigID2 == chromo2[nn]) 
-                            & (dat2$perc_ref_query >= perc_similarity_parents 
-                            & dat2$perc_query_ref >= perc_similarity_parents)
+                        dat2UnfilteredFrequency <-  dat2[which((
+                            (dat2$RefcontigID2 == chromo2[nn]) 
+                            & (dat2$perc_ref_query >= perc_similarity 
+                            & dat2$perc_query_ref >= perc_similarity)
                             & ((as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) != svfamid)))),]
                           
@@ -1495,14 +1490,14 @@ internalFrequency_solo <- function(mergedFiles,
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
                                 & (dat2$patID == 1 & dat2$RelationID == 2)),]
-						dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) 
+                        dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) 
                                 & (dat2$RefEndPos==re[nn])) 
                                 & (dat2$RefcontigID2 == chromo2[nn]) 
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
                                 & (dat2$patID == 1 & dat2$RelationID == 3)),]
-						dat2MomRange <- dat2[which(((
-						    dat2$RefStartPos >= rf_wb_int_parents[nn]) 
+                        dat2MomRange <- dat2[which(((
+                            dat2$RefStartPos >= rf_wb_int_parents[nn]) 
                             & (dat2$RefEndPos <= re_fb_int_parents[nn]))  
                             & (dat2$RefcontigID2 == chromo2[nn]) 
                             & (as.character(dat2$Type) == variantType2[nn])
@@ -1510,33 +1505,32 @@ internalFrequency_solo <- function(mergedFiles,
                             & (dat2$patID == 1 & dat2$RelationID == 2)),]
                             
                         dat2DadRange <- dat2[which(((
-						    dat2$RefStartPos >= rf_wb_int_parents[nn]) 
+                            dat2$RefStartPos >= rf_wb_int_parents[nn]) 
                             & (dat2$RefEndPos <= re_fb_int_parents[nn]))  
                             & (dat2$RefcontigID2 == chromo2[nn]) 
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
                             & (dat2$patID == 1 & dat2$RelationID == 3)),]'
-						dat2UnfilteredFrequency <-  dat2[which((
-						    (dat2$RefcontigID2 == chromo2[nn]) 
+                        dat2UnfilteredFrequency <-  dat2[which((
+                            (dat2$RefcontigID2 == chromo2[nn]) 
                             & ((as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) != svfamid)))),]
                     }
-					dat2Frequencyinvtrans <- dat2[which((
-					    as.character(dat2$Type) == "inversion" &
+                    dat2Frequencyinvtrans <- dat2[which(((
+                        as.character(dat2$Type) == "inversion" &
                         as.numeric(dat2$Confidence) >= invconf 
                         & (dat2$perc_ref_query >= perc_similarity 
                         & dat2$perc_query_ref >= perc_similarity)
-						& ((dat2$Type1 =="inversion" & dat2$Type2 =="inversion") 
+                        & ((dat2$Type1 =="inversion" & dat2$Type2 =="inversion") 
                         | (dat2$Type1 =="inversion" & is.na(dat2$Type2)) 
                         | (is.na(dat2$Type1) & dat2$Type2 =="inversion") 
                         | (dat2$Type1 == "-" 
-                        & dat2$Type2 == "-" & dat2$Type == "inversion")
-                        | (dat2$Type == "inversion")))|
-                        ((as.character(dat2$Type) == "translocation_intrachr"
+                        & dat2$Type2 == "-" & dat2$Type == "inversion")))
+                        | ((as.character(dat2$Type) == "translocation_intrachr"
                         | as.character(dat2$Type) == "translocation_interchr"
                         | as.character(dat2$Type) == "translocation")
                         & (as.numeric(dat2$Confidence) >= transconf)
-						& ((dat2$Type1 =="translocation" & 
+                        & ((dat2$Type1 =="translocation" & 
                         dat2$Type2 =="translocation") | 
                         (dat2$Type1 =="translocation" 
                         & is.na(dat2$Type2)) |
@@ -1558,11 +1552,7 @@ internalFrequency_solo <- function(mergedFiles,
                         | (dat2$Type1 == "-" & dat2$Type2 == "-" 
                         & dat2$Type == "translocation")
                         | (dat2$Type1 == "-" & dat2$Type2 == "-" 
-                        & dat2$Type == "translocation_intrachr")
-                        |((as.character(dat2$Type) == "translocation") |
-                        (as.character(dat2$Type) == "translocation_intrachr") |
-                        (as.character(dat2$Type) == "translocation_interchr")
-                         )))
+                        & dat2$Type == "translocation_intrachr"))))
                         & (as.character(dat2$FamilyID) != svfamid)
                         & (dat2$RefcontigID2 == chromo2[nn]) 
                         &((dat2$Found_in_self_BSPQI_molecules == "yes" & 
@@ -1843,9 +1833,9 @@ internalFrequency_solo <- function(mergedFiles,
                             }
                         }  '
                         if (identical(chrom2,chromo2[nn]) &
-                        identical(type,variantType2[nn]) 
-                        & (perc_ref_query >= perc_similarity_parents 
-                        & perc_query_ref >= perc_similarity_parents)
+                        (identical(type,variantType2[nn]))
+                        & (perc_ref_query >= perc_similarity 
+                        & perc_query_ref >= perc_similarity)
                         & !(identical(svfamid1, svfamid)) & 
                         ((BSPQI_status_DB == "yes" & 
                         BSSSI_status_DB == "yes") | 
@@ -1870,11 +1860,10 @@ internalFrequency_solo <- function(mergedFiles,
                         (BSPQI_chimeric_score_DB == "-" & 
                         BSSSI_chimeric_score_DB == "pass")
                         |(Fail_assembly_chimeric_score_SE == "pass"))
-						& ((typ1=="inversion" & typ2=="inversion") |
+                        & ((typ1=="inversion" & typ2=="inversion") |
                         (typ1=="inversion" & is.na(typ2)) | 
                         (is.na(typ1) & typ2=="inversion")
-                        | (typ1=="-" & typ2=="-" & type == "inversion")
-                        | (identical(type, "inversion")))){
+                        | (typ1=="-" & typ2=="-" & type == "inversion"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -1901,9 +1890,9 @@ internalFrequency_solo <- function(mergedFiles,
                     
                     if (identical(chrom2,chromo2[nn]) & 
                         identical(type, variantType2[nn]) 
-                        & (perc_ref_query >= perc_similarity_parents 
-                        & perc_query_ref >= perc_similarity_parents)
-                        & !(identical(svfamid1, svfamid)) ){
+                        & (perc_ref_query >= perc_similarity 
+                        & perc_query_ref >= perc_similarity)
+                        & !(identical(svfamid1, svfamid))){
                       
                         if(zygo=="homozygous"){
                             countfreunfilt <- 2
@@ -1947,7 +1936,7 @@ internalFrequency_solo <- function(mergedFiles,
                             }
                         }  
                         else'
-						if (identical(chrom2,chromo2[nn]) &
+                        if (identical(chrom2,chromo2[nn]) &
                         identical(type,variantType2[nn]) &
                         !(identical(svfamid1, svfamid)) & 
                         ((BSPQI_status_DB == "yes" & 
@@ -1988,10 +1977,7 @@ internalFrequency_solo <- function(mergedFiles,
                         | (typ1=="-" & typ2=="-" 
                         & type == "translocation_interchr")
                         | (typ1=="-" & typ2=="-" 
-                        & type == "translocation_intrachr")
-                        | ((identical(type, "translocation") 
-                        | identical(type, "translocation_intrachr")
-                        | identical(type, "translocation_interchr"))))){
+                        & type == "translocation_intrachr"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }

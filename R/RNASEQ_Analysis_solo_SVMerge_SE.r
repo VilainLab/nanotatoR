@@ -68,7 +68,7 @@ RNAseqcombine_solo<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
         pag<-paste("^",genes[kk],"$",sep="")
         val<-grep(pag,ensemblid,fixed=TRUE)
         if(length(val)>0){
-            gene3<-c(gene3,as.character(genesym[val]))
+            gene3<-c(gene3,as.character(unique(genesym[val])))
             ens<-c(ens,as.character(genes[kk]))
         }
         else{
@@ -658,7 +658,7 @@ SVexpression_solo <- function(input_fmt_SV=c("Text","dataFrame"),
             ##Extracting NonOverlapped Genes
             nearestUPGenes<-smapdata$Upstream_nonOverlapGenes_dist_kb
             #datanonOverLapUP<-data.frame(matrix(nrow=nrow(smapdata),ncol=5))
-            datanonOverLapUP<-data.frame(matrix(nrow = 10,ncol = 2))
+            datanonOverLapUP<-data.frame(matrix(nrow = nrow(smapdata),ncol = 2))
             names(datanonOverLapUP) <- c("SVID", "NonOverlapUPProbandTPM")
             print("###NonOverlapUPStreamGenes###") 
             for(ll in 1:length(nearestUPGenes))

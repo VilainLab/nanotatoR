@@ -329,9 +329,10 @@ nanotatoR_main_Trio_SE<-function(
             )
     
 }
-     end_time <- Sys.time()
-     print(paste("Time taken to run internalFrequency is:" , start_time-end_time))
-     dim(datInf)
+    end_time <- Sys.time()
+    print(paste("Time taken to run internalFrequency is:" , 
+        start_time-end_time))
+    dim(datInf)
     start_time <- Sys.time()
     buildBNInternalDB = buildBNInternalDB
 if(buildBNInternalDB==FALSE){

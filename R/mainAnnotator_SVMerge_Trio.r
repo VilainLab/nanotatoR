@@ -405,7 +405,7 @@ RNASeqDatasetPresent = RNASeqDatasetPresent
 RNAseqcombo = RNAseqcombo
 if(RNASeqDatasetPresent == TRUE){
 if(RNAseqcombo==TRUE){
-    RNASeqData <- tryCatch(RNAseqcombo(RNASeqDir = RNASeqDir, 
+    RNASeqData <- tryCatch(RNAseqcombine(RNASeqDir = RNASeqDir, 
                 returnMethod="dataFrame"),
     error = function(e) {
         print(paste("RNAseqcombo cannot work"))

@@ -204,7 +204,7 @@ nanotatoR_main_Solo_SVmerge <-function(
     outputType = c("Excel", "csv"))
     {
     print("####PipeLine Starts####")
-	 start_time <- Sys.time()
+    start_time <- Sys.time()
     termListPresent = termListPresent
     if(termListPresent == TRUE){
    
@@ -234,7 +234,8 @@ nanotatoR_main_Solo_SVmerge <-function(
     }else{ dat_geneList <- NULL } 
     #start_time <- Sys.time()
     end_time <- Sys.time()
-    print(paste("Time taken to run gene_list_generation is:" , start_time-end_time))
+    print(paste("Time taken to run gene_list_generation is:" , 
+        start_time-end_time))
     start_time <- Sys.time()
     datcompSmap <- tryCatch(overlapnearestgeneSearch(smap=smap,
             bed=bed, 
@@ -248,7 +249,8 @@ nanotatoR_main_Solo_SVmerge <-function(
                     return (NA)
             })
     end_time <- Sys.time()
-    print(paste("Time taken to run compSmapbed is:" , start_time-end_time))
+    print(paste("Time taken to run compSmapbed is:" , 
+        start_time-end_time))
     start_time <- Sys.time()
     datDGV <- tryCatch(
         DGVfrequency(
@@ -267,10 +269,11 @@ nanotatoR_main_Solo_SVmerge <-function(
             }
             )
     end_time <- Sys.time()
-    print(paste("Time taken to run DGV_extraction is:" , start_time-end_time))
+    print(paste("Time taken to run DGV_extraction is:" , 
+        start_time-end_time))
     dim(datDGV)
     start_time <- Sys.time()
-	buildSVInternalDB = buildSVInternalDB
+    buildSVInternalDB = buildSVInternalDB
     if(buildSVInternalDB==FALSE){
     datInf <- tryCatch(
         internalFrequency_solo(
@@ -328,169 +331,172 @@ nanotatoR_main_Solo_SVmerge <-function(
             }
         )
 }
-     end_time <- Sys.time()
-     print(paste("Time taken to run internalFrequency is:" , start_time-end_time))
-     dim(datInf)
+    end_time <- Sys.time()
+    print(paste("Time taken to run internalFrequency is:" , 
+        start_time-end_time))
+    dim(datInf)
     start_time <- Sys.time()
 	buildBNInternalDB = buildBNInternalDB
-if(buildBNInternalDB==FALSE){
+    if(buildBNInternalDB==FALSE){
+            datchort <- tryCatch(
+            BNDBfrequency(
+            internalBNDB = internalBNDB, 
+            buildBNInternalDB = FALSE, 
+            smapdata = datInf, 
+            win_indel = win_indel_INF, 
+            win_inv_trans = win_inv_trans_INF, 
+            input_fmt_SV = "dataFrame",
+            EnzymeType  = EnzymeType, 
+            perc_similarity = perc_similarity_INF, 
+            indelconf = indelconf, 
+            invconf = invconf, 
+            limsize = limsize,
+            transconf = transconf,
+            returnMethod = c("dataFrame")),
+            error = function(e) {
+                        print(paste("BNDBfrequency cannot work"))
+                        return (datInf)
+                }
+            )
+    } else{
         datchort <- tryCatch(
         BNDBfrequency(
-        internalBNDB = internalBNDB, 
-        buildBNInternalDB = FALSE, 
-        smapdata = datInf, 
-        win_indel = win_indel_INF, 
-        win_inv_trans = win_inv_trans_INF, 
-        input_fmt_SV = "dataFrame",
-        EnzymeType  = EnzymeType, 
-        perc_similarity = perc_similarity_INF, 
-        indelconf = indelconf, 
-        invconf = invconf, 
-        limsize = limsize,
-        transconf = transconf,
-        returnMethod = c("dataFrame")),
-        error = function(e) {
-                    print(paste("BNDBfrequency cannot work"))
-                    return (datInf)
-            }
-        )
-} else{
-    datchort <- tryCatch(
-    BNDBfrequency(
-        buildBNInternalDB = TRUE, 
-        dbOutput = c("dataframe"),
-        smapdata = datInf, 
-        BNDBpath = path, 
-        BNDBpattern = pattern, 
-        win_indel = win_indel_INF, 
-        input_fmt_SV = "dataFrame",
-        EnzymeType  = EnzymeType,
-        win_inv_trans = win_inv_trans_INF, 
-        perc_similarity = perc_similarity_INF, 
-        indelconf = indelconf, 
-        invconf = invconf, 
-        limsize=limsize, 
-        transconf = transconf,
-        returnMethod = c("dataFrame")),
-        error = function(e) {
-                    print(paste("BNDBfrequency cannot work"))
-                    return (datInf)
-            }
-        )
-    
-}
-    
-    end_time <- Sys.time()
-     print(paste("Time taken to run BNDBfrequency is:" , start_time-end_time))
-     dim(datchort)
-start_time <- Sys.time()
-datdecipher <- tryCatch(
-        Decipherfrequency(
-        decipherpath = decipherpath, 
-        smap_data = datchort,
-        win_indel = win_indel_INF, 
-        input_fmt_SV = "dataFrame",
-        EnzymeType  = EnzymeType,
-        perc_similarity = perc_similarity_INF, 
-        returnMethod = c("dataFrame")),
-        error = function(e) {
-                    print(paste("Decipherfrequency cannot work"))
-                    return (datchort)
-            }
-        )
+            buildBNInternalDB = TRUE, 
+            dbOutput = c("dataframe"),
+            smapdata = datInf, 
+            BNDBpath = path, 
+            BNDBpattern = pattern, 
+            win_indel = win_indel_INF, 
+            input_fmt_SV = "dataFrame",
+            EnzymeType  = EnzymeType,
+            win_inv_trans = win_inv_trans_INF, 
+            perc_similarity = perc_similarity_INF, 
+            indelconf = indelconf, 
+            invconf = invconf, 
+            limsize=limsize, 
+            transconf = transconf,
+            returnMethod = c("dataFrame")),
+            error = function(e) {
+                        print(paste("BNDBfrequency cannot work"))
+                        return (datInf)
+                }
+            )
         
-end_time <- Sys.time()
-print(paste("Time taken to run Decipherfrequency is:" , start_time-end_time))
-dim(datdecipher)
-
-start_time <- Sys.time()
-RNASeqDatasetPresent = RNASeqDatasetPresent
-RNAseqcombo = RNAseqcombo
-if(RNASeqDatasetPresent == TRUE){
-if(RNAseqcombo==TRUE){
-    RNASeqData <- tryCatch(RNAseqcombine_solo(RNASeqDir = RNASeqDir, 
-                returnMethod="dataFrame"),
-    error = function(e) {
-        print(paste("RNAseqcombo cannot work"))
-        return (NA)
-        }
-    )
-    datRNASeq <- tryCatch(
-        SVexpression_solo(
-        input_fmt_SV = "dataFrame", 
-        smapdata = datdecipher, 
-        smappath = smappath, 
-        input_fmt_RNASeq = "dataFrame", 
-        RNASeqData = RNASeqData, 
-        outputfmt = "datFrame",
-        EnzymeType  = EnzymeType,
-        pattern_Proband = pattern_Proband),
+    }
+        
+    end_time <- Sys.time()
+    print(paste("Time taken to run BNDBfrequency is:" , start_time-end_time))
+    dim(datchort)
+    start_time <- Sys.time()
+    datdecipher <- tryCatch(
+            Decipherfrequency(
+            decipherpath = decipherpath, 
+            smap_data = datchort,
+            win_indel = win_indel_INF, 
+            input_fmt_SV = "dataFrame",
+            EnzymeType  = EnzymeType,
+            perc_similarity = perc_similarity_INF, 
+            returnMethod = c("dataFrame")),
+            error = function(e) {
+                        print(paste("Decipherfrequency cannot work"))
+                        return (datchort)
+                }
+            )
+            
+    end_time <- Sys.time()
+    print(paste("Time taken to run Decipherfrequency is:" , start_time-end_time))
+    dim(datdecipher)
+    
+    start_time <- Sys.time()
+    RNASeqDatasetPresent = RNASeqDatasetPresent
+    RNAseqcombo = RNAseqcombo
+    if(RNASeqDatasetPresent == TRUE){
+    if(RNAseqcombo==TRUE){
+        RNASeqData <- tryCatch(RNAseqcombine_solo(RNASeqDir = RNASeqDir, 
+            returnMethod="dataFrame"),
         error = function(e) {
             print(paste("RNAseqcombo cannot work"))
+            return (NA)
+            }
+        )
+        datRNASeq <- tryCatch(
+            SVexpression_solo(
+            input_fmt_SV = "dataFrame", 
+            smapdata = datdecipher, 
+            smappath = smappath, 
+            input_fmt_RNASeq = "dataFrame", 
+            RNASeqData = RNASeqData, 
+            outputfmt = "datFrame",
+            EnzymeType  = EnzymeType,
+            pattern_Proband = pattern_Proband),
+            error = function(e) {
+                print(paste("RNAseqcombo cannot work"))
+                return (datdecipher)
+            }
+        )
+    }else{
+        datRNASeq <- tryCatch(
+            SVexpression_solo(
+            input_fmt_SV = "dataFrame", 
+            smapdata = datdecipher, 
+            smappath = smappath, 
+            input_fmt_RNASeq = "Text",
+            RNASeqPATH = RNASeqDir,
+            EnzymeType  = EnzymeType,
+            outputfmt = "datFrame",
+            pattern_Proband = pattern_Proband),
+            error = function(e) {
+            print(paste("RNAseqcombo cannot work"))
             return (datdecipher)
-        }
-    )
-}else{
-    datRNASeq <- tryCatch(
-        SVexpression_solo(
+            }
+        )
+    }
+    end_time <- Sys.time()
+    print(paste("Time taken to run SmapRNAseqquery is:" , start_time-end_time))
+    start_time <- Sys.time()
+    'r3 <-read.csv("C:/Annotator/Data/RNASeq_F1.1.csv")
+    datRNASeq <- cbind(datdecipher, r3[, 2:ncol(r3)])
+    datRNASeq[is.na(datRNASeq)]<-"-"
+    datRNASeq[is.na(datRNASeq$Type2)]<-"-\"
+    #dat_geneList<-read.table("C:/Annotator/Data/F3.1_UDN992683_GeneList.txt",header=TRUE,sep=" ")'
+    tryCatch( 
+    run_bionano_filter_SVMerge_solo(
+        input_fmt_geneList = "dataFrame", 
         input_fmt_SV = "dataFrame", 
-        smapdata = datdecipher, 
-        smappath = smappath, 
-        input_fmt_RNASeq = "Text",
-        RNASeqPATH = RNASeqDir,
+        svData = datRNASeq, 
+        dat_geneList = dat_geneList,
+        outpath = outpath,
         EnzymeType  = EnzymeType,
-        outputfmt = "datFrame",
-        pattern_Proband = pattern_Proband),
+        outputType = outputType,
+        outputFilename = outputFilename,
+        RZIPpath = RZIPpath, 
+        primaryGenesPresent = primaryGenesPresent),
         error = function(e) {
-        print(paste("RNAseqcombo cannot work"))
-        return (datdecipher)
-        }
-    )
-}
-end_time <- Sys.time()
-print(paste("Time taken to run SmapRNAseqquery is:" , start_time-end_time))
-start_time <- Sys.time()
-'r3 <-read.csv("C:/Annotator/Data/RNASeq_F1.1.csv")
-datRNASeq <- cbind(datdecipher, r3[, 2:ncol(r3)])
-datRNASeq[is.na(datRNASeq)]<-"-"
-datRNASeq[is.na(datRNASeq$Type2)]<-"-\"
-#dat_geneList<-read.table("C:/Annotator/Data/F3.1_UDN992683_GeneList.txt",header=TRUE,sep=" ")'
-tryCatch( 
-run_bionano_filter_SVMerge_solo(
-input_fmt_geneList = "dataFrame", 
-input_fmt_SV = "dataFrame", 
-svData = datRNASeq, 
-dat_geneList = dat_geneList,
-outpath = outpath,
-EnzymeType  = EnzymeType,
-outputType = outputType,
-outputFilename = outputFilename,
-RZIPpath = RZIPpath, 
-primaryGenesPresent = primaryGenesPresent),
-error = function(e) {
-        print(paste("run_bionano_filter_SE_solo cannot work"))
-        return (datRNASeq)
-        }
-    )
-} else{
-tryCatch( 
-run_bionano_filter_SVMerge_solo(
-input_fmt_geneList = "dataFrame", 
-input_fmt_SV = "dataFrame", 
-svData = datdecipher, 
-dat_geneList = dat_geneList,
-outpath = outpath,
-EnzymeType  = EnzymeType,
-outputFilename = outputFilename,
-outputType = outputType,
-RZIPpath = RZIPpath, 
-primaryGenesPresent = primaryGenesPresent),
-error = function(e) {
+            print(paste("run_bionano_filter_SE_solo cannot work"))
+            return (datRNASeq)
+            }
+        )
+    } else{
+    tryCatch( 
+    run_bionano_filter_SVMerge_solo(
+        input_fmt_geneList = "dataFrame", 
+        input_fmt_SV = "dataFrame", 
+        svData = datdecipher, 
+        dat_geneList = dat_geneList,
+        outpath = outpath,
+        EnzymeType  = EnzymeType,
+        outputFilename = outputFilename,
+        outputType = outputType,
+        RZIPpath = RZIPpath, 
+        primaryGenesPresent = primaryGenesPresent),
+    error = function(e) {
         print(paste("run_bionano_filter_SE_solo cannot work"))
         return (datdecipher)
         }
-    )}
-end_time <- Sys.time()
-print(paste("Time taken to run run_bionano_filter_SE_solo is:" , start_time-end_time))
-
-}
+        )}
+    end_time <- Sys.time()
+    print(paste("Time taken to run run_bionano_filter_SE_solo is:" , 
+        start_time-end_time))
+    
+    }
+    

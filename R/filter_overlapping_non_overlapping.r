@@ -170,7 +170,7 @@ ha1 <- hash()
                 else {
                     pagene <- c(pagene, opag)
                     pagene_term <- c(pagene_term, opagt)
-                pagene_clinSig <- c(pagene_clinSig, opagcs)
+                    pagene_clinSig <- c(pagene_clinSig, opagcs)
                 }
             }
             else {

@@ -94,13 +94,13 @@
 #' @importFrom stats na.omit
 #' @export
 run_bionano_filter_SE_Trio <- function(primaryGenesPresent = TRUE, 
-                                input_fmt_geneList = c("Text", "dataFrame"),
-                                input_fmt_SV = c("Text", "dataFrame"),
-                                smap = NULL, svData, dat_geneList, fileName, outpath,
-                                outputFilename = "", RZIPpath,
-		                        outputType = c("Excel", "csv"), 
-								directoryName, fileprefix, 
-								EnzymeType = c("SVMerge", "SE" )) {
+    input_fmt_geneList = c("Text", "dataFrame"),
+    input_fmt_SV = c("Text", "dataFrame"),
+    smap = NULL, svData, dat_geneList, fileName, outpath,
+    outputFilename = "", RZIPpath,
+    outputType = c("Excel", "csv"), 
+    directoryName, fileprefix, 
+    EnzymeType = c("SVMerge", "SE" )) {
   # library(openxlsx)
   # library(hash)
   # setwd(path)##change the directory to your working directory
@@ -125,38 +125,38 @@ run_bionano_filter_SE_Trio <- function(primaryGenesPresent = TRUE,
         smapdata = svData
         if(EnzymeType == "SVMerge"){
             #smapdata <- readSMap(smap, input_fmt_smap = "Text")
-			SVID<-smapdata$SVIndex
+            SVID<-smapdata$SVIndex
         }
         else{
             #smapdata <- readSMap_DLE(smap, input_fmt_smap)
-			SVID<-smapdata$SmapEntryID
+            SVID<-smapdata$SmapEntryID
         }
     }
     else if(input_fmt_SV=="Text"){
         if(EnzymeType == "SVMerge"){
             smapdata <- readSMap(smap, input_fmt_smap = "Text")
-			SVID<-smapdata$SVIndex
+            SVID<-smapdata$SVIndex
         }
         else{
             smapdata <- readSMap_DLE(smap, input_fmt_smap = "Text")
-			SVID<-smapdata$SmapEntryID
+            SVID<-smapdata$SmapEntryID
         }
     }
     else{
         stop("Input format for SMAP Incorrect")
     }
     r <- smapdata
-	primaryGenesPresent = primaryGenesPresent
-  if (primaryGenesPresent == TRUE){
-    if (input_fmt_geneList == "Text") {
-        rr <- read.table(fileName, header = TRUE)
-    }
-    else if (input_fmt_geneList == "dataFrame") {
-        rr <- dat_geneList
-    }
-    else {
-        stop("input_fmt_geneList Incorrect!!")
-    }
+    primaryGenesPresent = primaryGenesPresent
+    if (primaryGenesPresent == TRUE){
+        if (input_fmt_geneList == "Text") {
+            rr <- read.table(fileName, header = TRUE)
+        }
+        else if (input_fmt_geneList == "dataFrame") {
+            rr <- dat_geneList
+        }
+        else {
+            stop("input_fmt_geneList Incorrect!!")
+        }
 
 
     ogene <- as.character(r$OverlapGenes_strand_perc)
@@ -168,8 +168,8 @@ run_bionano_filter_SE_Trio <- function(primaryGenesPresent = TRUE,
     dataPGOV <- overlappingGenes (rr, ogene)
 ### Non-Overlap Up-stream Gene
     dataPGUP <- nonOverlappingUPGenes (rr, upgene)
-	### Non-Overlap Down-stream Gene
-	dataPGDN <- nonOverlappingDNGenes (rr, dngene)
+    ### Non-Overlap Down-stream Gene
+    dataPGDN <- nonOverlappingDNGenes (rr, dngene)
 ### Non-OverlapDnGene
 
 # len<-length(pagene)-length(pg)
@@ -177,68 +177,75 @@ run_bionano_filter_SE_Trio <- function(primaryGenesPresent = TRUE,
     data <- data.frame(cbind(
         r, Overlap_PG = as.character(dataPGOV$pagene),
         Overlap_Terms = as.character(dataPGOV$pagene_term),
-		Overlap_ClinicalSig = as.character(dataPGOV$pagene_clinSig),
+        Overlap_ClinicalSig = as.character(dataPGOV$pagene_clinSig),
         Non_Overlap_UP_PG = as.character(dataPGUP$nopageneup),
         Non_Overlap_UP_Terms = as.character(dataPGUP$nopageneup_term),
-		Non_Overlap_UP_ClinicalSig = as.character(dataPGUP$nopageneup_clinSig),
+        Non_Overlap_UP_ClinicalSig = as.character(dataPGUP$nopageneup_clinSig),
         Non_Overlap_DN_PG = as.character(dataPGDN$nopagenedn),
-        Non_Overlap_DN_Terms = as.character(dataPGDN$nopagenedn_term)),
-		Non_Overlap_DN_ClinicalSig = as.character(dataPGDN$nopagenedn_clinSig))
+        Non_Overlap_DN_Terms = as.character(dataPGDN$nopagenedn_term),
+        Non_Overlap_DN_ClinicalSig = as.character(dataPGDN$nopagenedn_clinSig)))
     }else if (primaryGenesPresent == FALSE){
-	    data <- r
-	}else {stop("primaryGenesPresent Incorrect!!")}
-  data$BNG_Freq_Perc_Filtered<-gsub("-",0,as.character(data$BNG_Freq_Perc_Filtered))
-  data$BNG_Freq_Perc_UnFiltered<-gsub("-",0,as.character(data$BNG_Freq_Perc_UnFiltered))
-  data$DGV_Freq_Perc<-as.numeric(data$DGV_Freq_Perc)
-  data$Internal_Freq_Perc_Filtered<-as.numeric(data$Internal_Freq_Perc_Filtered)
-  data$Internal_Freq_Perc_Unfiltered<-as.numeric(data$Internal_Freq_Perc_Unfiltered)
-  data$BNG_Freq_Perc_Filtered<-as.numeric(data$BNG_Freq_Perc_Filtered)
-  data$BNG_Freq_Perc_UnFiltered<-as.numeric(data$BNG_Freq_Perc_UnFiltered)
-  data$DECIPHER_Frequency<-as.numeric(data$DECIPHER_Frequency)
+        data <- smapdata
+    }else {stop("primaryGenesPresent Incorrect!!")}
+    data$BNG_Freq_Perc_Filtered<-gsub("-",0,as.character(
+        data$BNG_Freq_Perc_Filtered))
+    data$BNG_Freq_Perc_UnFiltered<-gsub("-",0,as.character(
+        data$BNG_Freq_Perc_UnFiltered))
+    data$DGV_Freq_Perc<-as.numeric(data$DGV_Freq_Perc)
+    data$Internal_Freq_Perc_Filtered<-as.numeric(
+        data$Internal_Freq_Perc_Filtered)
+    data$Internal_Freq_Perc_Unfiltered<-as.numeric(
+        data$Internal_Freq_Perc_Unfiltered)
+    data$BNG_Freq_Perc_Filtered<-as.numeric(
+        data$BNG_Freq_Perc_Filtered)
+    data$BNG_Freq_Perc_UnFiltered<-as.numeric(
+        data$BNG_Freq_Perc_UnFiltered)
+    data$DECIPHER_Frequency<-as.numeric(data$DECIPHER_Frequency)
  
   
-  dat <- data[which(data$Type %in% "insertion"), ]
-  dat1 <- data[which(data$Type %in% "deletion"), ]
-  dat44 <- data[which(data$Type %in% "duplication"), ]
-  dat45 <- data[which(data$Type %in% "duplication_split"), ]
-  dat46 <- data[which(data$Type %in% "duplication_inverted"), ]
-  dat_dup_rem<-rbind(dat44,dat45,dat46)
-  dat_dup_rem_FINAL<-dat_dup_rem[which(((dat_dup_rem$Type %in% "duplication") |
-     (dat_dup_rem$Type %in% "duplication_split") | (dat_dup_rem$Type %in% "duplication_inverted"))&
-    (dat_dup_rem$Fail_assembly_chimeric_score == "pass")), ]
-   
-  dat3 <- rbind(dat1, dat, dat_dup_rem_FINAL)
-  dat10 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
-    ((dat3$Found_in_parents_molecules == "none" | dat3$Found_in_parents_molecules == "-"))), ]
+    dat <- data[which(data$Type %in% "insertion"), ]
+    dat1 <- data[which(data$Type %in% "deletion"), ]
+    dat44 <- data[which(data$Type %in% "duplication"), ]
+    dat45 <- data[which(data$Type %in% "duplication_split"), ]
+    dat46 <- data[which(data$Type %in% "duplication_inverted"), ]
+    dat_dup_rem<-rbind(dat44,dat45,dat46)
+    dat_dup_rem_FINAL<-dat_dup_rem[which(((dat_dup_rem$Type %in% "duplication") |
+       (dat_dup_rem$Type %in% "duplication_split") | (dat_dup_rem$Type %in% "duplication_inverted"))&
+      (dat_dup_rem$Fail_assembly_chimeric_score == "pass")), ]
+     
+    dat3 <- rbind(dat1, dat, dat_dup_rem_FINAL)
+    dat10 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
+      ((dat3$Found_in_parents_molecules == "none" 
+      | dat3$Found_in_parents_molecules == "-"))), ]
+      
+    dat11 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
+      ((dat3$Found_in_parents_molecules == "both"))),]
+    dat12 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
+      ((dat3$Found_in_parents_molecules == "mother"))),]
+    dat13 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
+      ((dat3$Found_in_parents_molecules == "father"))),]
+    dat14 <- rbind(dat12, dat13)
     
-  dat11 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
-    ((dat3$Found_in_parents_molecules == "both"))),]
-  dat12 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
-    ((dat3$Found_in_parents_molecules == "mother"))),]
-  dat13 <- dat3[which((dat3$Found_in_self_molecules == "yes") &
-    ((dat3$Found_in_parents_molecules == "father"))),]
-  dat14 <- rbind(dat12, dat13)
-
-  'gg <- grep("inversion", as.character(data$Type))
-  dat8 <- data[gg, ]'
-  dat8 <- data[which(data$Type %in% "inversion"
-	        | data$Type %in% "inversion_partial"
-			| data$Type %in% "inversion_paired"
-			| data$Type %in% "inversion_repeat"), ]
-  dat8 <-dat8[which((dat8$Found_in_self_molecules == "yes") 
-        & (dat8$Fail_assembly_chimeric_score == "pass")), ]
-  gg1 <- grep("translocation", as.character(data$Type))
-  dat7 <- data[gg1, ]
-  dat7 <-dat7[which((dat7$Found_in_self_molecules == "yes") 
-        & (dat7$Fail_assembly_chimeric_score == "pass")), ]
-  dat6 <- data[which(data$Type %in% "MisMatch"), ]
-  ovrlapPG<-which(!((as.character(data$Overlap_PG)=="-")))
-  datovrlapPG<-data[ovrlapPG,]
-  nonovrlapupPG<-which(!((as.character(data$Non_Overlap_UP_PG)=="-")))
-  datnonovrlapUPPG<-data[nonovrlapupPG,]
-  nonovrlapdnPG<-which(!((as.character(data$Non_Overlap_DN_PG)=="-")))
-  datnonovrlapDNPG<-data[nonovrlapdnPG,]
-  datOvrLap <- rbind(datovrlapPG,datnonovrlapUPPG,datnonovrlapDNPG)
+    'gg <- grep("inversion", as.character(data$Type))
+    dat8 <- data[gg, ]'
+    dat8 <- data[which(data$Type %in% "inversion"
+        | data$Type %in% "inversion_partial"
+        | data$Type %in% "inversion_paired"
+        | data$Type %in% "inversion_repeat"), ]
+    dat8 <-dat8[which((dat8$Found_in_self_molecules == "yes") 
+          & (dat8$Fail_assembly_chimeric_score == "pass")), ]
+    gg1 <- grep("translocation", as.character(data$Type))
+    dat7 <- data[gg1, ]
+    dat7 <-dat7[which((dat7$Found_in_self_molecules == "yes") 
+          & (dat7$Fail_assembly_chimeric_score == "pass")), ]
+    dat6 <- data[which(data$Type %in% "MisMatch"), ]
+    ovrlapPG<-which(!((as.character(data$Overlap_PG)=="-")))
+    datovrlapPG<-data[ovrlapPG,]
+    nonovrlapupPG<-which(!((as.character(data$Non_Overlap_UP_PG)=="-")))
+    datnonovrlapUPPG<-data[nonovrlapupPG,]
+    nonovrlapdnPG<-which(!((as.character(data$Non_Overlap_DN_PG)=="-")))
+    datnonovrlapDNPG<-data[nonovrlapdnPG,]
+    datOvrLap <- rbind(datovrlapPG,datnonovrlapUPPG,datnonovrlapDNPG)
   
   'list_of_datasets <- list(
     "all" = data, "indel_dup_denovo" = dat10,
@@ -247,26 +254,35 @@ run_bionano_filter_SE_Trio <- function(primaryGenesPresent = TRUE,
     "indel_dup_cmpdHET" = dat14, "inv" = dat8, "trans" = dat7, "mismatch" = dat6,
     "all_PG_OV" = datovrlapPG, "all_PG_Non_OV_UP" = datnonovrlapUPPG,"all_PG_Non_OV_DN" = datnonovrlapDNPG
   )'
-  if (outputType == "Excel"){
+    if (outputType == "Excel"){
         list_of_datasets <- list(
         "indel_dup_denovo" = dat10,
         "indel_dup_both" = dat11, "indel_dup_cmpdHET" = dat14,
-	    "inv" = dat8, "trans" = dat7,
+        "inv" = dat8, "trans" = dat7,
         "indel_dup_mother" = dat12, "indel_dup_father" = dat13,
-      	"all_PG_OV" = datOvrLap, "all" = data)
-		fname <- paste(outputFilename, ".xlsx", sep = "")
+          "all_PG_OV" = datOvrLap, "all" = data)
+        fname <- paste(outputFilename, ".xlsx", sep = "")
         write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
-	} else if (outputType == "csv"){
-	    write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
-		write.csv(dat11, file.path(directoryName, paste(fileprefix,"_indel_dup_both.csv",sep = ""), row.names = FALSE))
-		write.csv(dat14, file.path(directoryName, paste(fileprefix,"_indel_dup_cmpdHET.csv",sep = ""), row.names = FALSE))
-		write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
-		write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
-		write.csv(dat12, file.path(directoryName, paste(fileprefix,"_indel_dup_mother.csv",sep = ""), row.names = FALSE))
-		write.csv(dat13, file.path(directoryName, paste(fileprefix,"_indel_dup_father.csv",sep = ""), row.names = FALSE))
-		write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
-		write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = ""), row.names = FALSE))
-	} else {stop(" outputType incorrect !!")}
+    } else if (outputType == "csv"){
+        write.csv(dat10, file.path(directoryName, paste(
+            fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
+        write.csv(dat11, file.path(directoryName, paste(
+            fileprefix,"_indel_dup_both.csv",sep = ""), row.names = FALSE))
+        write.csv(dat14, file.path(directoryName, paste(
+            fileprefix,"_indel_dup_cmpdHET.csv",sep = ""), row.names = FALSE))
+        write.csv(dat8, file.path(directoryName, paste(
+            fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
+        write.csv(dat7, file.path(directoryName, paste(
+            fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
+        write.csv(dat12, file.path(directoryName, paste(
+            fileprefix,"_indel_dup_mother.csv",sep = ""), row.names = FALSE))
+        write.csv(dat13, file.path(directoryName, paste(
+            fileprefix,"_indel_dup_father.csv",sep = ""), row.names = FALSE))
+        write.csv(datOvrLap, file.path(directoryName, paste(
+            fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
+        write.csv(data, file.path(directoryName, paste(
+            fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+    } else {stop(" outputType incorrect !!")}
   
 
 

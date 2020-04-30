@@ -1,8 +1,3 @@
-    #setwd("Z:/bionano/VSVM_Solo")
-
-#setwd("Z:/bionano/VSVM_Solo")
-#setwd("Z:/bionano/VSVM_Solo")
-
 #' Merges Solo SV files to one common SV file
 #'
 #' @param path  character. Path to the solo files.
@@ -135,14 +130,15 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
     {
     #library(hash)
     print("###Cohort Frequency Calculation###")
-    print("###Building Database###")
-     if(buildBNInternalDB==TRUE){
+    if(buildBNInternalDB==TRUE){
+        print("###Building Database###")
         r<-makeInternalBNDatabase(path = BNDBpath, 
         pattern = BNDBpattern,dbOutput=dbOutput)
     } else{
+        print("###Reading Database###")
         r <- read.table(internalBNDB, sep = "\t", header = TRUE)
     }
-     usampt<-as.character(unique(r$Sample))
+    usampt<-as.character(unique(r$Sample))
     strst<-strsplit(usampt,split="_")
     usampp<-c()
     for(o in 1:length(strst)){
@@ -215,10 +211,12 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
         {
             #print(paste("nn:",nn)) 
             
-            if ((variantType2[nn] == "deletion" | variantType2[nn] == "insertion"))
+            if ((variantType2[nn] == "deletion" 
+                | variantType2[nn] == "insertion"))
             {
                 
-                dat2 <-dat[which((dat$BreakPntStrt >= rf_wb_ind[nn] & dat$BreakPntEnd <= re_wf_ind[nn])),]
+                dat2 <-dat[which((dat$BreakPntStrt >= rf_wb_ind[nn] 
+                    & dat$BreakPntEnd <= re_wf_ind[nn])),]
                 size1 <- size_bn[nn]
                 ## Calculating Internal Frequency
                 if (nrow(dat2) > 1)
@@ -233,7 +231,8 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
                     zygo <- as.character(dat2$Zygosity)
                     samp <- as.character(dat2$Sample)
                   
-                    sampid<-c();sampid_unfiltered<-c();zyg<-c();zyg_unfiltered<-c()
+                    sampid<-c();sampid_unfiltered<-c();
+                    zyg<-c();zyg_unfiltered<-c()
                     homozygo<-c(); unmapped<-c()
                 for (ll in 1:nrow(dat2))
                   
@@ -246,7 +245,11 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
                     #print(perc)
                     
                     #### print(svfamid1)
-                    if ((perc_ref_query[ll] >= perc_similarity & perc_query_ref[ll] >= perc_similarity) & identical(type[ll], variantType2[nn]) & (conf[ll] >= indelconf) & size_internal[ll] >=limsize)
+                    if ((perc_ref_query[ll] >= perc_similarity 
+                        & perc_query_ref[ll] >= perc_similarity) 
+                        & identical(type[ll], variantType2[nn]) 
+                        & (conf[ll] >= indelconf) 
+                        & size_internal[ll] >=limsize)
                       {
                       
                         countfre <- c(countfre,1)
@@ -320,7 +323,9 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
                                         & length(g3)==0){
                                             countfre1 <- countfre1 + 2
                                     }
-                                    else if(length(g1)>=1 & length(g2)==0 & length(g3)>=1){
+                                    else if(length(g1)>=1 
+                                        & length(g2)==0 
+                                        & length(g3)>=1){
                                         countfre1 <- countfre1 + 2
                                     }
                                     else{
@@ -339,10 +344,12 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
                         countfre1 <- 0
                         }
                     #### Unfiltered
-                    if ((length(sampid_unfiltered) >= 1) & length(countfreunfilt) >= 1)
+                    if ((length(sampid_unfiltered) >= 1) 
+                        & length(countfreunfilt) >= 1)
                     {
                     
-                        dat_temp <- data.frame(sampid_unfiltered, countfreunfilt,zyg_unfiltered)
+                        dat_temp <- data.frame(sampid_unfiltered, 
+                            countfreunfilt,zyg_unfiltered)
                         countfreunfilt1 <- 0
                         if (nrow(dat_temp) > 0){
                             #### print(paste('dat_temp',dim(dat_temp)))
@@ -497,8 +504,10 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
                   # next;
                 }
                 
-            }else if ((variantType2[nn] == "duplication" | variantType2[nn] == "duplication_split"
-                        |variantType2[nn] == "duplication_inverted"| variantType2[nn] == "insertion"))
+            }else if ((variantType2[nn] == "duplication" 
+                | variantType2[nn] == "duplication_split"
+                |variantType2[nn] == "duplication_inverted"
+                | variantType2[nn] == "insertion"))
             {
                 dat2 <-dat[which((dat$BreakPntStrt >= rf_wb_int[nn] 
                     & dat$BreakPntEnd <= re_fb_int[nn])),]
@@ -506,79 +515,80 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
                 ## Calculating Internal Frequency
                 if (nrow(dat2) > 1)
                 {
-                  countfre <- c();countfreunfilt<- c()
-                  #print (paste(nn, ":", ll))
-                  # svind1<-dat2$SVIndex
-                  
-                  size_internal <- dat2$Size
-                  type <- as.character(dat2$Type)
-                  conf <- dat2$Score
-                  zygo <- as.character(dat2$Zygosity)
-                  samp <- as.character(dat2$Sample)
-                  sampid<-c();sampid_unfiltered<-c();zyg<-c();zyg_unfiltered<-c()
-                  unmapped<-c()
-                  homozygo<-c()
-                  for (ll in 1:nrow(dat2))
-                  {
-                    #print (ll)
-                    #print(type[ll])
-                    perc_ref_query <- as.numeric(dat2$Size)/size1
-                    perc_query_ref <- size1/as.numeric(dat2$Size)
-                    #### print(perc) 
-                    #### print(svfamid1)
-                    if ((identical(type[ll], "duplication") |
-                        identical(type[ll], "duplication_split")| 
-                        identical(type[ll], "duplication_inverted")
-                        & (perc_ref_query[ll] >= perc_similarity 
-                        & perc_query_ref[ll] >= perc_similarity)))
+                    countfre <- c();countfreunfilt<- c()
+                    #print (paste(nn, ":", ll))
+                    # svind1<-dat2$SVIndex
+                    
+                    size_internal <- dat2$Size
+                    type <- as.character(dat2$Type)
+                    conf <- dat2$Score
+                    zygo <- as.character(dat2$Zygosity)
+                    samp <- as.character(dat2$Sample)
+                    sampid<-c();sampid_unfiltered<-c();
+                    zyg<-c();zyg_unfiltered<-c()
+                    unmapped<-c()
+                    homozygo<-c()
+                    for (ll in 1:nrow(dat2))
                     {
-                        countfre <- c(countfre,1)
-                        sampid<-c(sampid,samp[ll])                       
-                        zyg<-c(zyg,zygo[ll])
-                        if(as.character(zygo[ll])=="homozygous"){
-                            homozygo<-c(homozygo, as.character(samp[ll]))
-                       }
-                        else{
-                            homozygo<-c(homozygo, NULL)
-                       }
-                    } else if ((identical(type[ll], "insertion")) 
-                        & (perc_ref_query[ll] >= perc_similarity 
-                        & perc_query_ref[ll] >= perc_similarity) 
-                        & (size_internal[ll]>=limsize) 
-                        & (conf[ll] >= indelconf))
-                    {
-                        countfre <- c(countfre,1)
-                        sampid<-c(sampid,samp[ll])                       
-                        zyg<-c(zyg,zygo[ll])
-                        if(as.character(zygo[ll])=="homozygous"){
-                            homozygo<-c(homozygo, as.character(samp[ll]))
-                        }
-                        else{
-                            homozygo<-c(homozygo, NULL)
-                        }
-                    }                    
-                    else {
-                           unmapped<-c(unmapped, ll)
-                        }
-                        ##Unfiltered
+                        #print (ll)
+                        #print(type[ll])
+                        perc_ref_query <- as.numeric(dat2$Size)/size1
+                        perc_query_ref <- size1/as.numeric(dat2$Size)
+                        #### print(perc) 
+                        #### print(svfamid1)
                         if ((identical(type[ll], "duplication") |
-                        identical(type[ll], "duplication_split")| 
-                        identical(type[ll], "duplication_inverted")|
-                        identical(type[ll], "insertion")
-                        & (perc_ref_query[ll] >= perc_similarity 
-                        & perc_query_ref[ll] >= perc_similarity)))
-                        {   
-                       
-                        countfreunfilt <- c(countfreunfilt, 1)
-                        sampid_unfiltered<-c(
-                            sampid_unfiltered,as.character(samp[ll])
+                            identical(type[ll], "duplication_split")| 
+                            identical(type[ll], "duplication_inverted")
+                            & (perc_ref_query[ll] >= perc_similarity 
+                            & perc_query_ref[ll] >= perc_similarity)))
+                        {
+                            countfre <- c(countfre,1)
+                            sampid<-c(sampid,samp[ll])                       
+                            zyg<-c(zyg,zygo[ll])
+                            if(as.character(zygo[ll])=="homozygous"){
+                                homozygo<-c(homozygo, as.character(samp[ll]))
+                           }
+                            else{
+                                homozygo<-c(homozygo, NULL)
+                           }
+                        } else if ((identical(type[ll], "insertion")) 
+                            & (perc_ref_query[ll] >= perc_similarity 
+                            & perc_query_ref[ll] >= perc_similarity) 
+                            & (size_internal[ll]>=limsize) 
+                            & (conf[ll] >= indelconf))
+                        {
+                            countfre <- c(countfre,1)
+                            sampid<-c(sampid,samp[ll])                       
+                            zyg<-c(zyg,zygo[ll])
+                            if(as.character(zygo[ll])=="homozygous"){
+                                homozygo<-c(homozygo, as.character(samp[ll]))
+                            }
+                            else{
+                                homozygo<-c(homozygo, NULL)
+                            }
+                        }                    
+                        else {
+                               unmapped<-c(unmapped, ll)
+                            }
+                            ##Unfiltered
+                            if ((identical(type[ll], "duplication") |
+                            identical(type[ll], "duplication_split")| 
+                            identical(type[ll], "duplication_inverted")|
+                            identical(type[ll], "insertion")
+                            & (perc_ref_query[ll] >= perc_similarity 
+                            & perc_query_ref[ll] >= perc_similarity)))
+                            {   
+                           
+                            countfreunfilt <- c(countfreunfilt, 1)
+                            sampid_unfiltered<-c(
+                                sampid_unfiltered,as.character(samp[ll])
+                                )
+                            zyg_unfiltered<-c(zyg_unfiltered,as.character(zygo[ll])
                             )
-                        zyg_unfiltered<-c(zyg_unfiltered,as.character(zygo[ll])
-                        )
-                    
-                        } 
-                    
-                  }
+                        
+                            } 
+                        
+                    }
                   ##Calculating filtered Frequency
                  ##Filtration
                   ##Filtration

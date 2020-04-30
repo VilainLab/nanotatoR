@@ -778,7 +778,8 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                             # print(paste('distfromStart:',distfromStart),sep='')
                             # print(paste('distfromEnd:',distfromEnd),sep='') Checking for
                             # partial/complete inclusion in the SV
-                            if ((chromStart1[k] >= start_adj & chromEnd1[k] <= start_adj1)) {
+                            if ((chromStart1[k] >= start_adj 
+                                & chromEnd1[k] <= start_adj1)) {
                                 percentage <- 100
                             } 
                             else if ((chromStart1[k] < start_adj 
@@ -795,28 +796,13 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                                             distfromStart / (chromEnd1[k] - chromStart1[k])) * 100), 
                                             digits = 2)
                             } 
-                            else if (((chromStart2[k] < end_adj1) 
-                                        & (chromEnd2[k] > end_adj1) 
-                                        & (chromEnd2[k] <= end_adj))) {
-                                            distfromStart <- chromEnd2[k] - end_adj1
-                                            percentage <- round(abs((
-                                            distfromStart / (chromEnd2[k] - chromStart2[k])) * 100), 
-                                            digits = 2)
-                            } 
                             else if (((chromStart1[k] >= start_adj) 
-                                        & (chromStart1[k] < start_adj1
-                                        & chromEnd1[k] > start_adj1))) {
-                                            distfromEnd <- start_adj1 - chromStart1[k]
-                                            percentage <- round(abs((
-                                                distfromEnd / (chromEnd1[k] - chromStart1[k])) * 100), digits = 2)
+                                & (chromStart1[k] < start_adj1
+                                & chromEnd1[k] > start_adj1))) {
+                                    distfromEnd <- start_adj1 - chromStart1[k]
+                                    percentage <- round(abs((
+                                        distfromEnd / (chromEnd1[k] - chromStart1[k])) * 100), digits = 2)
                             } 
-                            else if (((chromStart2[k] >= end_adj1) 
-                                        & (chromStart2[k] < end_adj
-                                        & chromEnd2[k] > end_adj))) {
-                                            distfromEnd <- end_adj - chromStart2[k]
-                                            percentage <- round(abs((
-                                                distfromEnd / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
-                            }
                             else {
                                 percentage <- "NA"
                             }
@@ -845,29 +831,34 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                             # print(paste('distfromStart:',distfromStart),sep='')
                             # print(paste('distfromEnd:',distfromEnd),sep='') Checking for
                             # partial/complete inclusion in the SV
-                            if ((chromStart2[k] >= end_adj1 & chromEnd2[k] <= end_adj)) {
+                            if ((chromStart2[k] >= end_adj1 
+                                & chromEnd2[k] <= end_adj)) {
                                 percentage <- 100
                             } 
                             else if ((chromStart2[k] < end_adj1
                                 & chromEnd2[k] > end_adj) 
-                                & (lengthgene > lengthbp2)) {
+                                & (lengthgene2 > lengthbp2)) {
+                                #print("1")
                                 percentage <- round(abs(
                                     ((end_adj - end_adj1) / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
                             } 
                             else if (((chromStart2[k] < end_adj1) 
-                                        & (chromEnd2[k] > end_adj1) 
-                                        & (chromEnd2[k] <= end_adj))) {
-                                            distfromStart <- chromEnd2[k] - end_adj1
-                                            percentage <- round(abs((
-                                            distfromStart / (chromEnd2[k] - chromStart2[k])) * 100), 
-                                            digits = 2)
+                                    & (chromEnd2[k] > end_adj1) 
+                                    & (chromEnd2[k] <= end_adj))) {
+                                         #print("2")
+                                         distfromStart <- chromEnd2[k] - end_adj1
+                                         percentage <- round(abs((
+                                         distfromStart / (chromEnd2[k] - chromStart2[k])) * 100), 
+                                         digits = 2)
                             } 
                             else if (((chromStart2[k] >= end_adj1) 
-                                        & (chromStart2[k] < end_adj
-                                        & chromEnd2[k] > end_adj))) {
-                                            distfromEnd <- end_adj - chromStart2[k]
-                                            percentage <- round(abs((
-                                                distfromEnd / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
+                                   & (chromStart2[k] < end_adj
+                                   & chromEnd2[k] > end_adj))) {
+                                    #print("3")
+                                    distfromEnd <- end_adj - chromStart2[k]
+                                    percentage <- round(abs((
+                                        distfromEnd / (chromEnd2[k] - chromStart2[k])) * 100),
+                                        digits = 2)
                             }
                             else {
                                 percentage <- "NA"
@@ -918,7 +909,7 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                             } 
                             else if ((chromStart2[k] < end_adj1
                                 & chromEnd2[k] > end_adj) 
-                                & (lengthgene > lengthbp2)) {
+                                & (lengthgene2 > lengthbp2)) {
                                 percentage <- round(abs(
                                     ((end_adj - end_adj1) / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
                             } 
@@ -997,12 +988,12 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                                             distfromStart / (chromEnd1[k] - chromStart1[k])) * 100), 
                                             digits = 2)
                             } 
-                            else if (((chromStart2[k] < end_adj1) 
-                                        & (chromEnd2[k] > end_adj1) 
-                                        & (chromEnd2[k] <= end_adj))) {
-                                            distfromStart <- chromEnd2[k] - end_adj1
+                            else if (((chromStart1[k] < end_adj1) 
+                                        & (chromEnd1[k] > end_adj1) 
+                                        & (chromEnd1[k] <= end_adj))) {
+                                            distfromStart <- chromEnd1[k] - end_adj1
                                             percentage <- round(abs((
-                                            distfromStart / (chromEnd2[k] - chromStart2[k])) * 100), 
+                                            distfromStart / (chromEnd1[k] - chromStart1[k])) * 100), 
                                             digits = 2)
                             } 
                             else if (((chromStart1[k] >= start_adj) 
@@ -1012,12 +1003,12 @@ overlapGenes <- function(bed, chrom, startpos, endpos, svid, chrom2, SVTyp,
                                             percentage <- round(abs((
                                                 distfromEnd / (chromEnd1[k] - chromStart1[k])) * 100), digits = 2)
                             } 
-                            else if (((chromStart2[k] >= end_adj1) 
-                                        & (chromStart2[k] < end_adj
-                                        & chromEnd2[k] > end_adj))) {
-                                            distfromEnd <- end_adj - chromStart2[k]
+                            else if (((chromStart1[k] >= end_adj1) 
+                                        & (chromStart1[k] < end_adj
+                                        & chromEnd1[k] > end_adj))) {
+                                            distfromEnd <- end_adj - chromStart1[k]
                                             percentage <- round(abs((
-                                                distfromEnd / (chromEnd2[k] - chromStart2[k])) * 100), digits = 2)
+                                                distfromEnd / (chromEnd1[k] - chromStart1[k])) * 100), digits = 2)
                             }
                             else {
                                 percentage <- "NA"
@@ -1656,11 +1647,13 @@ overlapnearestgeneSearch <- function(smap, bed, inputfmtBed = c("bed", "BNBED"),
     SVTyp <- r2$Type
     ## Calls for the functions to extract overlap/non-overlap genes and
     ## calculate informations for the same.
-    dat3 <- overlapGenes(r1, chrom, startpos, endpos, svid, chrom2, SVTyp = SVTyp, 
+    dat3 <- overlapGenes(bed = r1, chrom = chrom, startpos = startpos, 
+        endpos= endpos, svid = svid, chrom2 = chrom2, SVTyp = SVTyp, 
         bperrorindel = bperrorindel, bperrorinvtrans = bperrorinvtrans)
     # print(names(dat3))
-    dat4 <- nonOverlapGenes(r1, chrom, startpos, endpos, svid, chrom2, SVTyp = SVTyp,
-         bperrorindel = bperrorindel, bperrorinvtrans = bperrorinvtrans)
+    dat4 <- nonOverlapGenes(bed = r1, chrom = chrom, startpos = startpos, 
+        endpos = endpos, svid = svid, chrom2 = chrom2, SVTyp = SVTyp,
+        bperrorindel = bperrorindel, bperrorinvtrans = bperrorinvtrans)
     # print(names(dat4))
     ## Writing results in data frame and text files
     data1 <- data.frame(r2, 

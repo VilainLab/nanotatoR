@@ -14,8 +14,10 @@
 #' @return dataframe containing decipher data.
 #' are stored as text files.
 #' @examples
-#' decipherpath = system.file("extdata", "population_cnv.txt", package="nanotatoR")
-#' smappath=system.file("extdata", "GM24385_Ason_DLE1_VAP_trio5.smap", package="nanotatoR")
+#' decipherpath = system.file("extdata", "population_cnv.txt",
+#' package="nanotatoR")
+#' smappath=system.file("extdata", "GM24385_Ason_DLE1_VAP_trio5.smap", 
+#' package="nanotatoR")
 #' datdecipher <- Decipherfrequency (decipherpath = decipherpath, 
 #' smap = smappath, win_indel = 10000,
 #' EnzymeType= "SE",
@@ -29,7 +31,7 @@ Decipherfrequency  <- function(decipherpath, smap,
     returnMethod = c("Text", "dataFrame"),
     input_fmt_SV = c("Text", "dataFrame"),
     EnzymeType = c("SVMerge", "SE"),
-	outpath)
+    outpath)
     {
     # S='F' Change the window for Inversion/translocation 50000
     print("###Calculating Decipher Frequency###")
@@ -113,7 +115,8 @@ Decipherfrequency  <- function(decipherpath, smap,
             # print(paste('nn:',nn)) Comparing the conditions
             if (variantType2[nn] == "deletion")
             {
-                dat2 <- dat[which((dat$start >= rf_wb_ind[nn]  & dat$end <= re_wf_ind[nn])), ]
+                dat2 <- dat[which((dat$start >= rf_wb_ind[nn]  
+                    & dat$end <= re_wf_ind[nn])), ]
                 size1 <- size_bn[nn]
                 # print(dim(dat2)) Writing if the dgv_match is TRUE or not
                 
@@ -161,43 +164,45 @@ Decipherfrequency  <- function(decipherpath, smap,
                   datf <- rbind(datf, data1)
                 } else if (nrow(dat2) == 1)
                 {
-                  # dgv_match=TRUE Calculating percentage similarity
-                  del_freq <- as.numeric(dat2$deletion_frequency)
-                  del_samp <- as.numeric(dat2$sample_size)
-                  size_dec <- dat2$end - dat2$start
-                  perc_ref_query <- as.numeric(size_dec)/size1
-                  perc_query_ref <- size1/as.numeric(size_dec)
-                  # ctr=ctr+1
-                  if ((perc_ref_query >= perc_similarity & perc_query_ref >= perc_similarity)
-                   & (del_freq > 0))
-                  {
-                    # print(paste('del_freq:',del_freq,sep=''))
-                    freq <- round(del_freq, 2)
+                    # dgv_match=TRUE Calculating percentage similarity
+                    del_freq <- as.numeric(dat2$deletion_frequency)
+                    del_samp <- as.numeric(dat2$sample_size)
+                    size_dec <- dat2$end - dat2$start
+                    perc_ref_query <- as.numeric(size_dec)/size1
+                    perc_query_ref <- size1/as.numeric(size_dec)
                     # ctr=ctr+1
-                  } else
-                  {
-                    freq <- 0
+                    if ((perc_ref_query >= perc_similarity 
+				    & perc_query_ref >= perc_similarity)
+                     & (del_freq > 0))
+                    {
+                      # print(paste('del_freq:',del_freq,sep=''))
+                      freq <- round(del_freq, 2)
+                      # ctr=ctr+1
+                    } else
+                    {
+                      freq <- 0
+                      
+                    }
+                    # freq=paste(as.numeric(freq),collapse=',')
+                    # samp_size=paste(as.numeric(samp_size),collapse=',')
                     
-                  }
-                  # freq=paste(as.numeric(freq),collapse=',')
-                  # samp_size=paste(as.numeric(samp_size),collapse=',')
-                  
-                  data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = freq, 
-                    stringsAsFactors = FALSE)
-                  datf <- rbind(datf, data1)
-                } else
+                    data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = freq, 
+                      stringsAsFactors = FALSE)
+                    datf <- rbind(datf, data1)
+                  } else
                 {
-                  # dgv_match=FALSE
-                  data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = 0, 
-                    stringsAsFactors = FALSE)
-                  datf <- rbind(datf, data1)
-                  # next;
+                      # dgv_match=FALSE
+                      data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = 0, 
+                        stringsAsFactors = FALSE)
+                      datf <- rbind(datf, data1)
+                      # next;
                 }
                 
-            } else if (variantType2[nn] == "insertion" | variantType2[nn] == 
-                "duplication")
+            } else if (variantType2[nn] == "insertion" 
+                | variantType2[nn] == "duplication")
                 {
-                dat2 <- dat[which((dat$start >= rf_wb_ind[nn]  & dat$end <= re_wf_ind[nn])), ]
+                dat2 <- dat[which((dat$start >= rf_wb_ind[nn]  
+                    & dat$end <= re_wf_ind[nn])), ]
                 size1 <- size_bn[nn]
                 # print(dim(dat2)) Writing if the dgv_match is TRUE or not
                 
@@ -220,7 +225,9 @@ Decipherfrequency  <- function(decipherpath, smap,
                     'size_dec <- dat2$end[ll] - dat2$start[ll]
                     perc <- (size1/size_dec)'
                     
-                    if ((dat2$perc_ref_query[ll] >= perc_similarity & dat2$perc_query_ref[ll] >= perc_similarity) & (ins_freq[ll] > 0))
+                    if ((dat2$perc_ref_query[ll] >= perc_similarity 
+                        & dat2$perc_query_ref[ll] >= perc_similarity)
+                        & (ins_freq[ll] > 0))
                     {
                       # print(paste('ins_freq:',ins_freq[ll],sep=''))
                       freq <- c(freq, as.numeric(ins_freq[ll]))
@@ -247,36 +254,36 @@ Decipherfrequency  <- function(decipherpath, smap,
                   datf <- rbind(datf, data1)
                 } else if (nrow(dat2) == 1)
                 {
-                  # dgv_match=TRUE Calculating percentage similarity
-                  ins_freq <- as.numeric(dat2$duplication_frequency)
-                  ins_samp <- as.numeric(dat2$sample_size)
-                  size_dec <- dat2$end - dat2$start
-                  perc_ref_query <- as.numeric(size_dec)/size1
-                  perc_query_ref <- size1/as.numeric(size_dec)
-                  # ctr=ctr+1
-                  if ((perc_ref_query >= perc_similarity & perc_query_ref >= perc_similarity)
-                   & (ins_freq > 0))    
-                  {
-                    # print(paste('ins_freq:',ins_freq,sep=''))
-                    freq <- round(ins_freq, 2)
-                    
+                    # dgv_match=TRUE Calculating percentage similarity
+                    ins_freq <- as.numeric(dat2$duplication_frequency)
+                    ins_samp <- as.numeric(dat2$sample_size)
+                    size_dec <- dat2$end - dat2$start
+                    perc_ref_query <- as.numeric(size_dec)/size1
+                    perc_query_ref <- size1/as.numeric(size_dec)
                     # ctr=ctr+1
-                  } else
-                  {
-                    freq <- 0
+                    if ((perc_ref_query >= perc_similarity & perc_query_ref >= perc_similarity)
+                     & (ins_freq > 0))    
+                    {
+                      # print(paste('ins_freq:',ins_freq,sep=''))
+                      freq <- round(ins_freq, 2)
+                      
+                      # ctr=ctr+1
+                    } else
+                    {
+                      freq <- 0
+                      
+                    }
                     
-                  }
-                  
-                  data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = freq, 
-                    stringsAsFactors = FALSE)
-                  datf <- rbind(datf, data1)
+                    data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = freq, 
+                      stringsAsFactors = FALSE)
+                    datf <- rbind(datf, data1)
                 } else
                 {
-                  # dgv_match=FALSE
-                  data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = 0, 
-                    stringsAsFactors = FALSE)
-                  datf <- rbind(datf, data1)
-                  # next;
+                    # dgv_match=FALSE
+                    data1 <- data.frame(dat1[nn, ], DECIPHER_Frequency = 0, 
+                      stringsAsFactors = FALSE)
+                    datf <- rbind(datf, data1)
+                    # next;
                 }
             } else
             {
@@ -298,9 +305,9 @@ Decipherfrequency  <- function(decipherpath, smap,
         st1 <- strsplit(smap, ".txt")
         fname <- st1[[1]][1]
         row.names(dataFinal) <- c()
-		filename <- paste(fname, "_Decipher.txt", sep = "") 
+        filename <- paste(fname, "_Decipher.txt", sep = "") 
         write.table(dataFinal, file.path(outpath, filename), 
-		sep = "\t", row.names = FALSE)
+        sep = "\t", row.names = FALSE)
     } else if (returnMethod == "dataFrame")
     {
         return(dataFinal)

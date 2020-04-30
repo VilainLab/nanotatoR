@@ -45,8 +45,10 @@ are stored as text files.
 Frequency calculation of variants compared to Decipher.
 }
 \examples{
-decipherpath = system.file("extdata", "population_cnv.txt", package="nanotatoR")
-smappath=system.file("extdata", "GM24385_Ason_DLE1_VAP_trio5.smap", package="nanotatoR")
+decipherpath = system.file("extdata", "population_cnv.txt",
+package="nanotatoR")
+smappath=system.file("extdata", "GM24385_Ason_DLE1_VAP_trio5.smap", 
+package="nanotatoR")
 datdecipher <- Decipherfrequency (decipherpath = decipherpath, 
 smap = smappath, win_indel = 10000,
 EnzymeType= "SE",

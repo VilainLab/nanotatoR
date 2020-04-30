@@ -203,8 +203,8 @@ nanotatoR_Duo_SVmerge<-function(
     outputType = c("Excel", "csv"))
     {
     print("####PipeLine Starts####")
-   start_time <- Sys.time()
-   termListPresent = termListPresent
+    start_time <- Sys.time()
+    termListPresent = termListPresent
     if(termListPresent == TRUE){
     
     

@@ -98,10 +98,10 @@
 run_bionano_filter_SVMerge_solo <- function(
         input_fmt_geneList = c("Text", "dataFrame"),
         input_fmt_SV = c("Text", "dataFrame"),
-		EnzymeType = c("SE", "SVMerge"),
-		smap = NULL, svData, dat_geneList, fileName, outpath,
+        EnzymeType = c("SE", "SVMerge"),
+        smap = NULL, svData, dat_geneList, fileName, outpath,
         outputFilename = "", RZIPpath, primaryGenesPresent = TRUE,
-		outputType = c("Excel", "csv"), directoryName, fileprefix) {
+        outputType = c("Excel", "csv"), directoryName, fileprefix) {
     # library(openxlsx)
     # library(hash)
     # setwd(path)##change the directory to your working directory
@@ -115,29 +115,29 @@ run_bionano_filter_SVMerge_solo <- function(
         smapdata = svData
         if(EnzymeType == "SVMerge"){
             #smapdata <- readSMap(smap, input_fmt_smap = "Text")
-			SVID<-smapdata$SVIndex
+            SVID<-smapdata$SVIndex
         }
         else{
             #smapdata <- readSMap_DLE(smap, input_fmt_smap)
-			SVID<-smapdata$SmapEntryID
+            SVID<-smapdata$SmapEntryID
         }
     }
     else if(input_fmt_SV=="Text"){
         if(EnzymeType == "SVMerge"){
             smapdata <- readSMap(smap, input_fmt_smap = "Text")
-			SVID<-smapdata$SVIndex
+            SVID<-smapdata$SVIndex
         }
         else{
             smapdata <- readSMap_DLE(smap, input_fmt_smap = "Text")
-			SVID<-smapdata$SmapEntryID
+            SVID<-smapdata$SmapEntryID
         }
     }
     else{
         stop("Input format for SMAP Incorrect")
     }
-	r <- smapdata
+    r <- smapdata
     primaryGenesPresent = primaryGenesPresent
-	if (primaryGenesPresent == TRUE){
+    if (primaryGenesPresent == TRUE){
         if (input_fmt_geneList == "Text") {
             rr <- read.table(fileName, header = TRUE)
         }
@@ -167,16 +167,17 @@ run_bionano_filter_SVMerge_solo <- function(
         data <- data.frame(cbind(
         r, Overlap_PG = as.character(dataPGOV$pagene),
         Overlap_Terms = as.character(dataPGOV$pagene_term),
-		Overlap_ClinicalSig = as.character(dataPGOV$pagene_clinSig),
+        Overlap_ClinicalSig = as.character(dataPGOV$pagene_clinSig),
         Non_Overlap_UP_PG = as.character(dataPGUP$nopageneup),
         Non_Overlap_UP_Terms = as.character(dataPGUP$nopageneup_term),
-		Non_Overlap_UP_ClinicalSig = as.character(dataPGUP$nopageneup_clinSig),
+        Non_Overlap_UP_ClinicalSig = as.character(dataPGUP$nopageneup_clinSig),
         Non_Overlap_DN_PG = as.character(dataPGDN$nopagenedn),
-        Non_Overlap_DN_Terms = as.character(dataPGDN$nopagenedn_term)),
-		Non_Overlap_DN_ClinicalSig = as.character(dataPGDN$nopagenedn_clinSig))
+        Non_Overlap_DN_Terms = as.character(dataPGDN$nopagenedn_term),
+        Non_Overlap_DN_ClinicalSig = as.character(dataPGDN$nopagenedn_clinSig)
+    ))
     }else if (primaryGenesPresent == FALSE){
-	    data <- r
-	}else {stop("primaryGenesPresent Incorrect!!")}
+        data <- smapdata
+    }else {stop("primaryGenesPresent Incorrect!!")}
     ##
     data$BNG_Freq_Perc_Filtered<-gsub("-", 0, as.character(
     data$BNG_Freq_Perc_Filtered))
@@ -185,7 +186,8 @@ run_bionano_filter_SVMerge_solo <- function(
     data$DGV_Freq_Perc<-as.numeric(data$DGV_Freq_Perc)
     data$Internal_Freq_Perc_Filtered<-as.numeric(
     data$Internal_Freq_Perc_Filtered)
-    data$Internal_Freq_Perc_Unfiltered<-as.numeric(data$Internal_Freq_Perc_Unfiltered)
+    data$Internal_Freq_Perc_Unfiltered<-as.numeric(
+        data$Internal_Freq_Perc_Unfiltered)
     data$BNG_Freq_Perc_Filtered<-as.numeric(data$BNG_Freq_Perc_Filtered)
     data$BNG_Freq_Perc_UnFiltered<-as.numeric(data$BNG_Freq_Perc_UnFiltered)
     data$DECIPHER_Frequency<-as.numeric(data$DECIPHER_Frequency)
@@ -285,9 +287,9 @@ run_bionano_filter_SVMerge_solo <- function(
     
     #gg <- grep("inversion", as.character(data$Type))
     dat8 <- data[which(data$Type %in% "inversion"
-	        | data$Type %in% "inversion_partial"
-			| data$Type %in% "inversion_paired"
-			| data$Type %in% "inversion_repeat"), ]
+            | data$Type %in% "inversion_partial"
+            | data$Type %in% "inversion_paired"
+            | data$Type %in% "inversion_repeat"), ]
     dat8 <- dat8[which(((dat8$Found_in_self_BSPQI_molecules == "yes"
         & dat8$Found_in_self_BSSSI_molecules == "yes") |
         (dat8$Found_in_self_BSPQI_molecules == "no" &
@@ -352,16 +354,23 @@ run_bionano_filter_SVMerge_solo <- function(
             "indel_dup" = dat10, "inv" = dat8, "trans" = dat7, 
             "all_PG_OV" = datOvrLap, "mismatch" = dat6, "all" = data
         )
-		fname <- paste(outputFilename, ".xlsx", sep = "")
-        write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
-	} else if (outputType == "csv"){
-	    write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
-		write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
-		write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
-		write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
-		write.csv(dat6, file.path(directoryName, paste(fileprefix,"_mismatch.csv",sep = ""), row.names = FALSE))
-		write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = ""), row.names = FALSE))
-	} else {stop(" outputType incorrect !!")}
+        fname <- paste(outputFilename, ".xlsx", sep = "")
+        write.xlsx(list_of_datasets, file = file.path(
+            outpath, fname), keepNA = TRUE)
+    } else if (outputType == "csv"){
+        write.csv(dat10, file.path(directoryName, paste(
+            fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
+        write.csv(dat8, file.path(directoryName, paste(
+            fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
+        write.csv(dat7, file.path(directoryName, paste(
+            fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
+        write.csv(datOvrLap, file.path(directoryName, paste(
+            fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
+        write.csv(dat6, file.path(directoryName, paste(
+            fileprefix,"_mismatch.csv",sep = ""), row.names = FALSE))
+        write.csv(data, file.path(directoryName, paste(
+            fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+    } else {stop(" outputType incorrect !!")}
     
       # gg<-grep("inversion",as.character(data$Type))
       # dat8<-data[gg,]

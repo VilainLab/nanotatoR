@@ -51,8 +51,7 @@ run_bionano_filter_SE_duo <- function(primaryGenesPresent = TRUE,
     # library(hash)
     # setwd(path)##change the directory to your working directory
     Sys.setenv("R_ZIPCMD" = RZIPpath)
-    ## GeneList Input Format
-    if (input_fmt_geneList == "Text") {
+    'if (input_fmt_geneList == "Text") {
         rr <- read.table(fileName, header = TRUE)
     }
     else if (input_fmt_geneList == "dataFrame") {
@@ -62,10 +61,12 @@ run_bionano_filter_SE_duo <- function(primaryGenesPresent = TRUE,
         stop("Dataframe Incorrect!!")
     }
     ha <- hash()
-    .set(ha, keys = rr$Genes, values = rr$Terms)
+    .set(ha, keys = rr$Genes, values = rr$Terms)'
 
-    pg <- as.character(rr$Genes)
-    gen <- paste("^", pg, "$", sep = "")
+    #pg <- as.character(rr$Genes)
+    #gen <- paste("^", pg, "$", sep = "")
+    
+    ## GeneList Input Format
     # ll<-list.files(pattern="txt")
     if(input_fmt_SV=="dataFrame"){
         smapdata = svData
@@ -105,18 +106,18 @@ run_bionano_filter_SE_duo <- function(primaryGenesPresent = TRUE,
         }
 
 
-         ogene <- as.character(r$OverlapGenes_strand_perc)
-         upgene <- as.character(r$Upstream_nonOverlapGenes_dist_kb)
-         dngene <- as.character(r$Downstream_nonOverlapGenes_dist_kb)
-         # nogene<-c(upgene,dngene)
+        ogene <- as.character(r$OverlapGenes_strand_perc)
+        upgene <- as.character(r$Upstream_nonOverlapGenes_dist_kb)
+        dngene <- as.character(r$Downstream_nonOverlapGenes_dist_kb)
+        # nogene<-c(upgene,dngene)
          
-         ### OverlapGene
-         dataPGOV <- overlappingGenes (rr, ogene)
-         ### Non-Overlap Up-stream Gene
-         dataPGUP <- nonOverlappingUPGenes (rr, upgene)
-         ### Non-Overlap Down-stream Gene
-         dataPGDN <- nonOverlappingDNGenes (rr, dngene)
-         ### Non-OverlapDnGene
+        ### OverlapGene
+        dataPGOV <- overlappingGenes (rr, ogene)
+        ### Non-Overlap Up-stream Gene
+        dataPGUP <- nonOverlappingUPGenes (rr, upgene)
+        ### Non-Overlap Down-stream Gene
+        dataPGDN <- nonOverlappingDNGenes (rr, dngene)
+        ### Non-OverlapDnGene
          
          # len<-length(pagene)-length(pg)
          # genesPG<-c(as.character(pg),rep("-",len))
@@ -128,10 +129,10 @@ run_bionano_filter_SE_duo <- function(primaryGenesPresent = TRUE,
         Non_Overlap_UP_Terms = as.character(dataPGUP$nopageneup_term),
         Non_Overlap_UP_ClinicalSig = as.character(dataPGUP$nopageneup_clinSig),
         Non_Overlap_DN_PG = as.character(dataPGDN$nopagenedn),
-        Non_Overlap_DN_Terms = as.character(dataPGDN$nopagenedn_term)),
-        Non_Overlap_DN_ClinicalSig = as.character(dataPGDN$nopagenedn_clinSig))
+        Non_Overlap_DN_Terms = as.character(dataPGDN$nopagenedn_term),
+        Non_Overlap_DN_ClinicalSig = as.character(dataPGDN$nopagenedn_clinSig)))
     }else if (primaryGenesPresent == FALSE){
-        data <- r
+        data <- smapdata
     }else {stop("primaryGenesPresent Incorrect!!")}
     data$BNG_Freq_Perc_Filtered <- gsub("-",0,as.character(
          data$BNG_Freq_Perc_Filtered)
@@ -204,17 +205,17 @@ run_bionano_filter_SE_duo <- function(primaryGenesPresent = TRUE,
         
         if (outputType == "Excel"){
             list_of_datasets <- list(
-                "indel_dup_denovo" = dat10,
+                "indel_dup_notshared" = dat10,
                 "inv" = dat8, "trans" = dat7,
-                "indel_dup_mother" = dat12,
+                "indel_dup_control" = dat12,
                 "all_PG_OV" = datOvrLap, "all" = data)
             fname <- paste(outputFilename, ".xlsx", sep = "")
             write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
         } else if (outputType == "csv"){
-            write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
+            write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup_notshared.csv",sep = ""), row.names = FALSE))
             write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
             write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
-            write.csv(dat12, file.path(directoryName, paste(fileprefix,"_indel_dup_mother.csv",sep = ""), row.names = FALSE))
+            write.csv(dat12, file.path(directoryName, paste(fileprefix,"_indel_dup_control.csv",sep = ""), row.names = FALSE))
             write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
             write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = ""), row.names = FALSE))
         } else {stop(" outputType incorrect !!")}
@@ -254,17 +255,17 @@ run_bionano_filter_SE_duo <- function(primaryGenesPresent = TRUE,
   )'
         if (outputType == "Excel"){
             list_of_datasets <- list(
-                "indel_dup_denovo" = dat10,
+                "indel_dup_notshared" = dat10,
                 "inv" = dat8, "trans" = dat7,
-                "indel_dup_father" = dat13,
+                "indel_dup_control" = dat12,
                 "all_PG_OV" = datOvrLap, "all" = data)
             fname <- paste(outputFilename, ".xlsx", sep = "")
             write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
         } else if (outputType == "csv"){
-            write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
+            write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup_notshared.csv",sep = ""), row.names = FALSE))
             write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
             write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
-            write.csv(dat13, file.path(directoryName, paste(fileprefix,"_indel_dup_father.csv",sep = ""), row.names = FALSE))
+            write.csv(dat13, file.path(directoryName, paste(fileprefix,"_indel_dup_control.csv",sep = ""), row.names = FALSE))
             write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
             write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = ""), row.names = FALSE))
         } else {stop(" outputType incorrect !!")}

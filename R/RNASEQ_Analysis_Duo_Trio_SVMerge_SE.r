@@ -70,8 +70,9 @@ RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
     for(kk in 1:length(genes)){
         pag<-paste("^",genes[kk],"$",sep="")
         val<-grep(pag,ensemblid,fixed=TRUE)
+		#if(length(val) > 1) {print(paste("val:", val, "kk:", kk))}
         if(length(val)>0){
-            gene3<-c(gene3,as.character(genesym[val]))
+            gene3<-c(gene3,as.character(unique(genesym[val])))
             ens<-c(ens,as.character(genes[kk]))
         }
         else{
@@ -381,7 +382,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
                     }
         '               
         datGeneInfo<-data.frame(SVID=SVID,Probandexpression=ProbandTPM,
-                Fatherexpression=FatherTPM,Motherexprssion=MotherTPM)     
+                Fatherexpression=FatherTPM,Motherexpression=MotherTPM)     
                 
     }
     else if(length(gnsOverlapID)==1){
@@ -1194,7 +1195,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
     overlapgenes<-str_trim(smapdata$OverlapGenes_strand_perc)
     
     SVID<-smapdata$SVIndex
-    dataOverLap<-data.frame(matrix(nrow=nrow(smapdata),ncol=5))
+    dataOverLap<-data.frame(matrix(nrow=nrow(smapdata),ncol=4))
     ##Extracting Overlapped Genes
     #dataOverLap<-data.frame(matrix(nrow=10,ncol=5))
     names(dataOverLap)<-c("SVID","OverlapProbandTPM",
@@ -1238,19 +1239,20 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
         }
         else{
         #print(paste("OverLapDNSVID:",svID))
-            datOverLap<-data.frame(SVID=svID,ProbandTPM="-",FatherTPM="-",
-                MotherTPM="-")
+            datOverLap<-data.frame(SVID = svID,
+                Probandexpression = "-",
+                Fatherexpression = "-",
+                Motherexpression = "-")
         }
         dataOverLap[kk,]<-c(as.character(datOverLap$SVID),
-            Proband_OverlapGeneExpression_TPM = as.character(datOverLap$ProbandTPM),
-            Father_OverlapGeneExpression_TPM = as.character(datOverLap$FatherTPM),
-            Mother_OverlapGeneExpression_TPM = as.character(datOverLap$MotherTPM))
+            Proband_OverlapGeneExpression_TPM = as.character(datOverLap$Probandexpression),
+            Father_OverlapGeneExpression_TPM = as.character(datOverLap$Fatherexpression),
+            Mother_OverlapGeneExpression_TPM = as.character(datOverLap$Motherexpression))
     }
     
     ##Extracting NonOverlapped Genes
     nearestUPGenes<-smapdata$Upstream_nonOverlapGenes_dist_kb
-    #datanonOverLapUP<-data.frame(matrix(nrow=nrow(smapdata),ncol=5))
-    datanonOverLapUP<-data.frame(matrix(nrow=10,ncol=5))
+    datanonOverLapUP<-data.frame(matrix(nrow=nrow(smapdata),ncol=4))
     names(datanonOverLapUP)<-c("SVID","NonOverlapUPProbandTPM",
                             "NonOverlapUPFatherTPM","NonOverlapUPMotherTPM")
     print("###NonOverlapUPStreamGenes###") 
@@ -1305,7 +1307,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
     
   ##Extracting NonOverlapped Down Stream Genes
     nearestDNGenes<-smapdata$Downstream_nonOverlapGenes_dist_kb
-    datanonOverLapDN<-data.frame(matrix(nrow=nrow(smapdata),ncol=5))
+    datanonOverLapDN<-data.frame(matrix(nrow=nrow(smapdata),ncol=4))
     names(datanonOverLapDN)<-c("SVID","NonOverlapDNProbandTPM",
                             "NonOverlapDNFatherTPM","NonOverlapDNMotherTPM")
     print("###NonOverlapDNStreamGenes###") 

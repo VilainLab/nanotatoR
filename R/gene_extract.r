@@ -272,7 +272,7 @@ gene_extraction<-function(terms){
     ##Initializing values
     geneName<-c()
     Final_terms <-c()
-    httr::set_config(httr::config(http_version = 0))
+    #httr::set_config(httr::config(http_version = 0))
     ##Initialising data to be extracted from ensembl
     'ensembl = useMart("ensembl",host = "www.ensembl.org", 
     ensemblRedirect = FALSE,dataset="hsapiens_gene_ensembl")'
@@ -323,8 +323,12 @@ gene_extraction<-function(terms){
                     print("Error")
                     return(NA)}
                 )
-                if (length(unique(as.character(na.omit(gn1)))) ==0) {next} else {gn1 = gn1}
-                if (length(unique(as.character(na.omit(gn2)))) ==0) {next} else {gn2 = gn2}
+                if (length(unique(as.character(na.omit(gn1)))) ==0) 
+                    {next} 
+                else {gn1 = gn1}
+                if (length(unique(as.character(na.omit(gn2)))) ==0) 
+                    {next} 
+                else {gn2 = gn2}
                 rn <- row.names(data.frame(gn1))
                 rn1 <- row.names(data.frame(gn2))
                 gene1<-data.frame(
@@ -416,7 +420,7 @@ omim_gene<-function(terms, omim){
     ##Initialising variables
     omimGenes<-c()
     Final_terms_OMIM<-c()
-    httr::set_config(httr::config(http_version = 0))
+    #httr::set_config(httr::config(http_version = 0))
     ##Initialising data to be extracted from ensembl
     ####Checking for term size and extracting gene list accordingly
     print(paste0("omim_gene",omim))
@@ -474,24 +478,28 @@ omim_gene<-function(terms, omim){
                 print("Error")
                 return(NA)}
             )
-            if (length(unique(as.character(na.omit(gn1)))) ==0) {next} else {gn1 = gn1}
-            if (length(unique(as.character(na.omit(gn2)))) ==0) {next} else {gn2 = gn2}
-                'gn1 <- mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")
-                gn2 <- mapIds(org.Hs.eg.db, geneID, "ENSEMBL", "ENTREZID")'
-                rn <- row.names(data.frame(gn1))
-                rn1 <- row.names(data.frame(gn2))
-                gene1<-data.frame(
-                entrezID = as.numeric(rn),
-                ensemblID = as.character(data.frame(gn2)[,1]),
-                hgnc_symbol = as.character(data.frame(gn1)[,1])
-                )
-                gn<-as.character(unique(gene1$hgnc_symbol))
-                gn_1_temp <- gn[gn != ""]
-                gn_1 <- as.character(na.omit(gn_1_temp))
-                omimGenes<-c(omimGenes,as.character(gn_1))
-                terms_list<-as.character(rep(paste(terms[ll],"_OMIM",sep=""),
-                    length(gn_1)))
-                Final_terms_OMIM<-c(Final_terms_OMIM,terms_list)
+            if (length(unique(as.character(na.omit(gn1)))) ==0) 
+                {next} 
+            else {gn1 = gn1}
+            if (length(unique(as.character(na.omit(gn2)))) ==0) 
+               {next} 
+            else {gn2 = gn2}
+            'gn1 <- mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")
+            gn2 <- mapIds(org.Hs.eg.db, geneID, "ENSEMBL", "ENTREZID")'
+            rn <- row.names(data.frame(gn1))
+            rn1 <- row.names(data.frame(gn2))
+            gene1<-data.frame(
+            entrezID = as.numeric(rn),
+            ensemblID = as.character(data.frame(gn2)[,1]),
+            hgnc_symbol = as.character(data.frame(gn1)[,1])
+            )
+            gn<-as.character(unique(gene1$hgnc_symbol))
+            gn_1_temp <- gn[gn != ""]
+            gn_1 <- as.character(na.omit(gn_1_temp))
+            omimGenes<-c(omimGenes,as.character(gn_1))
+            terms_list<-as.character(rep(paste(terms[ll],"_OMIM",sep=""),
+                length(gn_1)))
+            Final_terms_OMIM<-c(Final_terms_OMIM,terms_list)
             }
             else{
                 next
@@ -596,7 +604,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
     Final_terms_GTR<-c()
     print(downloadGTR)
     ##Initialising data to be extracted from ensembl
-    httr::set_config(httr::config(http_version = 0))
+    #httr::set_config(httr::config(http_version = 0))
     datGtr <- reading_GTR(gtr = gtr, 
         url_gtr = url_gtr, 
         downloadGTR = downloadGTR)
@@ -676,7 +684,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
 #' ge <- clinvar_gene(terms = terms, clinvar = clinvar, 
 #' downloadClinvar = downloadClinvar, 
 #' omimID = "OMIM:118980")
-#'}
+#'} 
 #' @importFrom stats na.omit 
 #' @import VarfromPDB
 #' @export
@@ -687,28 +695,28 @@ clinvar_gene<-function(terms,
     omimID = NULL){
     print("###Clinvar data Analysis###")
     ##Initializing variables
-    clinvarGenes<-c()
-    Final_terms_Clinvar<-c()
-    clinicalSig <- c()
-    #clinsig = clinsig
+    clinvarGenes <- c()
+    Final_terms_Clinvar = c()
+    clinicalSig = c()
+	#clinsig = clinsig
     #print(downloadClinvar)
     ##Initialising the database
     'httr::set_config(httr::config(http_version = 0))
     datclinvar <- reading_clinvar(clinvar = clinvar, 
         downloadClinvar = downloadClinvar, url_clinvar = url_clinvar)'
     if (length(terms)>1){
-        genes <- c()
-        clinsigfig <- c()
+        
         for(ll in seq_len(length(terms))){
             print(paste0("Clinvar:", ll))
             'e<-entrez_search(db="gtr",term=terms[ll],retmax=99999999)
             gtrgeneID<-e$ids'
             if(downloadClinvar == TRUE){
-                clinvar.phenotype = VarfromPDB::extract_clinvar(keyword= terms[ll])
+                clinvar.phenotype = extract_clinvar_mod(
+                    keyword = terms[ll])
             }else{
-                clinvar.phenotype = VarfromPDB::extract_clinvar(keyword= terms[ll], 
-                localPDB.path = clinvar, 
-                HPO.disease = omimID)
+                clinvar.phenotype = extract_clinvar_mod(keyword= terms[ll], 
+                    localPDB.path = clinvar, 
+                    HPO.disease = omimID)
             }
             'g1 <- grep(as.character(terms[ll]), as.character(datclinvar$DiseaseName), 
                 ignore.case = TRUE)'
@@ -727,6 +735,10 @@ clinvar_gene<-function(terms,
             varn <- clinvar.phenotype$variants
             st1 <- strsplit(as.character(varn$PhenotypeIDS), split = ",")
             varn$omimID <- sapply(st1, function(x) strsplit(x[2],split="OMIM:")[[1]][2])
+			print(geneID)
+			genes <- c()
+            clinsigfig <- c()
+		    termsclinvar <- c()
             if (length(geneID) > 1){
                 
                 for(ii in 1:length(geneID)){
@@ -740,11 +752,18 @@ clinvar_gene<-function(terms,
                         | varn$ClinicalSignificance == "Likely pathogenic")),]
                     if(nrow(da1) > 0){
                         genes <- c(genes, as.character(unique(da1$GeneSymbol)))
-                        g1 <- grep("Pathogenic/Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                        g2 <- grep("Pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                        g3 <- grep("Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                         if((length(g1) >= 1 & length(g2) >= 1 & length(g3) >= 1)
-                           |(length(g1) >= 1 | length(g2) >= 1 | length(g3) >= 1)){
+                        g1 <- grep("Pathogenic/Likely pathogenic",
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        g2 <- grep("Pathogenic", da1$ClinicalSignificance, 
+                            ignore.case = TRUE)
+                        g3 <- grep("Likely pathogenic", 
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        if((length(g1) >= 1 
+                            & length(g2) >= 1 
+                            & length(g3) >= 1)
+                            |(length(g1) >= 1 
+                            | length(g2) >= 1 
+                            | length(g3) >= 1)){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
                         'if(clinsig == "Pathogenic"){
@@ -803,9 +822,11 @@ clinvar_gene<-function(terms,
                         if(length(cs) > 1){
                             csp <- paste(cs, collapse = ",")
                         }else {csp <- cs}
-                        clinsigfig <- c(clinsigfig,csp)
+                        clinsigfig <- c(clinsigfig, csp)
                     
-                    }else{ genes <- c(genes, NA)}
+                    }else{ genes <- c(genes, NA)
+					    'clinsigfig <- c(clinsigfig, "-")'
+				    }
                 }
             }
             else if (length(geneID) == 1){
@@ -819,11 +840,18 @@ clinvar_gene<-function(terms,
                         | varn$ClinicalSignificance == "Likely pathogenic")),]
                     if(nrow(da1) > 0){
                     #genes <- c(genes, as.character(unique(da1$GeneSymbol)))
-                        g1 <- grep("Pathogenic/Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                        g2 <- grep("Pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                        g3 <- grep("Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                         if((length(g1) >= 1 & length(g2) >= 1 & length(g3) >= 1)
-                           |(length(g1) >= 1 | length(g2) >= 1 | length(g3) >= 1)){
+                        g1 <- grep("Pathogenic/Likely pathogenic", 
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        g2 <- grep("Pathogenic", 
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        g3 <- grep("Likely pathogenic", 
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        if((length(g1) >= 1 
+                            & length(g2) >= 1 
+                            & length(g3) >= 1)
+                            |(length(g1) >= 1 
+                            | length(g2) >= 1 
+                            | length(g3) >= 1)){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
                         'if(clinsig == "Pathogenic"){
@@ -883,38 +911,63 @@ clinvar_gene<-function(terms,
                         genes <- c(genes, as.character(unique(da1$GeneSymbol)))
                         #cs <-  as.character(unique(da1$ClinicalSignificance))
                             if(length(cs) > 1){
-                                csp <- paste(cs, collapse = ",")
+                                csp <- paste(unique(cs), collapse = ",")
                             }
-                            else {csp <- cs}
+                            else {csp <- unique(cs)}
                         clinsigfig <- c(clinsigfig,csp)
                     }else{genes <- c(genes, NA)}
                 
             }
             else{
-                genes <- c(genes, NA)        
+                genes <- c(genes, NA)   
+                'clinsigfig <- c(clinsigfig, "-")'				
             }
-            
-            
-            
-            
-        }
-        ##Checking if gene ID extracted is greater than 0
+        print(paste("clinicalSig:",length(clinsigfig)))
+		print(paste("genes:",length(genes)))
+		 
+            ##Checking if gene ID extracted is greater than 0
         if(length(genes) > 0){
-            gn<-as.character(unique(genes))
-            gn_1_temp <- gn[gn != ""]
-            gn_1 <- as.character(na.omit(gn_1_temp))
-            clinvarGenes<-c(clinvarGenes,as.character(gn_1))
-                terms_list<-as.character(rep(paste(terms[ll],"_ClinVar",sep=""),
-                length(gn_1)))
-                
-            Final_terms_Clinvar<-c(Final_terms_Clinvar,terms_list)
-            clinicalSig <- c(clinicalSig, as.character(clinsigfig))
+            if((length(genes) > 1)){
+                gn<-as.character(unique(genes))
+                gn_1_temp <- gn[gn != ""]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                clinvarGenes<-c(clinvarGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms[ll],
+                    "_ClinVar",sep=""), length(gn_1)))
+                Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
+			    clinicalSig <- c(clinicalSig, as.character(clinsigfig))
+			}else if ((length(genes) == 1 & is.na(genes))){
+			    print ("No genes for term !!")
+                clinvarGenes <- "-"
+                Final_terms_Clinvar = "-"
+                clinicalSig = "-"
+			} else if (length(genes) == 1 & !is.na(genes)){
+			    gn<-as.character(unique(genes))
+                gn_1_temp <- gn[gn != ""]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                clinvarGenes<-c(clinvarGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms[ll],
+                    "_ClinVar",sep=""), length(gn_1)))
+                Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
+			    clinicalSig <- c(clinicalSig, as.character(clinsigfig))
+			}
+			else{
+			print ("No genes for term !!")
+                clinvarGenes <- "-"
+                Final_terms_Clinvar = "-"
+                clinicalSig = "-"
+			}
         }else{
                 print ("No genes for term !!")
                 clinvarGenes <- "-"
                 Final_terms_Clinvar = "-"
                 clinicalSig = "-"
             }
+		 
+            
+        }
+        
+			
     }
     else if (length(terms)==1){##Checking if term is single
             ##Extracting data from Clinvar
@@ -922,9 +975,9 @@ clinvar_gene<-function(terms,
             clinsigfig <- c()
             #print(clinsig)
             if(downloadClinvar == TRUE){
-                clinvar.phenotype = VarfromPDB::extract_clinvar(keyword= terms)
+                clinvar.phenotype = extract_clinvar_mod(keyword= terms)
             }else{
-                clinvar.phenotype = VarfromPDB::extract_clinvar(keyword= terms,
+                clinvar.phenotype = extract_clinvar_mod(keyword= terms,
                      localPDB.path = clinvar, HPO.disease = omimID)
             }
             'g1 <- grep(as.character(terms[ll]), as.character(datclinvar$DiseaseName), 
@@ -1029,20 +1082,26 @@ clinvar_gene<-function(terms,
                 }
             }else if (length(geneID) == 1){
                 da1 <- varn[which(varn$GeneID == geneID & 
-                        (varn$ClinicalSignificance == "Benign" 
-                        | varn$ClinicalSignificance == "Likely Benign"
-                        | varn$ClinicalSignificance == "Benign/Likely benign"
-                        | varn$ClinicalSignificance == "Uncertain significance"
-                        | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
-                        | varn$ClinicalSignificance == "Pathogenic"
-                        | varn$ClinicalSignificance == "Likely pathogenic")),]
+                    (varn$ClinicalSignificance == "Benign" 
+                    | varn$ClinicalSignificance == "Likely Benign"
+                    | varn$ClinicalSignificance == "Benign/Likely benign"
+                    | varn$ClinicalSignificance == "Uncertain significance"
+                    | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
+                    | varn$ClinicalSignificance == "Pathogenic"
+                    | varn$ClinicalSignificance == "Likely pathogenic")),]
                     if(nrow(da1)>0){
                         genes <- c(genes, as.character(unique(da1$GeneSymbol)))
                         g1 <- grep("Pathogenic/Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                        g2 <- grep("Pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                        g3 <- grep("Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
-                         if(((length(g1) >= 1 & length(g2) >= 1 & length(g3) >= 1)
-                           |(length(g1) >= 1 | length(g2) >= 1 | length(g3) >= 1))){
+                        g2 <- grep("Pathogenic", 
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        g3 <- grep("Likely pathogenic", 
+                            da1$ClinicalSignificance, ignore.case = TRUE)
+                        if(((length(g1) >= 1 
+                            & length(g2) >= 1 
+                            & length(g3) >= 1)
+                            |(length(g1) >= 1 
+                            | length(g2) >= 1 
+                            | length(g3) >= 1))){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
                         'if(clinsig == "Pathogenic"){
@@ -1196,7 +1255,7 @@ reading_mim2gene <- function(omim){
 #' @importFrom stats na.omit 
 #' @import utils
 #' @export
-reading_GTR <- function(gtr, downloadGTR, 
+    reading_GTR <- function(gtr, downloadGTR, 
         url_gtr = "ftp://ftp.ncbi.nlm.nih.gov/pub/GTR/data/test_condition_gene.txt"){
         downloadGTR = downloadGTR
         if(downloadGTR == TRUE){

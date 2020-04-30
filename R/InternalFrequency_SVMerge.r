@@ -113,11 +113,11 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
         smapdata = smapdata
         if(EnzymeType == "SVMerge"){
             #smapdata <- readSMap(smap, input_fmt_smap = "Text")
-            SVID<-smapdata$SVIndex
+            SVID <- smapdata$SVIndex
         }
         else{
             #smapdata <- readSMap_DLE(smap, input_fmt_smap)
-            SVID<-smapdata$SmapEntryID
+            SVID <- smapdata$SmapEntryID
         }
     }
     else if(input_fmt_SV=="Text"){
@@ -276,30 +276,30 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                     dat2$FamilyID <- sapply(stt12, function(x) x[1])
                     dat2$RelationID <- sapply(stt12, function(x) x[2])
                     dat2MomEqual <- dat2[which(((dat2$RefStartPos == rf[nn]) 
-                            & (dat2$RefEndPos==re[nn])) 
-                            & (dat2$perc_ref_query >= perc_similarity_parents 
-                            & dat2$perc_query_ref >= perc_similarity_parents) 
-                            & (as.character(dat2$Type) == variantType2[nn])
-                            & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & 
-                            dat2$RelationID == 2)),]
+                        & (dat2$RefEndPos==re[nn])) 
+                        & (dat2$perc_ref_query >= perc_similarity_parents 
+                        & dat2$perc_query_ref >= perc_similarity_parents) 
+                        & (as.character(dat2$Type) == variantType2[nn])
+                        & (as.character(dat2$FamilyID) == svfamid)
+                        & (patID == 1 & 
+                        dat2$RelationID == 2)),]
                     dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) & 
-                                    (dat2$RefEndPos==re[nn])) & 
-                                    (dat2$perc_ref_query >= perc_similarity_parents 
-                                    & dat2$perc_query_ref >= perc_similarity_parents) 
-                                    & (as.character(dat2$Type) == variantType2[nn]) 
-                                    & (as.character(dat2$FamilyID) == svfamid)
-                                    & (dat2$patID == 1 
-                                    & dat2$RelationID == 3)),]
+                        (dat2$RefEndPos==re[nn])) & 
+                        (dat2$perc_ref_query >= perc_similarity_parents 
+                        & dat2$perc_query_ref >= perc_similarity_parents) 
+                        & (as.character(dat2$Type) == variantType2[nn]) 
+                        & (as.character(dat2$FamilyID) == svfamid)
+                        & (patID == 1 
+                        & dat2$RelationID == 3)),]
                     dat2MomRange <- dat2[which(((
-                                        dat2$RefStartPos >= rf_wb_int_parents[nn]) 
-                                        & (dat2$RefEndPos <= re_fb_int_parents[nn]))
-                                        & (dat2$perc_ref_query >= perc_similarity_parents 
-                                        & dat2$perc_query_ref >= perc_similarity_parents) 
-                                        & (as.character(dat2$Type) == variantType2[nn])
-                                        & (as.character(dat2$FamilyID) == svfamid)
-                                        & (dat2$patID == 1
-                                        & dat2$RelationID == 2)),]
+                        dat2$RefStartPos >= rf_wb_int_parents[nn]) 
+                        & (dat2$RefEndPos <= re_fb_int_parents[nn]))
+                        & (dat2$perc_ref_query >= perc_similarity_parents 
+                        & dat2$perc_query_ref >= perc_similarity_parents) 
+                        & (as.character(dat2$Type) == variantType2[nn])
+                        & (as.character(dat2$FamilyID) == svfamid)
+                        & (patID == 1
+                        & dat2$RelationID == 2)),]
                     'dat2MomRange <- subset(dat2,((((RefStartPos <= rf[nn] & 
                         RefStartPos >= rf_wb_ind_parents[nn]) | 
                         (RefStartPos >= rf[nn] & RefStartPos <= rf_wb_ind_parents[nn])) 
@@ -310,14 +310,14 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & (as.character(dat2$FamilyID) == svfamid)
                             & (patID == 1 & dat2$RelationID == 2)))'
                     dat2DadRange <- dat2[which(((
-                                        dat2$RefStartPos >= rf_wb_int_parents[nn]) 
-                                        & (dat2$RefEndPos <= re_fb_int_parents[nn]))
-                                        & (dat2$perc_ref_query >= perc_similarity_parents 
-                                        & dat2$perc_query_ref >= perc_similarity_parents) 
-                                        & (as.character(dat2$Type) == variantType2[nn])
-                                        & (as.character(dat2$FamilyID) == svfamid)
-                                        & (dat2$patID == 1 
-                                        & dat2$RelationID == 3)),]
+                        dat2$RefStartPos >= rf_wb_int_parents[nn]) 
+                        & (dat2$RefEndPos <= re_fb_int_parents[nn]))
+                        & (dat2$perc_ref_query >= perc_similarity_parents 
+                        & dat2$perc_query_ref >= perc_similarity_parents) 
+                        & (as.character(dat2$Type) == variantType2[nn])
+                        & (as.character(dat2$FamilyID) == svfamid)
+                        & (patID == 1 
+                        & dat2$RelationID == 3)),]
                     dat2Frequency <- dat2[which((
                         dat2$perc_ref_query >= perc_similarity 
                         & dat2$perc_query_ref >= perc_similarity) 
@@ -345,8 +345,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         | (dat2$Type1 == "-" 
                         & dat2$Type2 == "-" & dat2$Type == "deletion")
                         | (dat2$Type1 == "-" 
-                        & dat2$Type2 == "-" & dat2$Type == "insertion")
-                        | (dat2$Type == "insertion" | dat2$Type == "deletion"))),]
+                        & dat2$Type2 == "-" & dat2$Type == "insertion"))),]
                     dat2UnfilteredFrequency <- dat2[which((
                         dat2$perc_ref_query >= perc_similarity & 
                         dat2$perc_query_ref >= perc_similarity)
@@ -559,7 +558,8 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 Heterozygo = .data$Zygosity == "heterozygous"
                                 ) 
                         %>%     group_by(.data$nanoID) 
-                        %>%     summarise (Heterozygotes = sum(.data$Heterozygo)))
+                        %>%     summarise (Heterozygotes = sum(.data$Heterozygo
+                        )))
                         dat2Heterozygotes [,2] <- ifelse(
                                     dat2Heterozygotes[,2] > 0, 1, 0
                                     )
@@ -582,7 +582,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 & (dat2filtFreq$Homozygote == 0 
                                 & dat2filtFreq$Unknown == 0)), 1, 2)
                         filtFreq <- sum(dat2filtFreq$RowSum)
-                    } else{
+                    }else{
                             filtFreq  = 0
                             cntHomozygotes = 0
                         }
@@ -592,7 +592,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                     if (is.null(dat2UnfilteredFrequency)){
                             filtFreq  = 0
                             cntHomozygotes = 0
-                    } else if (nrow(dat2UnfilteredFrequency) > 0){
+                    }else if (nrow(dat2UnfilteredFrequency) > 0){
                         dat2Homozygotes <- data.frame(
                             dat2UnfilteredFrequency 
                             %>%     mutate(Homozygo=.data$Zygosity=="homozygous") 
@@ -665,7 +665,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 collapse = ","
                                 )
                         }
-                        } else {
+                        }else {
                             fatherZygosity <- "-"
                             }
                        
@@ -682,7 +682,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 collapse = ","
                                 )
                             }
-                        } else if (length(dat2MomRange$Zygosity) > 0){
+                        }else if (length(dat2MomRange$Zygosity) > 0){
                         motherZygosity <- as.character(dat2MomRange$Zygosity)
                         motherZygosity1 <- gsub("-", NA, motherZygosity)
                         motherZygosity1 <- as.character(
@@ -750,7 +750,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                     perc_ref_query <- (size_internal/size1)
                     sv1 <- dat2$nanoID
                     #Found_in_SE_self_molecules <- dat2$Found_in_SE_self_molecules
-                    Found_in_SE_self_molecules <- dat2$Found_in_SE_self_molecules                    
+                    Found_in_SE_self_molecules <- dat2$Found_in_SE_self_molecules 
                     zygo <- as.character(dat2$Zygosity)
                     stt <- strsplit(as.character(sv1), split = "[.]")
                     patID1 <- stt[[1]][2]
@@ -788,7 +788,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                     }
                     else if ((perc_ref_query >= perc_similarity 
                         & perc_query_ref >= perc_similarity) 
-                        & identical(type, variantType2[nn]) 
+                        & type == variantType2[nn]
                         & !(identical(svfamid1, svfamid)) 
                         & ((size_internal>=limsize)) 
                         & ((BSPQI_status_DB == "yes" 
@@ -810,8 +810,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         | (typ1=="deletion" & is.na(typ2)) 
                         | (is.na(typ1) & typ2=="deletion")
                         | (typ1 == "-" & typ2 == "-" & type =="deletion")
-                        | (typ1 == "-" & typ2 == "-" & type =="insertion")
-                        | (type == "insertion" | type == "deletion")))
+                        | (typ1 == "-" & typ2 == "-" & type =="insertion")))
                         {
                         #print("not in a family")
                         if(as.character(zygo)=="homozygous"){
@@ -921,7 +920,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & dat2$perc_query_ref >= perc_similarity_parents)
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 2)
+                            & (patID == 1 & dat2$RelationID == 2)
                             & ((as.character(dat2$Type) == "duplication") |
                             (as.character(dat2$Type) == "duplication_split") |
                             (as.character(dat2$Type) == "duplication_inverted")
@@ -933,7 +932,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & dat2$perc_query_ref >= perc_similarity_parents)
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 
+                            & (patID == 1 
                             & dat2$RelationID == 3)
                             & ((as.character(dat2$Type) == "duplication") |
                             (as.character(dat2$Type) == "duplication_split") |
@@ -942,11 +941,11 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                     dat2MomRange_duplication <- dat2[which(((
                             dat2$RefStartPos >= rf_wb_ind_parents[nn])
                             & (dat2$perc_ref_query >= perc_similarity_parents 
-                            &  dat2$perc_query_ref >= perc_similarity_parents)                            
+                            &  dat2$perc_query_ref >= perc_similarity_parents) 
                             & (dat2$RefEndPos <= re_wf_ind_parents[nn]))
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 2)
+                            & (patID == 1 & dat2$RelationID == 2)
                             & ((as.character(dat2$Type) == "duplication") 
                             | (as.character(dat2$Type) == "duplication_split") 
                             | (as.character(dat2$Type) == "duplication_inverted")
@@ -958,7 +957,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & (dat2$RefEndPos <= re_wf_ind_parents[nn]))
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 3)
+                            & (patID == 1 & dat2$RelationID == 3)
                             & ((as.character(dat2$Type) == "duplication") 
                             | (as.character(dat2$Type) == "duplication_split") 
                             | (as.character(dat2$Type) == "duplication_inverted")
@@ -970,7 +969,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & (dat2$perc_ref_query >= perc_similarity_parents 
                             & dat2$perc_query_ref >= perc_similarity_parents) 
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 2) 
+                            & (patID == 1 & dat2$RelationID == 2) 
                             & ((as.character(dat2$Type) == "insertion")
                         )),]
                     dat2DadEqual_insertion <- dat2[which(
@@ -980,7 +979,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & (dat2$perc_ref_query >= perc_similarity_parents 
                             & dat2$perc_query_ref >= perc_similarity_parents) 
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 3) 
+                            & (patID == 1 & dat2$RelationID == 3) 
                             & ((as.character(dat2$Type) == "insertion")
                         )),]
                     dat2MomRange_insertion <- dat2[which(((
@@ -990,7 +989,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         & dat2$perc_query_ref >= perc_similarity_parents) 
                         & (as.character(dat2$Type) == variantType2[nn])
                         & (as.character(dat2$FamilyID) == svfamid)
-                        & (dat2$patID == 1 & dat2$RelationID == 2) 
+                        & (patID == 1 & dat2$RelationID == 2) 
                         & ((as.character(dat2$Type) == "insertion")
                         )),]
                     dat2DadRange_insertion <- dat2[which(((
@@ -1000,10 +999,11 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         & dat2$perc_query_ref >= perc_similarity_parents) 
                         & (as.character(dat2$Type) == variantType2[nn])
                         & (as.character(dat2$FamilyID) == svfamid)
-                        & (dat2$patID == 1 & dat2$RelationID == 3) 
+                        & (patID == 1 & dat2$RelationID == 3) 
                         & ((as.character(dat2$Type) == "insertion")
                         )),]
-                    dat2FrequencyDuplication <- dat2[which(((as.character(dat2$Type) == "duplication") |
+                    dat2FrequencyDuplication <- dat2[which(((
+                            as.character(dat2$Type) == "duplication") |
                             (as.character(dat2$Type) == "duplication_split") |
                             (as.character(dat2$Type) == "duplication_inverted"))
                             & (dat2$perc_ref_query >= perc_similarity 
@@ -1042,11 +1042,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 | (dat2$Type1 == "-" & dat2$Type2 == "-" 
                                 & dat2$Type == "duplication")
                                 | (dat2$Type1 == "-" & dat2$Type2 == "-" 
-                                & dat2$Type == "duplication_split")
-                                |((as.character(dat2$Type) == "duplication") |
-                                 (as.character(dat2$Type) == "duplication_split") |
-                                 (as.character(dat2$Type) == "duplication_inverted")
-                            ))
+                                & dat2$Type == "duplication_split"))
                             & ((dat2$Fail_BSPQI_assembly_chimeric_score == "pass" & 
                             dat2$Fail_BSSSI_assembly_chimeric_score == "pass") 
                             | (dat2$Fail_BSPQI_assembly_chimeric_score == "fail" 
@@ -1427,10 +1423,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             | (typ1=="-" & typ2=="-" 
                             & type == "duplication_inverted")
                             | (typ1=="-" & typ2=="-" 
-                            & type == "duplication_split")
-                            | ((identical(type, "duplication") 
-                            | identical(type, "duplication_split")
-                            | identical(type, "duplication_inverted"))))){
+                            & type == "duplication_split"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -1495,8 +1488,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         ((typ1=="insertion" & typ2=="insertion") |
                         (typ1=="insertion" & is.na(typ2)) | 
                         (is.na(typ1) & typ2=="insertion")
-                        | (typ1=="-" & typ2=="-" & type == "insertion")
-                        | (identical(type, "insertion")))){
+                        | (typ1=="-" & typ2=="-" & type == "insertion"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -1597,8 +1589,8 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         (dat$RefEndPos <= re[nn] & dat$RefEndPos >= re_wb_ind[nn]))
                         ), ]
                     size1 <- size_bn[nn]
-                    dat2$perc_ref_query <- 0
-                    dat2$perc_query_ref <- 0
+                    dat2$perc_ref_query <- rep(0, nrow(dat2))
+                    dat2$perc_query_ref <- rep(0, nrow(dat2))
                 }else {
                     dat2 <-dat[which((dat$RefStartPos >= rf_wb_ind[nn] 
                         & dat$RefEndPos <= re_wf_ind[nn])),]
@@ -1626,7 +1618,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 & (dat2$RefcontigID2 == chromo2[nn]) 
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
-                                & (dat2$patID == 1 & dat2$RelationID == 2)),]
+                                & (patID == 1 & dat2$RelationID == 2)),]
                         dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) 
                                 & (dat2$RefEndPos==re[nn])) 
                                 & (dat2$perc_ref_query >= perc_similarity_parents 
@@ -1634,7 +1626,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 & (dat2$RefcontigID2 == chromo2[nn]) 
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
-                                & (dat2$patID == 1 & dat2$RelationID == 3)),]
+                                & (patID == 1 & dat2$RelationID == 3)),]
                         dat2MomRange <- dat2[which(((
                             dat2$RefStartPos >= rf_wb_int_parents[nn]) 
                             & (dat2$RefEndPos <= re_fb_int_parents[nn]))  
@@ -1643,7 +1635,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & dat2$perc_query_ref >= perc_similarity_parents)
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 2)),]
+                            & (patID == 1 & dat2$RelationID == 2)),]
                             
                         dat2DadRange <- dat2[which(((
                             dat2$RefStartPos >= rf_wb_int_parents[nn]) 
@@ -1653,12 +1645,12 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & dat2$perc_query_ref >= perc_similarity_parents)
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 3)),]
+                            & (patID == 1 & dat2$RelationID == 3)),]
                         dat2UnfilteredFrequency <-  dat2[which((
                             (dat2$RefcontigID2 == chromo2[nn]) 
-                            & (dat2$perc_ref_query >= perc_similarity_parents 
-                            & dat2$perc_query_ref >= perc_similarity_parents)
-                            & ((as.character(dat2$Type) == variantType2[nn])
+                            & (dat2$perc_ref_query >= perc_similarity 
+                            & dat2$perc_query_ref >= perc_similarity)
+                            & ((as.character(dat2$Type) == "inversion")
                             & (as.character(dat2$FamilyID) != svfamid)))),]
                           
                     }else{
@@ -1667,20 +1659,20 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                                 & (dat2$RefcontigID2 == chromo2[nn]) 
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
-                                & (dat2$patID == 1 & dat2$RelationID == 2)),]
+                                & (patID == 1 & dat2$RelationID == 2)),]
                         dat2DadEqual <- dat2[which(((dat2$RefStartPos ==rf[nn]) 
                                 & (dat2$RefEndPos==re[nn])) 
                                 & (dat2$RefcontigID2 == chromo2[nn]) 
                                 & (as.character(dat2$Type) == variantType2[nn])
                                 & (as.character(dat2$FamilyID) == svfamid)
-                                & (dat2$patID == 1 & dat2$RelationID == 3)),]
+                                & (patID == 1 & dat2$RelationID == 3)),]
                         dat2MomRange <- dat2[which(((
                             dat2$RefStartPos >= rf_wb_int_parents[nn]) 
                             & (dat2$RefEndPos <= re_fb_int_parents[nn]))  
                             & (dat2$RefcontigID2 == chromo2[nn]) 
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 2)),]
+                            & (patID == 1 & dat2$RelationID == 2)),]
                             
                         dat2DadRange <- dat2[which(((
                             dat2$RefStartPos >= rf_wb_int_parents[nn]) 
@@ -1688,13 +1680,13 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & (dat2$RefcontigID2 == chromo2[nn]) 
                             & (as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) == svfamid)
-                            & (dat2$patID == 1 & dat2$RelationID == 3)),]
+                            & (patID == 1 & dat2$RelationID == 3)),]
                         dat2UnfilteredFrequency <-  dat2[which((
                             (dat2$RefcontigID2 == chromo2[nn]) 
                             & ((as.character(dat2$Type) == variantType2[nn])
                             & (as.character(dat2$FamilyID) != svfamid)))),]
                     }
-                    dat2Frequencyinvtrans <- dat2[which((
+                    dat2Frequencyinvtrans <- dat2[which(((
                         as.character(dat2$Type) == "inversion" &
                         as.numeric(dat2$Confidence) >= invconf 
                         & (dat2$perc_ref_query >= perc_similarity 
@@ -1703,8 +1695,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         | (dat2$Type1 =="inversion" & is.na(dat2$Type2)) 
                         | (is.na(dat2$Type1) & dat2$Type2 =="inversion") 
                         | (dat2$Type1 == "-" 
-                        & dat2$Type2 == "-" & dat2$Type == "inversion")
-                        | (dat2$Type == "inversion")))|
+                        & dat2$Type2 == "-" & dat2$Type == "inversion")))|
                         ((as.character(dat2$Type) == "translocation_intrachr"
                         | as.character(dat2$Type) == "translocation_interchr"
                         | as.character(dat2$Type) == "translocation")
@@ -1731,11 +1722,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         | (dat2$Type1 == "-" & dat2$Type2 == "-" 
                         & dat2$Type == "translocation")
                         | (dat2$Type1 == "-" & dat2$Type2 == "-" 
-                        & dat2$Type == "translocation_intrachr")
-                        |((as.character(dat2$Type) == "translocation") |
-                        (as.character(dat2$Type) == "translocation_intrachr") |
-                        (as.character(dat2$Type) == "translocation_interchr")
-                         )))
+                        & dat2$Type == "translocation_intrachr"))))
                         & (as.character(dat2$FamilyID) != svfamid)
                         & (dat2$RefcontigID2 == chromo2[nn]) 
                         &((dat2$Found_in_self_BSPQI_molecules == "yes" & 
@@ -1994,17 +1981,17 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             & identical(svfamid1, svfamid)){
                         # Family Extra column zygosity
                             if (patID == 1 & patID1 == 2){
-                                countfre <- countfre + 0
+                                #countfre <- countfre + 0
                                 motherZygosity <- as.character(zygo)
                                 fatherZygosity <- "-"
                             } 
                             else if (patID == 1 & patID1 == 3){
-                                countfre <- countfre + 0
+                                #countfre <- countfre + 0
                                 motherZygosity <- "-"
                                 fatherZygosity <- as.character(zygo)
                             } 
                             else if (patID == patID1){
-                                countfre <- countfre + 0
+                                #countfre <- countfre + 0
                                 motherZygosity <- "-"
                                 fatherZygosity <- "-"
                             } 
@@ -2016,8 +2003,8 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         }  
                         else if (identical(chrom2,chromo2[nn]) &
                         identical(type,variantType2[nn]) 
-                        & (perc_ref_query >= perc_similarity_parents 
-                        & perc_query_ref >= perc_similarity_parents)
+                        & (perc_ref_query >= perc_similarity 
+                        & perc_query_ref >= perc_similarity)
                         & !(identical(svfamid1, svfamid)) & 
                         ((BSPQI_status_DB == "yes" & 
                         BSSSI_status_DB == "yes") | 
@@ -2045,8 +2032,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         & ((typ1=="inversion" & typ2=="inversion") |
                         (typ1=="inversion" & is.na(typ2)) | 
                         (is.na(typ1) & typ2=="inversion")
-                        | (typ1=="-" & typ2=="-" & type == "inversion")
-                        | (identical(type, "inversion")))){
+                        | (typ1=="-" & typ2=="-" & type == "inversion"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -2066,15 +2052,15 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                             fatherZygosity <- "-"
                         } 
                         else {
-                            countfre <- countfre + 0
+                            countfre <- 0
                             motherZygosity <- "-"
                             fatherZygosity <- "-"
                         }
                     
                     if (identical(chrom2,chromo2[nn]) & 
                         identical(type, variantType2[nn]) 
-                        & (perc_ref_query >= perc_similarity_parents 
-                        & perc_query_ref >= perc_similarity_parents)
+                        & (perc_ref_query >= perc_similarity 
+                        & perc_query_ref >= perc_similarity)
                         & !(identical(svfamid1, svfamid)) ){
                       
                         if(zygo=="homozygous"){
@@ -2159,10 +2145,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
                         | (typ1=="-" & typ2=="-" 
                         & type == "translocation_interchr")
                         | (typ1=="-" & typ2=="-" 
-                        & type == "translocation_intrachr")
-                        | ((identical(type, "translocation") 
-                        | identical(type, "translocation_intrachr")
-                        | identical(type, "translocation_interchr"))))){
+                        & type == "translocation_intrachr"))){
                             if(zygo=="homozygous"){
                                 countfre <- 2
                             }
@@ -2247,12 +2230,13 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
             else{
                 #### print(paste('QueryData:',dim(dat1[nn,]),sep=''))
                 
-                data1 <- data.frame(dat1[nn, ], Internal_Freq_Perc_Filtered= 0,
-                Internal_Freq_Perc_Unfiltered = 0, 
-                Internal_Homozygotes= 0, MotherZygosity = "-", 
-                FatherZygosity = "-", stringsAsFactors = FALSE)
-                #### print(dim(data1))
-                datf <- rbind(datf, data1)
+                data1 <- data.frame(dat1[nn, ], 
+                    Internal_Freq_Perc_Filtered= 0,
+                    Internal_Freq_Perc_Unfiltered = 0, 
+                    Internal_Homozygotes= 0, MotherZygosity = "-", 
+                    FatherZygosity = "-", stringsAsFactors = FALSE)
+                    #### print(dim(data1))
+                    datf <- rbind(datf, data1)
             }
             
         }
