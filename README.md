@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 **nanotatoR: structural variant annotation and classification**
 **author: "Surajit Bhattacharya,Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain**
 
@@ -285,7 +283,3 @@ Again the functions are different for different samples and label types; with th
 5. Bionano Genomics. Theory Of Operation – Structural Variant Calling. https://bionanogenomics.com/wp-content/uploads/2018/04/30110-Bionano-Solve-Theory-of-Operation-Structural-Variant-Calling.pdf
 
 6. Bionano Genomics. Theory of Operation - Variant Annotation Pipeline. https://bionanogenomics.com/wp-content/uploads/2018/04/30190-Bionano-Solve-Theory-of-Operation-Variant-Annotation-Pipeline.pdf
-=======
-# Nanotator
-Bionano Data Annotation R package
->>>>>>> 714868ed579a092f4cd6df397baa7f46eded618f
