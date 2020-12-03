@@ -24,12 +24,10 @@ Symbols, and terms associated with it
 Extracting genes from clinvar database NCBI.
 }
 \examples{
-\dontrun{
 terms="Muscle Weakness"
 clinvar = system.file("extdata", "localPDB/", package="nanotatoR")
 downloadClinvar = TRUE
 ge <- clinvar_gene(terms = terms, clinvar = clinvar, 
 downloadClinvar = downloadClinvar, 
 omimID = "OMIM:118980")
-} 
 }

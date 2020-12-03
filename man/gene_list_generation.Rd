@@ -26,7 +26,8 @@ gene_list_generation(
 \item{method_entrez}{character. Input Method for terms. Choices are 
 "Single","Multiple" and "Text".}
 
-\item{termPath}{character. Path and file name for textfile.}
+\item{termPath}{character. Path and file name for textfile. FileName 
+should be in the following format "SampleID_Keywords.csv".}
 
 \item{omimID}{numeric. mimID for disease. Default is NULL.}
 
@@ -64,16 +65,14 @@ Text files containg gene list and terms associated with them
 Extracting genes for phenotype/diseases from NCBI.
 }
 \examples{
-\dontrun{
 terms="CIRRHOSIS, FAMILIAL"
 genes <- gene_list_generation(
      method_entrez = c("Single"), 
      term = terms,
      returnMethod=c("dataFrame"), 
      omimID = "OMIM:118980",
-       omim = system.file("extdata", "mim2gene.txt", package="nanotatoR"), 
+     omim = system.file("extdata", "mim2gene.txt", package="nanotatoR"), 
      clinvar = system.file("extdata", "localPDB/", package="nanotatoR"), 
-       gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR"),
-       downloadClinvar = FALSE, downloadGTR = FALSE)
-}
+     gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR"),
+     downloadClinvar = FALSE, downloadGTR = FALSE)
 }

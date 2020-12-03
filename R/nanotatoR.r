@@ -3,6 +3,8 @@
 #' Annotation of Bionano data using available databases
 #'
 #' @import knitr
+#' @import testthat
+#' @import utils
 #' @examples
 #' path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 #' pattern <- "_hg19.txt"
@@ -11,11 +13,8 @@
 #' mergedSmap[1,]
 #' @docType package
 #' @name nanotatoR
-#' @import testthat
-#' @import graphics
-#' @import grDevices
-#' @import knitr
-#' @import utils
+NULL
+# > [1] '_PACKAGE' 
 
 
 

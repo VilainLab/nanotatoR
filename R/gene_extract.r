@@ -2,7 +2,8 @@
 #'
 #' @param method_entrez  character. Input Method for terms. Choices are 
 #'                "Single","Multiple" and "Text".
-#' @param termPath  character. Path and file name for textfile.
+#' @param termPath  character. Path and file name for textfile. FileName 
+#' should be in the following format "SampleID_Keywords.csv".
 #' @param term  character. Single or Multiple Terms.
 #' @param outpath character. Path where gene lists are saved.
 #' @param omim character. omim2gene file name and location.
@@ -21,18 +22,16 @@
 #' @return Text files containg gene list and terms associated with them
 #'         are stored as text files.
 #' @examples
-#' \dontrun{
 #' terms="CIRRHOSIS, FAMILIAL"
 #' genes <- gene_list_generation(
 #'      method_entrez = c("Single"), 
 #'      term = terms,
 #'      returnMethod=c("dataFrame"), 
 #'      omimID = "OMIM:118980",
-#'        omim = system.file("extdata", "mim2gene.txt", package="nanotatoR"), 
+#'      omim = system.file("extdata", "mim2gene.txt", package="nanotatoR"), 
 #'      clinvar = system.file("extdata", "localPDB/", package="nanotatoR"), 
-#'        gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR"),
-#'        downloadClinvar = FALSE, downloadGTR = FALSE)
-#'}
+#'      gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR"),
+#'      downloadClinvar = FALSE, downloadGTR = FALSE)
 #' @import stats
 #' @import rentrez 
 #' @import utils
@@ -83,14 +82,27 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
         g_o<-omim_gene(terms_1, omim =omim)
         g_o_1<-omim_gene(terms_2, omim =omim)
         print(paste0("main",gtr = gtr))
-        g_g<-gtr_gene(terms_1, 
+		if(downloadGTR == FALSE){
+            g_g<-gtr_gene(terms_1, 
                 gtr = gtr, 
                 url_gtr = url_gtr, 
                 downloadGTR = downloadGTR)
-        g_g_1<-gtr_gene(terms_2, 
+            g_g_1<-gtr_gene(terms_2, 
             gtr = gtr,
             url_gtr = url_gtr,
             downloadGTR = downloadGTR)
+        
+        }else{
+            g_g<-gtr_gene(terms_1, 
+                gtr = gtr, 
+                url_gtr = url_gtr, 
+                downloadGTR = downloadGTR)
+            g_g_1<-gtr_gene(terms_2, 
+            gtr = gtr,
+            url_gtr = url_gtr,
+            downloadGTR = downloadGTR)
+        
+        }
         #print(paste0("main",clinvar = clinvar))
         if(downloadClinvar == FALSE){
         g_c<-clinvar_gene(terms_1, 
@@ -141,8 +153,7 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             g_g<-gtr_gene(terms = terms, 
                 gtr = gtr,
                 downloadGTR = FALSE)
-        }
-        else{
+        }else{
             g_g<-gtr_gene(terms = terms, 
                 url_gtr = url_gtr,
                 downloadGTR = TRUE)
@@ -152,8 +163,7 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             clinvar = clinvar,
             downloadClinvar = FALSE,
             omimID = omimID)
-        }
-        else{
+        }else{
             g_c<-clinvar_gene(terms = terms, 
             downloadClinvar = downloadClinvar)
         }
@@ -229,12 +239,31 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
     #final_genes<-unique(final_genes)
     ##Make the filename and write the data into a text file
     if(returnMethod=="Text"){
-        st<-strsplit(term,".csv")
-        fname<-st[[1]][1]
+	    if(method_entrez == "Single"){
+		    fileName<-paste(term,"_GeneList.txt",sep="")
+		}else if(method_entrez == "Multiple"){
+		    fileName<-paste("Multiple_Terms_GeneList.txt",sep="")
+		}else if(method_entrez == "Text"){
+		    if(length(strsplit(termPath, split ="/")[[1]]) >= 1){
+			    fn1 <- strsplit(termPath, split ="/")[[1]]
+				len <- length(fn1)
+				fname <- strsplit(fn1[len],split = "_Keywords")[[1]][1]
+				fileName<-paste(fname,"_GeneList.txt",sep="")
+			}else if(length(strsplit(termPath, split ="\\\\")[[1]]) >= 1){
+			    fn1 <- strsplit(termPath, split ="\\\\")[[1]]
+				len <- length(fn1)
+				fname <- strsplit(fn1[len],split = "_Keywords")[[1]][1]
+				fileName<-paste(fname,"_GeneList.txt",sep="")
+			}else{
+			    fname <- strsplit(termPath,split = "_Keywords")[[1]][1]
+				fileName<-paste(fname,"_GeneList.txt",sep="")
+			}
+		}else{stop("Method of input not selected")}
+		
         rownames(dat_Final)<-NULL
-        fileName<-paste(fname,"_GeneList.txt",sep="")
+        
         write.table(dat_Final,file.path(outpath,fileName),
-        col.names = c("Genes","Terms"),row.names=FALSE,sep="\t")
+            col.names = c("Genes","Terms", "ClinicalSignificance"),row.names=FALSE,sep="\t")
     }
     else if (returnMethod=="dataFrame"){
         dat_Final<-dat_Final
@@ -677,14 +706,12 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
 #' @return Dataframe returned containing gene lists in entrezid and Gene 
 #' Symbols, and terms associated with it
 #' @examples
-#' \dontrun{
 #' terms="Muscle Weakness"
 #' clinvar = system.file("extdata", "localPDB/", package="nanotatoR")
 #' downloadClinvar = TRUE
 #' ge <- clinvar_gene(terms = terms, clinvar = clinvar, 
 #' downloadClinvar = downloadClinvar, 
 #' omimID = "OMIM:118980")
-#'} 
 #' @importFrom stats na.omit 
 #' @import VarfromPDB
 #' @export
@@ -739,7 +766,7 @@ clinvar_gene<-function(terms,
 			genes <- c()
             clinsigfig <- c()
 		    termsclinvar <- c()
-            if (length(geneID) > 1){
+            if (length(geneID) > 0){
                 
                 for(ii in 1:length(geneID)){
                     da1 <- varn[which(varn$GeneID == geneID[ii] & 
@@ -750,8 +777,26 @@ clinvar_gene<-function(terms,
                         | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
                         | varn$ClinicalSignificance == "Pathogenic"
                         | varn$ClinicalSignificance == "Likely pathogenic")),]
-                    if(nrow(da1) > 0){
-                        genes <- c(genes, as.character(unique(da1$GeneSymbol)))
+					if(nrow(da1)>1){
+					
+                    if(length(unique(da1$GeneSymbol)) > 1){
+						ungenes <-  as.character(unique(da1$GeneSymbol))
+						    for(ff in 1:length(ungenes)){
+					            if(sapply(gregexpr("\\S+", ungenes[ff]), length) == 1){
+                                    genes <- c(genes, as.character(ungenes[ff]))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						    }
+						}else{
+						    ungenes <-  as.character(unique(da1$GeneSymbol))
+							if(sapply(gregexpr("\\S+", ungenes), length) == 1){
+                                    genes <- c(genes, as.character(ungenes))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						}
+						print(paste(ii, ":", genes))
                         g1 <- grep("Pathogenic/Likely pathogenic",
                             da1$ClinicalSignificance, ignore.case = TRUE)
                         g2 <- grep("Pathogenic", da1$ClinicalSignificance, 
@@ -766,70 +811,16 @@ clinvar_gene<-function(terms,
                             | length(g3) >= 1)){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
-                        'if(clinsig == "Pathogenic"){
-                            da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Pathogenic")
-                                & varn$omimID == omim[ii]),]
-                        } else if(clinsig == "Likely Pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Likely pathogenic") 
-                                & varn$omimID == omim[ii]),]
-                         
-                        }
-                        else if(clinsig == "Pathogenic/Likely pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Pathogenic/Likely pathogenic") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "Benign"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "Benign/Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign/Likely benign") 
-                                & varn$omimID == omim[ii]),]
-                            
-                        }
-                        else if(clinsig == "Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Likely benign") 
-                                & varn$omimID == omim[ii]),]
-                            
-                            
-                        }
-                        else if(clinsig == "VUS"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Uncertain significance") 
-                                & varn$omimID == omim[ii]),]
-                            
-                        }
-                        else if(clinsig == "Benign/Likely Benign/VUS"){
-                            da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Uncertain significance")
-                                | varn$omimID == omim[ii]),]
-                            
-                            
-                        }else if(clinsig == "All"){
-                            
-                            
-                        } else {
-                            stop ("Clinicical Significance input parameter incorrect")
-                        }'                    
                         if(length(cs) > 1){
                             csp <- paste(cs, collapse = ",")
                         }else {csp <- cs}
                         clinsigfig <- c(clinsigfig, csp)
                     
-                    }else{ genes <- c(genes, NA)
-					    'clinsigfig <- c(clinsigfig, "-")'
+                    }else{ genes <- c(genes, ".")
+					    clinsigfig <- c(clinsigfig, "-")
 				    }
                 }
-            }
-            else if (length(geneID) == 1){
+            }else if (length(geneID) == 1){
                 da1 <- varn[which(varn$GeneID == geneID & 
                         (varn$ClinicalSignificance == "Benign" 
                         | varn$ClinicalSignificance == "Likely Benign"
@@ -854,116 +845,82 @@ clinvar_gene<-function(terms,
                             | length(g3) >= 1)){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
-                        'if(clinsig == "Pathogenic"){
-                            da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Pathogenic")
-                                & varn$omimID == omim),]
-                        } else if(clinsig == "Likely Pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Likely pathogenic") 
-                                & varn$omimID == omim),]
-                         
-                        }
-                        else if(clinsig == "Pathogenic/Likely pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Pathogenic/Likely pathogenic") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Benign"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Benign/Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign/Likely benign") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Likely benign") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "VUS"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Uncertain significance") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Benign/Likely Benign/VUS"){
-                            da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Uncertain significance")
-                                & varn$omimID == omim),]
-                        }else if(clinsig == "All"){
-                            da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Benign/Likely benign"
-                                | varn$ClinicalSignificance == "Uncertain significance"
-                                | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
-                                | varn$ClinicalSignificance == "Pathogenic"
-                                | varn$ClinicalSignificance == "Likely pathogenic")
-                                & varn$omimID == omim),]
-                        } else {
-                            stop ("Clinicical Significance input parameter incorrect")
-                        }'
-                        genes <- c(genes, as.character(unique(da1$GeneSymbol)))
-                        #cs <-  as.character(unique(da1$ClinicalSignificance))
+                        
+                        if(length(unique(da1$GeneSymbol)) > 1){
+						ungenes <-  as.character(unique(da1$GeneSymbol))
+						    for(ff in 1:length(ungenes)){
+					            if(sapply(gregexpr("\\S+", ungenes[ff]), length) == 1){
+                                    genes <- c(genes, as.character(ungenes[ff]))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						    }
+						}else{
+						    ungenes <-  as.character(unique(da1$GeneSymbol))
+							if(sapply(gregexpr("\\S+", ungenes), length) == 1){
+                                    genes <- c(genes, as.character(ungenes))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						}
+						
+						#cs <-  as.character(unique(da1$ClinicalSignificance))
                             if(length(cs) > 1){
                                 csp <- paste(unique(cs), collapse = ",")
                             }
                             else {csp <- unique(cs)}
                         clinsigfig <- c(clinsigfig,csp)
-                    }else{genes <- c(genes, NA)}
+                    }else{genes <- c(genes, ".")
+					    clinsigfig <- c(clinsigfig, "-")}
                 
+            }else{
+                genes <- c(genes, ".")   
+                clinsigfig <- c(clinsigfig, "-")				
             }
-            else{
-                genes <- c(genes, NA)   
-                'clinsigfig <- c(clinsigfig, "-")'				
-            }
-        print(paste("clinicalSig:",length(clinsigfig)))
-		print(paste("genes:",length(genes)))
+       
 		 
             ##Checking if gene ID extracted is greater than 0
         if(length(genes) > 0){
             if((length(genes) > 1)){
                 gn<-as.character(unique(genes))
-                gn_1_temp <- gn[gn != ""]
+                gn_1_temp <- gn[gn != "."]
                 gn_1 <- as.character(na.omit(gn_1_temp))
                 clinvarGenes<-c(clinvarGenes,as.character(gn_1))
                 terms_list<-as.character(rep(paste(terms[ll],
                     "_ClinVar",sep=""), length(gn_1)))
                 Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
+				clinsigfig<-as.character(rep("Pathogenic/Likely pathogenic", length(gn_1)))
 			    clinicalSig <- c(clinicalSig, as.character(clinsigfig))
-			}else if ((length(genes) == 1 & is.na(genes))){
+			}else if ((length(genes) == 1 & length(grep("\\.", genes)) == 1)){
 			    print ("No genes for term !!")
-                clinvarGenes <- "-"
+                'clinvarGenes <- "-"
                 Final_terms_Clinvar = "-"
-                clinicalSig = "-"
-			} else if (length(genes) == 1 & !is.na(genes)){
+                clinicalSig = "-"'
+			} else if (length(genes) == 1){
 			    gn<-as.character(unique(genes))
-                gn_1_temp <- gn[gn != ""]
+                gn_1_temp <- gn[gn != "."]
                 gn_1 <- as.character(na.omit(gn_1_temp))
                 clinvarGenes<-c(clinvarGenes,as.character(gn_1))
                 terms_list<-as.character(rep(paste(terms[ll],
                     "_ClinVar",sep=""), length(gn_1)))
                 Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
+				clinsigfig<-as.character(rep("Pathogenic/Likely pathogenic", length(gn_1)))
 			    clinicalSig <- c(clinicalSig, as.character(clinsigfig))
 			}
 			else{
 			print ("No genes for term !!")
-                clinvarGenes <- "-"
+                'clinvarGenes <- "-"
                 Final_terms_Clinvar = "-"
-                clinicalSig = "-"
+                clinicalSig = "-"'
 			}
         }else{
                 print ("No genes for term !!")
-                clinvarGenes <- "-"
+                'clinvarGenes <- "-"
                 Final_terms_Clinvar = "-"
-                clinicalSig = "-"
+                clinicalSig = "-"'
             }
-		 
+		print(paste("clinicalSig:",length(clinicalSig)))
+		print(paste("genes:",length(clinvarGenes))) 
             
         }
         
@@ -1008,77 +965,39 @@ clinvar_gene<-function(terms,
                         | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
                         | varn$ClinicalSignificance == "Pathogenic"
                         | varn$ClinicalSignificance == "Likely pathogenic")),]
-                    if(nrow(da1) > 0){
-                        genes <- c(genes, as.character(unique(da1$GeneSymbol)))
-                        g1 <- grep("Pathogenic/Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
+					if(nrow(da1)>0){
+                    if(length(unique(da1$GeneSymbol)) > 1){
+						ungenes <-  as.character(unique(da1$GeneSymbol))
+						    for(ff in 1:length(ungenes)){
+					            if(sapply(gregexpr("\\S+", ungenes[ff]), length) == 1){
+                                    genes <- c(genes, as.character(ungenes[ff]))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						    }
+						}else{
+						    ungenes <-  as.character(unique(da1$GeneSymbol))
+							if(sapply(gregexpr("\\S+", ungenes), length) == 1){
+                                    genes <- c(genes, as.character(ungenes))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						}
+						
+						g1 <- grep("Pathogenic/Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
                         g2 <- grep("Pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
                         g3 <- grep("Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
                          if(((length(g1) >= 1 & length(g2) >= 1 & length(g3) >= 1)
                            |(length(g1) >= 1 | length(g2) >= 1 | length(g3) >= 1))){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
-                        'if(clinsig == "Pathogenic"){
-                            da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Pathogenic")
-                                & varn$omimID == omim[ii]),]
-                        } else if(clinsig == "Likely Pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Likely pathogenic") 
-                                & varn$omimID == omim[ii]),]
-                         
-                        }
-                        else if(clinsig == "Pathogenic/Likely pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Pathogenic/Likely pathogenic") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "Benign"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "Benign/Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign/Likely benign") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Likely benign") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "VUS"){
-                             da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Uncertain significance") 
-                                & varn$omimID == omim[ii]),]
-                        }
-                        else if(clinsig == "Benign/Likely Benign/VUS"){
-                            da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Uncertain significance")
-                                & varn$omimID == omim[ii]),]
-                        }else if(clinsig == "All"){
-                            da1 <- varn[which(varn$GeneID == geneID[ii] & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Benign/Likely benign"
-                                | varn$ClinicalSignificance == "Uncertain significance"
-                                | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
-                                | varn$ClinicalSignificance == "Pathogenic"
-                                | varn$ClinicalSignificance == "Likely pathogenic")
-                                & varn$omimID == omim[ii]),]
-                        } else {
-                            stop ("Clinicical Significance input parameter incorrect")
-                        }                    
-                        genes <- c(genes, as.character(unique(da1$GeneSymbol)))
-                        cs <-  as.character(unique(da1$ClinicalSignificance))'
                         if(length(cs) > 1){
                             csp <- paste(cs, collapse = ",")
                         }
                         else {csp <- cs}
                         clinsigfig <- c(clinsigfig,csp)
-                    }else {genes <- c(genes, NA)}
+                    }else { genes <- c(genes, ".")   
+                            clinsigfig <- c(clinsigfig, "-")}
                 }
             }else if (length(geneID) == 1){
                 da1 <- varn[which(varn$GeneID == geneID & 
@@ -1090,7 +1009,24 @@ clinvar_gene<-function(terms,
                     | varn$ClinicalSignificance == "Pathogenic"
                     | varn$ClinicalSignificance == "Likely pathogenic")),]
                     if(nrow(da1)>0){
-                        genes <- c(genes, as.character(unique(da1$GeneSymbol)))
+                        if(length(unique(da1$GeneSymbol)) > 1){
+						ungenes <-  as.character(unique(da1$GeneSymbol))
+						    for(ff in 1:length(ungenes)){
+					            if(sapply(gregexpr("\\S+", ungenes[ff]), length) == 1){
+                                    genes <- c(genes, as.character(ungenes[ff]))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						    }
+						}else{
+						    ungenes <-  as.character(unique(da1$GeneSymbol))
+							if(sapply(gregexpr("\\S+", ungenes), length) == 1){
+                                    genes <- c(genes, as.character(ungenes))
+						        }else{
+						            genes <- c(genes, ".")
+						        }
+						}
+						
                         g1 <- grep("Pathogenic/Likely pathogenic", da1$ClinicalSignificance, ignore.case = TRUE)
                         g2 <- grep("Pathogenic", 
                             da1$ClinicalSignificance, ignore.case = TRUE)
@@ -1104,70 +1040,16 @@ clinvar_gene<-function(terms,
                             | length(g3) >= 1))){
                             cs <-  "Pathogenic/Likely pathogenic"
                         }else{cs <-  as.character("-")}
-                        'if(clinsig == "Pathogenic"){
-                            da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Pathogenic")
-                                & varn$omimID == omim),]
-                        } else if(clinsig == "Likely Pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Likely pathogenic") 
-                                & varn$omimID == omim),]
-                         
-                        }
-                        else if(clinsig == "Pathogenic/Likely pathogenic"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Pathogenic/Likely pathogenic") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Benign"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Benign/Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign/Likely benign") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Likely benign"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Likely benign") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "VUS"){
-                             da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Uncertain significance") 
-                                & varn$omimID == omim),]
-                        }
-                        else if(clinsig == "Benign/Likely Benign/VUS"){
-                            da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Uncertain significance")
-                                & varn$omimID == omim),]
-                        }else if(clinsig == "All"){
-                            da1 <- varn[which(varn$GeneID == geneID & 
-                                (varn$ClinicalSignificance == "Benign" 
-                                | varn$ClinicalSignificance == "Likely Benign"
-                                | varn$ClinicalSignificance == "Benign/Likely benign"
-                                | varn$ClinicalSignificance == "Uncertain significance"
-                                | varn$ClinicalSignificance == "Pathogenic/Likely pathogenic"
-                                | varn$ClinicalSignificance == "Pathogenic"
-                                | varn$ClinicalSignificance == "Likely pathogenic")
-                                & varn$omimID == omim),]
-                        } else {
-                            stop ("Clinicical Significance input parameter incorrect")
-                        }
-                gene    s <- c(genes, as.character(da1$GeneSymbol))
-                cs <    -  as.character(unique(da1$ClinicalSignificance))'
                         if(length(cs) > 1){
                             csp <- paste(cs, collapse = ",")
                         }
                         else {csp <- cs}
                         clinsigfig <- c(clinsigfig,csp)
-                    }else{genes <-c(genes, NA)}
+                    }else{genes <- c(genes, ".")   
+                            clinsigfig <- c(clinsigfig, "-")}
             }else{
-                genes <- c(genes, NA)
+                genes <- c(genes, ".")   
+                clinsigfig <- c(clinsigfig, "-")
             }
             
             
@@ -1175,24 +1057,50 @@ clinvar_gene<-function(terms,
             
         
         ##Checking if gene ID extracted is greater than 0
-        if(length(genes) > 0){
-            gn<-as.character(unique(genes))
-            gn_1_temp <- gn[gn != ""]
-            gn_1 <- as.character(na.omit(gn_1_temp))
-            clinvarGenes<-c(clinvarGenes,as.character(gn_1))
-                terms_list<-as.character(rep(paste(terms,"_ClinVar",sep=""),
-                length(gn_1)))
-            Final_terms_Clinvar<-c(Final_terms_Clinvar,terms_list)
-            clinicalSig <- c(clinicalSig, as.character(clinsigfig))
-        } else{
-            print ("No genes for term !!")
-            clinvarGenes <- "-"
-            Final_terms_Clinvar = "-"
-            clinicalSig = "-"
-        }
-    }else{
-        ##If term length is zero
-        stop("Term length is zero")
+         if(length(genes) > 0){
+            if((length(genes) > 1)){
+                gn<-as.character(unique(genes))
+                gn_1_temp <- gn[gn != "."]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                clinvarGenes<-c(clinvarGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms,
+                    "_ClinVar",sep=""), length(gn_1)))
+                Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
+				clinsigfig<-as.character(rep("Pathogenic/Likely pathogenic", length(gn_1)))
+			    clinicalSig <- c(clinicalSig, as.character(clinsigfig))
+			}else if ((length(genes) == 1 & length(grep("\\.", genes)) == 1)){
+			    print ("No genes for term !!")
+                'clinvarGenes <- "-"
+                Final_terms_Clinvar = "-"
+                clinicalSig = "-"'
+			} else if (length(genes) == 1){
+			    gn<-as.character(unique(genes))
+                gn_1_temp <- gn[gn != "."]
+                gn_1 <- as.character(na.omit(gn_1_temp))
+                clinvarGenes<-c(clinvarGenes,as.character(gn_1))
+                terms_list<-as.character(rep(paste(terms,
+                    "_ClinVar",sep=""), length(gn_1)))
+                Final_terms_Clinvar <- c(Final_terms_Clinvar,terms_list)
+				clinsigfig<-as.character(rep("Pathogenic/Likely pathogenic", length(gn_1)))
+			    clinicalSig <- c(clinicalSig, as.character(clinsigfig))
+			}
+			else{
+			print ("No genes for term !!")
+                'clinvarGenes <- "-"
+                Final_terms_Clinvar = "-"
+                clinicalSig = "-"'
+			}
+        }else{
+                print ("No genes for term !!")
+                'clinvarGenes <- "-"
+                Final_terms_Clinvar = "-"
+                clinicalSig = "-"'
+            }
+	}else{
+                print ("No terms present !!")
+                'clinvarGenes <- "-"
+                Final_terms_Clinvar = "-"
+                clinicalSig = "-"'
     }
     ##Writing gene and terms into dataframe and returning
     dat4 <- data.frame(clinvarGenes,Final_terms_Clinvar, clinicalSig)

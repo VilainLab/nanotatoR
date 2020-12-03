@@ -39,13 +39,13 @@
 #' datDGV <- DGVfrequency (hgpath = hgpath, 
 #'     smap_data = datcomp,
 #'     win_indel_DGV = 10000, 
-#'     input_fmt_SV = "dataFrame",
+#'     input_fmt_SV = "dataFrame", EnzymeType = "SE",
 #'     perc_similarity_DGV = 0.5,returnMethod="dataFrame")
 #'     indelconf = 0.5; invconf = 0.01;transconf = 0.1;
 #' datInf <- internalFrequency_solo(smapdata = datDGV, 
 #'     buildSVInternalDB=TRUE, win_indel=10000, 
 #'     win_inv_trans=50000, 
-#'     labelType = c("SE"),
+#'     labelType = c("SE"), EnzymeType = "SE",
 #'     SE_path = system.file("extdata", "SoloFile/", package="nanotatoR"),
 #'     SE_pattern = "*_DLE1_*", perc_similarity_parents =0.9,
 #'     Samplecodes = system.file("extdata", "nanotatoR_sample_codes.csv", package="nanotatoR"),
