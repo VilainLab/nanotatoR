@@ -1,7 +1,9 @@
 language: r
 sudo: false
 cache: packages
-r: bioc-devel
+r: 
+  - bioc-devel
+  - release
 warnings_are_errors: false
 addons:
   apt:
