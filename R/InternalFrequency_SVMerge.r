@@ -136,7 +136,6 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
     r1 <- smapdata
     sampID <- str_squish(as.character(unique(r1$SampleID)))
     
-    
     ufam <- as.character(unique(r$nanoID))
     famid <- c()
     for (qp in seq_len(length(ufam)))
@@ -155,7 +154,7 @@ internalFrequencyTrio_Duo <- function(mergedFiles, smappath , smap ,
     for (ii in seq_along(chro1))
     {
        
-        dat <- r[which(r$RefcontigID1 == ii), ]
+        dat <- r[which(r$RefcontigID1 == chro1[ii]), ]
         
         # variantType1<-dat$variantsubtype Changing the variant terms in DGV to
         # match svmap

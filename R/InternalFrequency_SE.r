@@ -162,7 +162,7 @@ internalFrequency_solo <- function(mergedFiles,
     for (ii in seq_along(chro1))
     {
        
-        dat <- r[which(r$RefcontigID1 == ii), ]
+        dat <- r[which(r$RefcontigID1 == chro1[ii]), ]
         #perc_similarity_parents = perc_similarity_parents
         perc_similarity = perc_similarity
         # variantType1<-dat$variantsubtype Changing the variant terms in DGV to
@@ -347,7 +347,7 @@ internalFrequency_solo <- function(mergedFiles,
                         & (as.character(dat2$FamilyID) != svfamid)
                         & (as.character(dat2$Type) == variantType2[nn])),]
                     
-                         
+                    
                     
                     
                     'countfre <- c();countfreunfilt<-c()

@@ -708,7 +708,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
 #' @examples
 #' terms="Muscle Weakness"
 #' clinvar = system.file("extdata", "localPDB/", package="nanotatoR")
-#' downloadClinvar = TRUE
+#' downloadClinvar = FALSE
 #' ge <- clinvar_gene(terms = terms, clinvar = clinvar, 
 #' downloadClinvar = downloadClinvar, 
 #' omimID = "OMIM:118980")

@@ -1,11 +1,11 @@
-#' Combining the RNAseq reads of family members in a 
+#' Combining the RNAseq reads of family members in a
 #' single file.
 #'
 #' @param RNASeqDir  character. Directory containing RNAseq reads.
 #' @param returnMethod  character. Method of returning Data.
-#' @param outpath  character. Contains file path if Method of return is chosen as 
+#' @param outpath  character. Contains file path if Method of return is chosen as
 #' Text.
-#' @param outFileName  character. Output file name. 
+#' @param outFileName  character. Output file name.
 #' @return Text or Dataframe containing TPM read counts of genes in the family.
 #' @examples
 #' \dontrun{
@@ -19,23 +19,23 @@
 #' @import org.Hs.eg.db
 #' @export
 RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
-                        outpath="",outFileName=""){ 
+                        outpath="",outFileName=""){
     #library(biomaRt)
     #setwd(RNASeqDir)
     l <- list.files(path = RNASeqDir,
-        pattern="*.genes.results", full.names = TRUE)
+        pattern="*.genes.results", full.names = FALSE)
     len<-length(l)
     #dat<-listDatasets(ensembl)
     #g1<-grep("sscrofa",listDatasets(ensembl)$dataset)
-    'grch37 = useMart(biomart="ENSEMBL_MART_ENSEMBL", host="www.ensembl.org", 
+    'grch37 = useMart(biomart="ENSEMBL_MART_ENSEMBL", host="www.ensembl.org",
                     dataset="hsapiens_gene_ensembl")'
-    gen<-c(); 
+    gen<-c();
     ##Need to make this function dynamic
     dat<-data.frame(matrix(ncol = len,
-        nrow = nrow(r<-read.table(l[1],sep="\t",header=TRUE))))
+        nrow = nrow(r<-read.table(file.path(RNASeqDir,l[1]),sep="\t",header=TRUE))))
     cnam<-c()
     for (ii in 1:length(l)){
-        r <- read.table(l[ii],sep="\t",header=TRUE)
+        r <- read.table(file.path(RNASeqDir,l[ii]),sep="\t",header=TRUE)
         gen <- c(gen,as.character(r$gene_id))
         dat[,ii] <- as.numeric(r$TPM)
         str <- strsplit(l[ii],split=".genes.results")
@@ -53,7 +53,7 @@ RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
     names(data1)<-cnam
     genesym<-c()
     ensemblid<-c()
-    'gene1 = getBM(attributes = c("external_gene_name", "ensembl_gene_id"), 
+    'gene1 = getBM(attributes = c("external_gene_name", "ensembl_gene_id"),
                 filters = "ensembl_gene_id", values = genes, mart = grch37)'
     gn1 <- mapIds(org.Hs.eg.db, genes, "SYMBOL", "ENSEMBL")
     'rn <- row.names(data.frame(gn1))
@@ -73,7 +73,8 @@ RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
 		#if(length(val) > 1) {print(paste("val:", val, "kk:", kk))}
         if(length(val)>0){
             gene3<-c(gene3,as.character(unique(genesym[val])))
-            ens<-c(ens,as.character(genes[kk]))
+            ens<-c(ens,as.character(rep(genes[kk], length(unique(genesym[val]))
+            )))
         }
         else{
             gene3<-c(gene3,as.character("-"))
@@ -84,7 +85,7 @@ RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
         GeneID = as.character(ens),data1)
     if(returnMethod == "Text"){
         fname = file.path(outFileName, ".csv" ,sep = "")
-        write.csv(RNASeqDat,file.path(outpath,fname), 
+        write.csv(RNASeqDat,file.path(outpath,fname),
             row.names = FALSE)
     }
     else if (returnMethod == "dataFrame"){
@@ -111,29 +112,29 @@ RNAseqcombine<-function(RNASeqDir,returnMethod=c("Text","dataFrame"),
 #' returnMethod = returnMethod)
 #' gnsOverlap <- c("AGL")
 #' SVID = 397
-#' datgnovrlap <- OverlapRNAseq(gnsOverlap = gnsOverlap, 
+#' datgnovrlap <- OverlapRNAseq(gnsOverlap = gnsOverlap,
 #' SVID = SVID, RNASeqData = datRNASeq,
 #' pattern_Proband = "*_P_*")
-#' @importFrom stats na.omit 
+#' @importFrom stats na.omit
 #' @export
 OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
                 pattern_Proband = NA, pattern_Mother = NA,
                 pattern_Father = NA){
-  
+
     ###Finding the column names
     #print(gnsOverlap);print(length(gnsOverlap))
-    if(is.na(pattern_Father)==FALSE){
-        fatherInd<-grep(pattern_Father,names(RNASeqData))
+    if(is.na(unique(as.character(pattern_Father))) == FALSE){
+        fatherInd<-grep(unique(as.character(pattern_Father)),names(RNASeqData))
     } else{fatherInd<- NA}
-    if(is.na(pattern_Mother)==FALSE){
-        motherInd<-grep(pattern_Mother,names(RNASeqData))
+    if(is.na(unique(as.character(pattern_Mother))) == FALSE){
+        motherInd<-grep(unique(as.character(pattern_Mother)),names(RNASeqData))
     } else{motherInd<- NA}
-    if(is.na(pattern_Proband)==FALSE){
-        probandInd<-grep(pattern_Proband,names(RNASeqData))
+    if(is.na(unique(as.character(pattern_Proband))) == FALSE){
+        probandInd<-grep(unique(as.character(pattern_Proband)),names(RNASeqData))
     } else{probandInd<- NA}
     'if(is.na(pattern_Sibling)==FALSE){
         siblingInd<-grep(pattern_Sibling,names(RNASeqData))
-    } 
+    }
     else{
         siblingInd<-NA
     }'
@@ -141,7 +142,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
     gene<-c()
     gnsname<-as.character(RNASeqData$GeneName)
     pasgnsname<-pasgnovlap<-paste("^",gnsname,"$",sep="")
-    'overlap_ensemblgenes = select(EnsDb.Hsapiens.v79, gnsOverlap, 
+    'overlap_ensemblgenes = select(EnsDb.Hsapiens.v79, gnsOverlap,
                 c("GENEID","GENENAME"), "SYMBOL")
     gnsOverlapID<-as.character(overlap_ensemblgenes$GENEID)'
     #print(paste("gnsOverlap:",gnsOverlap))
@@ -158,7 +159,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
     gnsOverlapID <- as.character(gnsOverlap)
     #print(gnsOverlapID)
     if(length(gnsOverlapID)>1){
-    
+
         datGeneInfoTemp<-data.frame()
         fatherReads<-c()
         motherReads<-c()
@@ -169,12 +170,12 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             #print(ki)
             gg<-grep(pasgnovlap,pasgnsname,fixed=TRUE)
             dat_temp<-RNASeqData[gg,]
-        
+
             if(nrow(dat_temp)>1){
-                dat_temp_1<-apply(dat_temp[,4:ncol(dat_temp)],2,mean)
+                dat_temp_1<-apply(dat_temp[,3:ncol(dat_temp)],2,mean)
                 #dat_temp_1<-data.frame(dat_temp_1)
                 dat_temp1<-dat_temp[1,]
-                dat_temp1[,4:ncol(dat_temp)]<-dat_temp_1
+                dat_temp1[,3:ncol(dat_temp)]<-dat_temp_1
                  #print(dim(dat_temp1))
                 fathercount<-c();mothercount<-c();
                 probandcount<-c();
@@ -183,61 +184,53 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
                         for(j in fatherInd){
                             fathercount<-c(fathercount,dat_temp1[,j])
                         }
-                        fatherReads<-c(fatherReads, 
+                        fatherReads<-c(fatherReads,
                         paste(fathercount,collapse = ":"))
-                    }
-                    else if(length(fatherInd)==1){
+                    }else if(length(fatherInd)==1){
                         fatherReads<-c(fatherReads,dat_temp1[,fatherInd])
-                    }
-                    else{
+                    }else{
                         fatherReads<-c(fatherReads,0)
                     }
-                }
-                else{
+                }else{
                     fatherReads<-c(fatherReads,"-")
                 }
-                if(is.na(motherInd[1])==FALSE){  
+                if(is.na(motherInd[1])==FALSE){
                     if(length(motherInd)>1){
                         for(j in motherInd){
                             mothercount<-c(mothercount,dat_temp1[,j])
                         }
-                        motherReads<-c(motherReads,paste(mothercount, 
+                        motherReads<-c(motherReads,paste(mothercount,
                             collapse = ":"))
-                    }
-                    else if(length(motherInd)==1){
+                    }else if(length(motherInd)==1){
                         motherReads<-c(motherReads,dat_temp1[,motherInd])
-                    }
-                    else{
+                    }else{
                         motherReads<-c(motherReads,0)
                     }
-                }
-                else{
+                }else{
                     motherReads<-c(motherReads,"-")
                 }
-                if(is.na(probandInd[1])==FALSE){  
+                if(is.na(probandInd[1])==FALSE){
                     if(length(probandInd)>1){
                         for(j in probandInd){
                             probandcount<-c(probandcount,dat_temp1[,j])
                         }
                     probandReads<-c(probandReads,paste(probandcount,collapse=":"))
-                }
-                else if(length(probandInd)==1){
+                }else if(length(probandInd)==1){
                     probandReads<-c(probandReads,dat_temp1[,probandInd])
-                }
-                else{
+                }else{
                     probandReads<-c(probandReads,0)
                 }
                 }else{
                     probandReads<-c(probandReads, "-")
                 }
-          
+
             'if(is.na(siblingInd[1])==FALSE){
                 if(length(siblingInd)>1){
                     for(j in siblingInd){
                         siblingcount<-c(siblingcount,dat_temp1[,j])
                     }
                     siblingReads<-c(siblingReads,paste(siblingcount,collapse=":"))
-                }            
+                }
                 else if(length(siblingInd)==1){
               siblingReads<-c(siblingReads,dat_temp1[,siblingInd])
             }
@@ -269,7 +262,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             else{
             fatherReads<-c(fatherReads,"-")
           }
-          if(is.na(motherInd [1])==FALSE){ 
+          if(is.na(motherInd [1])==FALSE){
           if(length(motherInd)>1){
           for(j in motherInd){
             mothercount<-c(mothercount,dat_temp[,j])
@@ -286,7 +279,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             else{
             motherReads<-c(motherReads, "-")
           }
-           if(is.na(probandInd [1])==FALSE){ 
+           if(is.na(probandInd [1])==FALSE){
           if(length(probandInd)>1){
           for(j in probandInd){
             probandcount<-c(probandcount,dat_temp[,j])
@@ -303,14 +296,14 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             else{
             probandReads<-c(probandReads, "-")
           }
-            
+
           'if(is.na(siblingInd[1])==FALSE){
             if(length(siblingInd)>1){
             for(j in siblingInd){
             siblingcount<-c(siblingcount,dat_temp[,j])
             }
             siblingReads<-c(siblingReads,paste(siblingcount,collapse=":"))
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-c(siblingReads,dat_temp[,siblingInd])
             }
@@ -345,7 +338,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
         } else{
             ProbandTPM <- "-"
            }
-                
+
         if(is.na(fatherInd[1])==FALSE){
             FatherGenes<-c()
             for(ii in 1:length(gene)){
@@ -366,12 +359,12 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
         } else{
                MotherTPM <- "-"
         }
-                
-                
+
+
         '        if(is.na(siblingInd[1])==FALSE){
                 siblingGenes<-c()
                 for(ii in 1:length(gene)){
-                
+
                 pasgene<-paste(gene[ii],"(",siblingReads[ii],")",sep="")
                 siblingGenes<-c(siblingGenes,pasgene)
                 }
@@ -380,10 +373,10 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
                 else{
                        SiblingTPM<-"-"
                     }
-        '               
+        '
         datGeneInfo<-data.frame(SVID=SVID,Probandexpression=ProbandTPM,
-                Fatherexpression=FatherTPM,Motherexpression=MotherTPM)     
-                
+                Fatherexpression=FatherTPM,Motherexpression=MotherTPM)
+
     }
     else if(length(gnsOverlapID)==1){
        pasgnovlap<-paste("^",as.character(gnsOverlapID),"$",sep="")
@@ -392,10 +385,10 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
       #gg<-grep(gnsOverlapID,gnsname,fixed=TRUE)
       dat_temp<-RNASeqData[gg,]
      if(nrow(dat_temp)>1){
-          dat_temp_1<-apply(dat_temp[,4:ncol(dat_temp)],2,mean)
+          dat_temp_1<-apply(dat_temp[,3:ncol(dat_temp)],2,mean)
           #dat_temp_1<-data.frame(dat_temp_1)
           dat_temp1<-dat_temp[1,]
-          dat_temp1[,4:ncol(dat_temp)]<-dat_temp_1
+          dat_temp1[,3:ncol(dat_temp)]<-dat_temp_1
           #dat_temp1<-cbind(dat_temp[1,1:3],dat_temp1)
            #print(dim(dat_temp1))
           fathercount<-c();mothercount<-c();probandcount<-c();
@@ -415,7 +408,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             } else{
             fatherReads<- "-"
             }
-          if(is.na(motherInd[1])==FALSE){ 
+          if(is.na(motherInd[1])==FALSE){
           if(length(motherInd)>1){
           for(j in motherInd){
             mothercount<-c(mothercount,mean(dat_temp1[,j]))
@@ -431,7 +424,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             } else{
             motherReads <- "-"
             }
-          if(is.na(probandInd[1])==FALSE){ 
+          if(is.na(probandInd[1])==FALSE){
           if(length(probandInd)>1){
           for(j in probandInd){
             probandcount<-c(probandcount,mean(dat_temp1[,j]))
@@ -447,14 +440,14 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             } else{
             probandReads <- "-"
             }
-          
+
           'if(is.na(siblingInd[1])==FALSE){
             if(length(siblingInd)>1){
             for(j in siblingInd){
             siblingcount<-c(siblingcount,mean(dat_temp1[,j]))
             }
             siblingReads<-paste(siblingcount,collapse=":")
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-mean(dat_temp1[,siblingInd])
             }
@@ -475,7 +468,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
         #}
         }
       else if (nrow(dat_temp)==1){
-       
+
          #print(dim(dat_temp1))
           fathercount<-c();mothercount<-c();probandcount<-c();siblingcount<-c()
           if(is.na(fatherInd[1])==FALSE){
@@ -494,7 +487,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             }else{
                 fatherReads<-"-"
             }
-          if(is.na(motherInd[1])==FALSE){  
+          if(is.na(motherInd[1])==FALSE){
           if(length(motherInd)>1){
           for(j in motherInd){
             mothercount<-c(mothercount,mean(dat_temp[,j]))
@@ -510,7 +503,7 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             } else{
                 motherReads<-"-"
             }
-            if(is.na(probandInd [1])==FALSE){  
+            if(is.na(probandInd [1])==FALSE){
           if(length(probandInd)>1){
           for(j in probandInd){
             probandcount<-c(probandcount,mean(dat_temp[,j]))
@@ -526,15 +519,15 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
             } else{
                 probandReads<-"-"
             }
-            
-          
+
+
           'if(is.na(siblingInd[1])==FALSE){
             if(length(siblingInd)>1){
             for(j in siblingInd){
             siblingcount<-c(siblingcount,mean(dat_temp[,j]))
             }
             siblingReads<-paste(siblingcount,collapse=":")
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-mean(dat_temp[,siblingInd])
             }
@@ -591,28 +584,28 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
         }
         else{
                 SiblingTPM<-"-"
-        }'                
+        }'
         datGeneInfo<-data.frame(SVID=SVID,Probandexpression=ProbandTPM,
                 Fatherexpression=FatherTPM,Motherexpression=MotherTPM)
-            
+
     }
     else{
         datGeneInfo<-data.frame(SVID=SVID,Probandexpression="-",
                     Fatherexpression="-",Motherexpression="-")
-    
-    
-    
+
+
+
     }
-  
+
   #print(warnings())
-  
+
   return(datGeneInfo)
 }
 
 
 #' Extract Read counts for genes that are near SVs.
 #'
-#' @param gnsNonOverlap  character. genes that are upstream 
+#' @param gnsNonOverlap  character. genes that are upstream
 #' and/or downstream of SV.
 #' @param SVID  character. ID of the SVs.
 #' @param RNASeqData  character. Expression of the genes.
@@ -627,43 +620,44 @@ OverlapRNAseq<-function(gnsOverlap, SVID, RNASeqData,
 #' returnMethod = returnMethod)
 #' gnsNonOverlap <- c("DDX11L1", "MIR1302-2HG", "OR4G4P")
 #' SVID = 397
-#' datgnnonovrlap <- nonOverlapRNAseq(gnsNonOverlap = gnsNonOverlap, 
+#' datgnnonovrlap <- nonOverlapRNAseq(gnsNonOverlap = gnsNonOverlap,
 #' SVID = SVID, RNASeqData = datRNASeq,
 #' pattern_Proband = "*_P_*")
-#' @importFrom stats na.omit 
+#' @importFrom stats na.omit
 #' @export
 nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
                 pattern_Proband=NA,pattern_Mother=NA,
                 pattern_Father=NA){
   ##Biomart annotation
-  ###Checking if the input is empty; else if not empty add 
+  ###Checking if the input is empty; else if not empty add
   ###expression values for each genes
     datGeneInfo<-data.frame()
     SVID=SVID
     ###Extracting the index for the the parents
-    if(is.na(pattern_Father)==FALSE){
-    fatherInd<-grep(pattern_Father,names(RNASeqData))
-    } else{fatherInd <- NA}
-    if(is.na(pattern_Mother)==FALSE){
-    motherInd<-grep(pattern_Mother,names(RNASeqData))
-    } else{motherInd <- NA}
-    if(is.na(pattern_Proband)==FALSE){
-    probandInd<-grep(pattern_Proband,names(RNASeqData))
-    } else{probandInd <- NA}
+    if(is.na(unique(as.character(pattern_Father))) == FALSE){
+        fatherInd<-grep(unique(as.character(pattern_Father)),names(RNASeqData))
+    } else{fatherInd<- NA}
+    if(is.na(unique(as.character(pattern_Mother))) == FALSE){
+        motherInd<-grep(unique(as.character(pattern_Mother)),names(RNASeqData))
+    } else{motherInd<- NA}
+    if(is.na(unique(as.character(pattern_Proband))) == FALSE){
+        probandInd<-grep(unique(as.character(pattern_Proband)),names(RNASeqData))
+    } else{probandInd<- NA}
+
     ##Checking for sibling
     'if(is.na(pattern_Sibling)==FALSE){
       siblingInd<-grep(pattern_Sibling,names(RNASeqData))
-    } 
+    }
     else{
       siblingInd<-NA
     }'
-    
+
     gene<-c()
     gnsname<-as.character(RNASeqData$GeneName)
     pasgnsname<-pasgnovlap<-paste("^",as.character(gnsname),"$",sep="")
-    'nonoverlap_ensemblgenes = select(EnsDb.Hsapiens.v79, gnsNonOverlap, 
+    'nonoverlap_ensemblgenes = select(EnsDb.Hsapiens.v79, gnsNonOverlap,
                 c("GENEID","GENENAME"), "SYMBOL")
-    gnsnonOverlapID<-as.character(nonoverlap_ensemblgenes$GENEID)'    
+    gnsnonOverlapID<-as.character(nonoverlap_ensemblgenes$GENEID)'
     ###Extracting Reads
     ###
     ###Genes Names Extraction
@@ -674,16 +668,16 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
       motherReads<-c()
       probandReads<-c()
       #siblingReads<-c()
-      
+
       for (ki in 1:length(gnsnonOverlapID)){
        pasgnnonovlap<-paste("^",as.character(gnsnonOverlapID[ki]),"$",sep="")
         gg<-grep(pasgnnonovlap,pasgnsname,fixed=TRUE)
         dat_temp<-RNASeqData[gg,]
         if(nrow(dat_temp)>1){
-          dat_temp_1<-apply(dat_temp[,4:ncol(dat_temp)],2,mean)
+          dat_temp_1<-apply(dat_temp[,3:ncol(dat_temp)],2,mean)
           #dat_temp_1<-data.frame(dat_temp_1)
           dat_temp1<-dat_temp[1,]
-          dat_temp1[,4:ncol(dat_temp)]<-dat_temp_1
+          dat_temp1[,3:ncol(dat_temp)]<-dat_temp_1
            #print(dim(dat_temp1))
           fathercount<-c();mothercount<-c();probandcount<-c();siblingcount<-c()
           if(is.na(fatherInd[1])==FALSE){
@@ -741,7 +735,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
             siblingcount<-c(siblingcount,dat_temp1[,j])
             }
             siblingReads<-c(siblingReads,paste(siblingcount,collapse=":"))
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-c(siblingReads,dat_temp1[,siblingInd])
             }
@@ -773,8 +767,8 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
             else{
             fatherReads<-c(fatherReads,"-")
           }
-            
-          if(is.na(motherInd[1])==FALSE){ 
+
+          if(is.na(motherInd[1])==FALSE){
           if(length(motherInd)>1){
           for(j in motherInd){
             mothercount<-c(mothercount,dat_temp[,j])
@@ -791,7 +785,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
             else{
             motherReads<-c(motherReads,"-")
           }
-           if(is.na(probandInd[1])==FALSE){ 
+           if(is.na(probandInd[1])==FALSE){
           if(length(probandInd)>1){
           for(j in probandInd){
             probandcount<-c(probandcount,dat_temp[,j])
@@ -814,7 +808,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
             siblingcount<-c(siblingcount,dat_temp[,j])
             }
             siblingReads<-c(siblingReads,paste(siblingcount,collapse=":"))
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-c(siblingReads,dat_temp[,siblingInd])
             }
@@ -841,7 +835,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
     }
         if(is.na(probandInd[1])==FALSE){
         ProbandGenes<-c()
-        
+
         for(ii in 1:length(gene)){
         pasgene<-paste(gene[ii],"(",probandReads[ii],")",sep="")
         ProbandGenes<-c(ProbandGenes,pasgene)
@@ -870,7 +864,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
         }else{
                MotherTPM<-"-"
             }
-        
+
         'if(is.na(siblingInd[1])==FALSE){
         siblingGenes<-c()
         for(ii in 1:length(gene)){
@@ -883,19 +877,19 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
                SiblingTPM<-"-"
             }'
         datGeneInfo<-data.frame(SVID=SVID,ProbandTPM=ProbandTPM,
-                FatherTPM=FatherTPM,MotherTPM=MotherTPM)      
-    }    
+                FatherTPM=FatherTPM,MotherTPM=MotherTPM)
+    }
     else if(length(gnsnonOverlapID)==1){
     pasgnnonovlap<-paste("^",as.character(gnsnonOverlapID),"$",sep="")
     gg<-grep(pasgnnonovlap,pasgnsname,fixed=TRUE)
       #gg<-grep(pasgnnonovlap,gnsname,fixed=TRUE)
       dat_temp<-RNASeqData[gg,]
-      
+
       if(nrow(dat_temp)>1){
-          dat_temp_1<-apply(dat_temp[,4:ncol(dat_temp)],2,mean)
+          dat_temp_1<-apply(dat_temp[,3:ncol(dat_temp)],2,mean)
           #dat_temp_1<-data.frame(dat_temp_1)
           dat_temp1<-dat_temp[1,]
-          dat_temp1[,4:ncol(dat_temp)]<-dat_temp_1
+          dat_temp1[,3:ncol(dat_temp)]<-dat_temp_1
            #print(dim(dat_temp1))
           fathercount<-c();mothercount<-c();probandcount<-c();
           if(is.na(fatherInd[1])==FALSE){
@@ -949,14 +943,14 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
           else{
             probandReads<- "-"
           }
-          
+
           'if(is.na(siblingInd[1])==FALSE){
             if(length(siblingInd)>1){
             for(j in siblingInd){
             siblingcount<-c(siblingcount,dat_temp1[,j])
             }
             siblingReads<-paste(siblingcount,collapse=":")
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-dat_temp1[,siblingInd]
             }
@@ -977,7 +971,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
         #}
         }
       else if (nrow(dat_temp)==1){
-       
+
          #print(dim(dat_temp1))
           fathercount<-c();mothercount<-c();probandcount<-c();
           if(is.na(fatherInd[1])==FALSE){
@@ -1037,7 +1031,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
             siblingcount<-c(siblingcount,dat_temp[,j])
             }
             siblingReads<-paste(siblingcount,collapse=":")
-            }            
+            }
             else if(length(siblingInd)==1){
               siblingReads<-dat_temp[,siblingInd]
             }
@@ -1084,7 +1078,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
         }else{
                 MotherTPM <- "-"
         }
-        
+
         'if(is.na(siblingInd[1])==FALSE){
         siblingGenes<-paste(gene,"(",siblingReads,")",sep="")
         #siblingGenes<-c(siblingGenes,pasgene)
@@ -1093,24 +1087,24 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
         }
         else{
                 SiblingTPM<-"-"
-        }'            
-               
+        }'
+
         datGeneInfo<-data.frame(SVID=SVID,ProbandTPM=ProbandTPM,
                 FatherTPM=FatherTPM,MotherTPM=MotherTPM)
     }
     else{
         datGeneInfo<-data.frame(SVID=SVID,ProbandTPM="-",
                 FatherTPM="-",MotherTPM="-")
-    
+
     }
-  
+
   return(datGeneInfo)
 }
 
-#' Extract Read counts for genes that are near 
+#' Extract Read counts for genes that are near
 #' or overalapping SVs.
 #'
-#' @param input_fmt_SV  character. genes that are upstream 
+#' @param input_fmt_SV  character. genes that are upstream
 #' and/or downstream of SV. input_fmt_RNASeq
 #' @param input_fmt_RNASeq  character. input format of RNASEQ data.
 #' Text or dataframe.
@@ -1132,12 +1126,12 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
 #' returnMethod = returnMethod)
 #' smapName="NA12878_DLE1_VAP_solo5.smap"
 #' smap = system.file("extdata", smapName, package="nanotatoR")
-#' datcomp<-overlapnearestgeneSearch(smap = smap, 
-#'    bed=bedFile, inputfmtBed = "BED", outpath, 
-#'    n = 3, returnMethod_bedcomp = c("dataFrame"), 
+#' datcomp<-overlapnearestgeneSearch(smap = smap,
+#'    bed=bedFile, inputfmtBed = "BED", outpath,
+#'    n = 3, returnMethod_bedcomp = c("dataFrame"),
 #'    input_fmt_SV = "Text",
-#'    EnzymeType = "SVMerge", 
-#'    bperrorindel = 3000, 
+#'    EnzymeType = "SVMerge",
+#'    bperrorindel = 3000,
 #'    bperrorinvtrans = 50000)
 #' datRNASeq1 <- SVexpression(
 #'     input_fmt_SV=c("dataFrame"),
@@ -1148,7 +1142,7 @@ nonOverlapRNAseq<-function(gnsNonOverlap,SVID,RNASeqData,
 #'     pattern_Proband = "*_P_*", EnzymeType = c("SVMerge"))
 
 #'}
-#' @importFrom stats na.omit  
+#' @importFrom stats na.omit
 #' @export
 SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
         smapdata,smappath,
@@ -1166,7 +1160,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
     else{
       stop("Input format for RNASeq Data Incorrect")
     }
-  
+
     if(input_fmt_SV=="dataFrame"){
         smapdata = smapdata
         if(EnzymeType == "SVMerge"){
@@ -1193,7 +1187,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
     }
     ##Extracting Data
     overlapgenes<-str_trim(smapdata$OverlapGenes_strand_perc)
-    
+
     SVID<-smapdata$SVIndex
     dataOverLap<-data.frame(matrix(nrow=nrow(smapdata),ncol=4))
     ##Extracting Overlapped Genes
@@ -1206,7 +1200,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
         #for(kk in 1:10){
         #print(kk)
         datOverLap<-data.frame()
-        #print(paste("kk:",kk,sep=""))
+        print(paste("kk:",kk,sep=""))
         svID<-as.character(SVID[kk])
         if(length(grep(";",overlapgenes[kk]))>=1){
             st1<-strsplit(as.character(overlapgenes[kk]),
@@ -1218,26 +1212,24 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
                 gn_temp<-strsplit(sttemp[tt],split="\\(")
                 gns_overlap<-c(gns_overlap,as.character(gn_temp[[1]][1]))
             }
-        
+
             datOverLap<-OverlapRNAseq(gnsOverlap = as.character(gns_overlap),
                 SVID = svID,RNASeqData = RNASeqData,
                 pattern_Proband=pattern_Proband,pattern_Mother=pattern_Mother,
                 pattern_Father=pattern_Father)
-        
-            
-        }
-        else if (length(grep("\\(",as.character(overlapgenes[kk])))>=1){
+
+
+        }else if (length(grep("\\(",as.character(overlapgenes[kk])))>=1){
             #print("2")
             gnsOverlap<-strsplit(as.character(overlapgenes[kk]),split="\\(")[[1]][1]
-          
+
             datOverLap<-OverlapRNAseq(gnsOverlap = as.character(gnsOverlap),
                     SVID = svID,RNASeqData = RNASeqData,
                     pattern_Proband = pattern_Proband,
                     pattern_Mother = pattern_Mother,
                     pattern_Father = pattern_Father)
-            
-        }
-        else{
+
+        }else{
         #print(paste("OverLapDNSVID:",svID))
             datOverLap<-data.frame(SVID = svID,
                 Probandexpression = "-",
@@ -1249,16 +1241,16 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
             Father_OverlapGeneExpression_TPM = as.character(datOverLap$Fatherexpression),
             Mother_OverlapGeneExpression_TPM = as.character(datOverLap$Motherexpression))
     }
-    
+
     ##Extracting NonOverlapped Genes
     nearestUPGenes<-smapdata$Upstream_nonOverlapGenes_dist_kb
     datanonOverLapUP<-data.frame(matrix(nrow=nrow(smapdata),ncol=4))
     names(datanonOverLapUP)<-c("SVID","NonOverlapUPProbandTPM",
                             "NonOverlapUPFatherTPM","NonOverlapUPMotherTPM")
-    print("###NonOverlapUPStreamGenes###") 
+    print("###NonOverlapUPStreamGenes###")
     for(ll in 1:length(nearestUPGenes)){
         #for(ll in 1:10){
-     
+
         datNonOverLapUP<-data.frame()
         #print(paste("llUP:",ll,sep=""))
         svID<-as.character(SVID[ll])
@@ -1272,15 +1264,15 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
                 gns_nonoverlap_up<-c(gns_nonoverlap_up,
                     as.character(gn_temp[[1]][1]))
             }
-        
-        
+
+
             datNonOverLapUP<-nonOverlapRNAseq(
                 gnsNonOverlap=as.character(gns_nonoverlap_up),
                 SVID=svID,RNASeqData=RNASeqData,
                 pattern_Proband=pattern_Proband,
                 pattern_Mother=pattern_Mother,
                 pattern_Father=pattern_Father)
-        
+
         }
         else if (length(grep("\\(",as.character(nearestUPGenes[ll])))>=1){
             #print("2")
@@ -1292,7 +1284,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
                 pattern_Proband = pattern_Proband,
                 pattern_Mother = pattern_Mother,
                 pattern_Father = pattern_Father)
-      
+
         }
         else{
         #print(paste("NonOverLapUPSVID:",svID))
@@ -1304,13 +1296,13 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
                 Father_Upstream_nonOverlapGeneExpression_TPM=as.character(datNonOverLapUP$FatherTPM),
                 Mother_Upstream_nonOverlapGeneExpression_TPM=as.character(datNonOverLapUP$MotherTPM))
         }
-    
+
   ##Extracting NonOverlapped Down Stream Genes
     nearestDNGenes<-smapdata$Downstream_nonOverlapGenes_dist_kb
     datanonOverLapDN<-data.frame(matrix(nrow=nrow(smapdata),ncol=4))
     names(datanonOverLapDN)<-c("SVID","NonOverlapDNProbandTPM",
                             "NonOverlapDNFatherTPM","NonOverlapDNMotherTPM")
-    print("###NonOverlapDNStreamGenes###") 
+    print("###NonOverlapDNStreamGenes###")
     for(nn in 1:length(nearestDNGenes)){
     #for(nn in 1:10){
         datNonOverLapDN<-data.frame()
@@ -1330,7 +1322,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
             pattern_Proband = pattern_Proband,
             pattern_Mother = pattern_Mother,
             pattern_Father=pattern_Father)
-        
+
         }
         else if (length(grep("\\(",as.character(nearestDNGenes[nn])))>=1){
             # print("2")
@@ -1342,7 +1334,7 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
                 pattern_Proband = pattern_Proband,
                 pattern_Mother = pattern_Mother,
                 pattern_Father = pattern_Father)
-      
+
         }
         else{
             #print(paste("NonOverLapDNSVID:",svID))
@@ -1356,19 +1348,18 @@ SVexpression_duo_trio <-function(input_fmt_SV=c("Text","dataFrame"),
         NonOverlapDNfatherEXP=as.character(datNonOverLapDN$FatherTPM),
         NonOverlapDNmotherEXP=as.character(datNonOverLapDN$MotherTPM))
     }
-  
-  dataFinal<-data.frame(smapdata,dataOverLap[,2:ncol(dataOverLap)],
+
+    dataFinal<-data.frame(smapdata,dataOverLap[,2:ncol(dataOverLap)],
             datanonOverLapUP[,2:ncol(datanonOverLapUP)],
             datanonOverLapDN[,2:ncol(datanonOverLapDN)])
 return(dataFinal)
 
 }
 
-    
-  
-  
-  
-    
-    
-    
-    
+
+
+
+
+
+
+

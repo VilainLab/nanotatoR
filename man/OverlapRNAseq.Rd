@@ -39,7 +39,7 @@ datRNASeq <- RNAseqcombine(RNASeqDir = RNASeqDir,
 returnMethod = returnMethod)
 gnsOverlap <- c("AGL")
 SVID = 397
-datgnovrlap <- OverlapRNAseq(gnsOverlap = gnsOverlap, 
+datgnovrlap <- OverlapRNAseq(gnsOverlap = gnsOverlap,
 SVID = SVID, RNASeqData = datRNASeq,
 pattern_Proband = "*_P_*")
 }

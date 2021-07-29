@@ -18,7 +18,9 @@ overlapnearestgeneSearch(
 )
 }
 \arguments{
-\item{smap}{character. Path to SMAP file.}
+\item{smap}{character or dataFrame depending on the input_fmt_SV argument. 
+If input_fmt_SV= 'Text", it is path to SMAP file. If input_fmt_SV= 'dataFrame", 
+it is a dataframe.}
 
 \item{bed}{Text. Normal Bed files or Bionano Bed file.}
 

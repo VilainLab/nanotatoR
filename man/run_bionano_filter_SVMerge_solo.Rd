@@ -71,6 +71,7 @@ RZIPpath <- system.file("extdata", "zip.exe", package = "nanotatoR")
 smap = system.file("extdata", smapName, package="nanotatoR")
 bedFile <- system.file("extdata", "HomoSapienGRCH19_lift37.bed", package="nanotatoR")
 outpath <- system.file("extdata", package="nanotatoR")
+directoryName <- system.file("extdata", package="nanotatoR")
 datcomp<-overlapnearestgeneSearch(smap = smap, 
     bed=bedFile, inputfmtBed = "bed", outpath, 
     n = 3, returnMethod_bedcomp = c("dataFrame"), 
@@ -129,8 +130,8 @@ run_bionano_filter_SVMerge_solo (input_fmt_geneList = c("Text"),
     svData = datdecipher, 
     dat_geneList = dat_geneList,
     RZIPpath = RZIPpath, EnzymeType = c("SVMerge"),
-    outputType = c("Excel"),
+    outputType = c("csv"),
     primaryGenesPresent = FALSE, 
-    outputFilename = outputFilename,
-    outpath = outpath)
+    directoryName = directoryName,
+    fileprefix = "AnnotatedSamplesNA12878_SVMerge")
 }

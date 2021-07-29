@@ -313,25 +313,25 @@ run_bionano_filter_SVMerge_Trio <- function(
             write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
         } else if (outputType == "csv"){
             write.csv(dat10, file.path(directoryName, paste(
-                fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_indel_dup.csv",sep = "")), row.names = FALSE)
             write.csv(dat11, file.path(directoryName, paste(
-                fileprefix,"_indel_dup_both.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_indel_dup_both.csv",sep = "")), row.names = FALSE)
             write.csv(dat14, file.path(directoryName, paste(
-                fileprefix,"_indel_dup_cmpdHET.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_indel_dup_cmpdHET.csv",sep = "")), row.names = FALSE)
             write.csv(dat8, file.path(directoryName, paste(
-                fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_inv.csv",sep = "")), row.names = FALSE)
             write.csv(dat7, file.path(directoryName, paste(
-                fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_trans.csv",sep = "")), row.names = FALSE)
             write.csv(dat12, file.path(directoryName, paste(
-                fileprefix,"_indel_dup_mother.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_indel_dup_mother.csv",sep = "")), row.names = FALSE)
             write.csv(dat13, file.path(directoryName, paste(
-                fileprefix,"_indel_dup_father.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_indel_dup_father.csv",sep = "")), row.names = FALSE)
             write.csv(datOvrLap, file.path(directoryName, paste(
-                fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_all_PG_OV.csv",sep = "")), row.names = FALSE)
             write.csv(dat6, file.path(directoryName, paste(
-                fileprefix,"_mismatch.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_mismatch.csv",sep = "")), row.names = FALSE)
             write.csv(data, file.path(directoryName, paste(
-                fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+                fileprefix,"_all.csv",sep = "")), row.names = FALSE)
         } else {stop(" outputType incorrect !!")}
     
     

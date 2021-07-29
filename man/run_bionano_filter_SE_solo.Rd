@@ -101,6 +101,7 @@ datInf <- internalFrequency_solo(smapdata = datDGV,
     returnMethod="dataFrame", input_fmt_SV = "dataFrame")
 path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 pattern <- "*_hg19_*"
+directoryName <- system.file("extdata", package="nanotatoR")
 datBNDB <- BNDBfrequency(smapdata = datInf, 
     buildBNInternalDB=TRUE, 
     input_fmt_SV = "dataFrame",
@@ -127,8 +128,8 @@ run_bionano_filter_SE_solo (input_fmt_geneList = c("Text"),
     svData = datdecipher, 
     dat_geneList = dat_geneList,
     RZIPpath = RZIPpath, EnzymeType = c("SE"),
-    outputType = c("Excel"),
+    outputType = c("csv"),
     primaryGenesPresent = FALSE, 
-    outputFilename = outputFilename,
-    outpath = outpath)
+    directoryName = directoryName,
+    fileprefix = "AnnotatedSamplesNA12878_DLE")
 }
