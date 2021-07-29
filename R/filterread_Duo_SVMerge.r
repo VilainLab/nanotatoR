@@ -268,7 +268,7 @@ run_bionano_filter_SVMerge_duo <- function(input_fmt_geneList = c("Text", "dataF
         datnonovrlapUPPG<-data[nonovrlapupPG,]
         nonovrlapdnPG<-which(!((as.character(data$Non_Overlap_DN_PG)=="-")))
         datnonovrlapDNPG<-data[nonovrlapdnPG,]
-        
+        datOvrLap <- rbind(datovrlapPG,datnonovrlapUPPG,datnonovrlapDNPG)
         
   'list_of_datasets <- list(
     "all" = data, "indel_dup_denovo" = dat10,
@@ -287,13 +287,13 @@ run_bionano_filter_SVMerge_duo <- function(input_fmt_geneList = c("Text", "dataF
             fname <- paste(outputFilename, ".xlsx", sep = "")
             write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
         } else if (outputType == "csv"){
-            write.csv(dat10, file.path(directoryName, paste(fileprefix,"indel_dup_notshared.csv",sep = ""), row.names = FALSE))
-            write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
-            write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
-            write.csv(dat12, file.path(directoryName, paste(fileprefix,"_indel_dup_control.csv",sep = ""), row.names = FALSE))
-            write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
-            write.csv(dat6, file.path(directoryName, paste(fileprefix,"_mismatch.csv",sep = ""), row.names = FALSE))
-            write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+             write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup_notshared.csv",sep = "")), row.names = FALSE)
+            write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = "")), row.names = FALSE)
+            write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = "")), row.names = FALSE)
+            write.csv(dat13, file.path(directoryName, paste(fileprefix,"_indel_dup_control.csv",sep = "")), row.names = FALSE)
+            write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = "")), row.names = FALSE)
+            write.csv(dat6, file.path(directoryName, paste(fileprefix,"_mismatch.csv",sep = "")), row.names = FALSE)
+            write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = "")), row.names = FALSE)
         } else {stop(" outputType incorrect !!")}
         } else if(length(grep("father",unique(as.character(dat3$Found_in_control_sample_BSPQI_molecules))))>=1 
         | length(grep("father",unique(as.character(dat3$Found_in_control_sample_BSSSI_molecules))))>=1){
@@ -392,13 +392,13 @@ run_bionano_filter_SVMerge_duo <- function(input_fmt_geneList = c("Text", "dataF
             fname <- paste(outputFilename, ".xlsx", sep = "")
             write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
         } else if (outputType == "csv"){
-            write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup_notshared.csv",sep = ""), row.names = FALSE))
-            write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
-            write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
-            write.csv(dat13, file.path(directoryName, paste(fileprefix,"_indel_dup_control.csv",sep = ""), row.names = FALSE))
-            write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
-            write.csv(dat6, file.path(directoryName, paste(fileprefix,"_mismatch.csv",sep = ""), row.names = FALSE))
-            write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+            write.csv(dat10, file.path(directoryName, paste(fileprefix,"_indel_dup_notshared.csv",sep = "")), row.names = FALSE)
+            write.csv(dat8, file.path(directoryName, paste(fileprefix,"_inv.csv",sep = "")), row.names = FALSE)
+            write.csv(dat7, file.path(directoryName, paste(fileprefix,"_trans.csv",sep = "")), row.names = FALSE)
+            write.csv(dat13, file.path(directoryName, paste(fileprefix,"_indel_dup_control.csv",sep = "")), row.names = FALSE)
+            write.csv(datOvrLap, file.path(directoryName, paste(fileprefix,"_all_PG_OV.csv",sep = "")), row.names = FALSE)
+            write.csv(dat6, file.path(directoryName, paste(fileprefix,"_mismatch.csv",sep = "")), row.names = FALSE)
+            write.csv(data, file.path(directoryName, paste(fileprefix,"_all.csv",sep = "")), row.names = FALSE)
         } else {stop(" outputType incorrect !!")}
         }
         else{ stop("Neither of the parents found !!!!!")}

@@ -59,6 +59,7 @@
 #'     returnMethod="dataFrame", input_fmt_SV = "dataFrame")
 #' path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 #' pattern <- "*_hg19_*"
+#' directoryName <- system.file("extdata", package="nanotatoR")
 #' datBNDB <- BNDBfrequency(smapdata = datInf, 
 #'     buildBNInternalDB=TRUE, 
 #'     input_fmt_SV = "dataFrame",
@@ -85,10 +86,10 @@
 #'     svData = datdecipher, 
 #'     dat_geneList = dat_geneList,
 #'     RZIPpath = RZIPpath, EnzymeType = c("SE"),
-#'     outputType = c("Excel"),
+#'     outputType = c("csv"),
 #'     primaryGenesPresent = FALSE, 
-#'     outputFilename = outputFilename,
-#'     outpath = outpath)
+#'     directoryName = directoryName,
+#'     fileprefix = "AnnotatedSamplesNA12878_DLE")
 #' @import openxlsx
 #' @import hash
 #' @importFrom stats na.omit
@@ -177,18 +178,36 @@ run_bionano_filter_SE_solo <- function(
     }else if (primaryGenesPresent == FALSE){
         data <- smapdata
     }else {stop("primaryGenesPresent Incorrect!!")}
-    data$BNG_Freq_Perc_Filtered<-gsub("-",0,as.character(
-        data$BNG_Freq_Perc_Filtered))
-    data$BNG_Freq_Perc_UnFiltered<-gsub("-",0,as.character(
-        data$BNG_Freq_Perc_UnFiltered))
-    data$DGV_Freq_Perc<-as.numeric(data$DGV_Freq_Perc)
-    data$Internal_Freq_Perc_Filtered<-as.numeric(
-        data$Internal_Freq_Perc_Filtered)
-    data$Internal_Freq_Perc_Unfiltered<-as.numeric(
-        data$Internal_Freq_Perc_Unfiltered)
-    data$BNG_Freq_Perc_Filtered<-as.numeric(data$BNG_Freq_Perc_Filtered)
-    data$BNG_Freq_Perc_UnFiltered<-as.numeric(data$BNG_Freq_Perc_UnFiltered)
-    data$DECIPHER_Frequency<-as.numeric(data$DECIPHER_Frequency)
+	g1 <- grep("BNG_Freq_Perc_Filtered", names(data))
+	g2 <- grep("BNG_Freq_Perc_UnFiltered", names(data))
+	if(length(g1) == 1 & length(g2) == 1){
+	    data$BNG_Freq_Perc_Filtered<-gsub("-",0,as.character(
+            data$BNG_Freq_Perc_Filtered))
+        data$BNG_Freq_Perc_UnFiltered<-gsub("-",0,as.character(
+            data$BNG_Freq_Perc_UnFiltered))
+		data$BNG_Freq_Perc_Filtered<-as.numeric(data$BNG_Freq_Perc_Filtered)
+        data$BNG_Freq_Perc_UnFiltered<-as.numeric(data$BNG_Freq_Perc_UnFiltered)
+	}else{print("BNG Calculation not performed!!")}
+	g3 <- grep("DGV_Freq_Perc", names(data))
+	if(length(g3) == 1){
+	    data$DGV_Freq_Perc<-as.numeric(data$DGV_Freq_Perc)
+	}else{print("DGV Calculation not performed!!")}
+	g4 <- grep("Internal_Freq_Perc_Filtered", names(data))
+	g5 <- grep("Internal_Freq_Perc_Unfiltered", names(data))
+	if(length(g4) == 1 & length(g5) == 1){
+	    data$Internal_Freq_Perc_Filtered<-as.numeric(
+            data$Internal_Freq_Perc_Filtered)
+        data$Internal_Freq_Perc_Unfiltered<-as.numeric(
+            data$Internal_Freq_Perc_Unfiltered)
+	}else{print("Internal Frequency Calculation not performed!!")}
+	g6 <- grep("DECIPHER_Frequency", names(data))
+	if(length(g6) == 1){
+	   data$DECIPHER_Frequency<-as.numeric(data$DECIPHER_Frequency)
+	}else{print("Decipher Calculation not performed!!")}
+    
+    
+    
+    
  
   
     dat <- data[which(data$Type %in% "insertion"), ]
@@ -256,15 +275,15 @@ run_bionano_filter_SE_solo <- function(
             keepNA = TRUE)
     } else if (outputType == "csv"){
         write.csv(dat10, file.path(directoryName, paste(
-            fileprefix, "_indel_dup.csv",sep = ""), row.names = FALSE))
+            fileprefix, "_indel_dup.csv",sep = "")), row.names = FALSE)
         write.csv(dat8, file.path(directoryName, paste(
-            fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_inv.csv",sep = "")), row.names = FALSE)
         write.csv(dat7, file.path(directoryName, paste(
-            fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_trans.csv",sep = "")), row.names = FALSE)
         write.csv(datOvrLap, file.path(directoryName, paste(
-            fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_all_PG_OV.csv",sep = "")), row.names = FALSE)
         write.csv(data, file.path(directoryName, paste(
-            fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_all.csv",sep = "")), row.names = FALSE)
     } else {stop(" outputType incorrect !!")}
     
     

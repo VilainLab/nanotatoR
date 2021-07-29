@@ -178,8 +178,8 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
     dataFinal <- c()
     for (ii in seq_along(chro))
     {
-        print(paste('Chrom:',ii,sep=''))
-        dat <- r[which(r$Chromosome1 == ii), ]
+        print(paste('Chrom:',chro[ii],sep=''))
+        dat <- r[which(r$Chromosome1 == chro[ii]), ]
         
         # variantType1<-dat$variantsubtype Changing the variant terms in DGV to
         # match svmap
@@ -187,7 +187,7 @@ BNDBfrequency  <- function(internalBNDB, smappath , smap ,
         #BSPQI_status_DB <- as.character(dat$Found_in_self_BSPQI_molecules)
         #BSSSI_status_DB <- as.character(dat$Found_in_self_BSSSI_molecules)
         ## Extracting data from SVmap
-        dat1 <- r1[which(r1$RefcontigID1 == ii), ]
+        dat1 <- r1[which(r1$RefcontigID1 == chro[ii]), ]
         chromo2<-dat1$RefcontigID2
         ## Adding the windows to the breakpoints
         rf <- dat1$RefStartPos

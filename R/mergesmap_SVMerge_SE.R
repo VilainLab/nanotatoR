@@ -168,7 +168,7 @@ for (ii in seq_along((l)))
     r10 <- readLines(con, n = -1)
     close(con)
     # datfinal<-data.frame()
-    g1 <- grep("RawConfidence", r10)
+    g1 <- grep("RefEndPos", r10)
     g2 <- grep("RefStartPos", r10)
     'gg1 <- grep("# BSPQI Sample", r10)
     stt <- strsplit(r10[gg1], split = ":")
@@ -198,7 +198,18 @@ for (ii in seq_along((l)))
     } else {
     stop("column names doesnot Match")
     }
-    Samp <- as.character(unique(r1$Sample))
+	if(length(unique(r1$Sample)) > 1){
+	    r1$Sample <- gsub("-", "ExperimentLabel", r1$Sample)
+	}else{r1$Sample <- r1$Sample}
+	if(unique(r1$Sample) == "ExperimentLabel"){
+	    g1 <- strsplit(smap, split = "/")
+		g2 <- strsplit(g1[[1]][length(g1[[1]])], split = ".smap")
+		g3 <- strsplit(g1[[1]][length(g1[[1]])], split = "_")
+	    #Samp <- as.character(g2[[1]][1])
+        Samp <- as.character(paste0(g3[[1]][1],g3[[1]][3], "_", g3[[1]][5]))	
+		}else{
+	    	Samp <- as.character(unique(r1$Sample))
+	    }
     'st1 <- strsplit(Samp, split = "*_DLE")
     SampleID <- st1[[1]][1]'
     if(length(grep("*_BspQI_*", Samp)) >= 1){
@@ -316,7 +327,7 @@ FamilyInfoPrep <- function(
         nid <- c()
         datFinal <- data.frame()
     for(ki in seq_along(famtag)){
-        ftag <- gsub("F","NR",famtag[ki])
+        ftag <- gsub("^\\w","NR",famtag[ki])
         dat_Proband <- mergecodes[which(
         mergecodes$Tag == famtag[ki] & mergecodes$Relationship == "proband"
         ),]
@@ -660,7 +671,7 @@ datFinal$NID <- as.character(paste(datFinal$ProjectID,"_",datFinal$NID, sep = ""
 #' @export
 
 merging_SE_SVMerge <- function(
-    labelType = c("SVMerge", "SE", "Both"),
+    labelType = c("SVMerge", "SE", "Both", "SE_Cancer"),
     SVMerge_path ,SVMerge_pattern , 
     SE_path , SE_pattern,
     Samplecodes ,mergeKey,
@@ -668,12 +679,25 @@ merging_SE_SVMerge <- function(
     mergedKeyFname , filename,
     outputMode = c("dataframe", "Text")){
     ###Creating the sample ID relation connection
-    datFinal <- FamilyInfoPrep(Samplecodes, mergeKey, outMode = "dataframe")
-    sampleIds <- as.character(unique(datFinal$SampleID))
-    write.csv(datFinal, file.path(mergedKeyoutpath, mergedKeyFname), 
-            row.names = FALSE)
+   if(labelType == "SE_Cancer"){
+	    re <- read.csv(mergeKey)
+	    re$sampleIds <- paste(re$ProjectID, "_", re$Tag, "_", re$SampleID, sep = "")
+	    re$NID <- paste("NR_", re$Tag, sep ="")
+	    datFinal <- re
+		write.csv(datFinal, file.path(mergedKeyoutpath, mergedKeyFname), 
+                row.names = FALSE)
+	}else{
+	    datFinal <- FamilyInfoPrep(Samplecodes, mergeKey, outMode = "dataframe")
+        sampleIds <- as.character(unique(datFinal$SampleID))
+        write.csv(datFinal, file.path(mergedKeyoutpath, mergedKeyFname), 
+                row.names = FALSE)
+	}
     ###Checking for labeltype and doing the calculation accordingly
     if(labelType == "Both"){
+	    datFinal <- FamilyInfoPrep(Samplecodes, mergeKey, outMode = "dataframe")
+        sampleIds <- as.character(unique(datFinal$SampleID))
+        write.csv(datFinal, file.path(mergedKeyoutpath, mergedKeyFname), 
+            row.names = FALSE)
         datDual <- mergingSMAP_SVMerge(path = SVMerge_path, 
             pattern = SVMerge_pattern, 
             outMode = "dataframe")
@@ -690,7 +714,12 @@ merging_SE_SVMerge <- function(
     }else if(labelType == "SVMerge"){
         datDual <- mergingSMAP_SVMerge(path = SVMerge_path, pattern = SVMerge_pattern, outMode = "dataframe")
         datfinal <- datDual
-    }else{stop("Label Type Empty !!!!")}    
+    }else if(labelType == "SE_Cancer"){
+	    datDLE <- mergingSMAP_SE(path = SE_path, 
+            pattern = SE_pattern, outMode = "dataframe")
+        datfinal <- datDLE
+	}
+	else{stop("Label Type Empty !!!!")}    
     ###Adding relation and NanoId information to the merged solo files
     dataFinal <- c()
     for (n in seq_along(sampleIds)){
@@ -717,14 +746,6 @@ merging_SE_SVMerge <- function(
     else{stop("Outmode incorrect !!!")}
 }
     
-     
-    
-     
-    
-    
-    
-
-
 
 
 

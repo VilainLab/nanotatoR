@@ -1,9 +1,2 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-^\.travis.yml$
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
-=======
->>>>>>> 714868ed579a092f4cd6df397baa7f46eded618f

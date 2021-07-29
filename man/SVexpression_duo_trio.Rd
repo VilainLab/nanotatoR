@@ -2,7 +2,7 @@
 % Please edit documentation in R/RNASEQ_Analysis_Duo_Trio_SVMerge_SE.r
 \name{SVexpression_duo_trio}
 \alias{SVexpression_duo_trio}
-\title{Extract Read counts for genes that are near 
+\title{Extract Read counts for genes that are near
 or overalapping SVs.}
 \usage{
 SVexpression_duo_trio(
@@ -20,7 +20,7 @@ SVexpression_duo_trio(
 )
 }
 \arguments{
-\item{input_fmt_SV}{character. genes that are upstream 
+\item{input_fmt_SV}{character. genes that are upstream
 and/or downstream of SV. input_fmt_RNASeq}
 
 \item{smapdata}{dataframe. smap data in dataframe format.}
@@ -48,7 +48,7 @@ Text or dataframe.}
 Text or Dataframe containing TPM read counts of genes in the family.
 }
 \description{
-Extract Read counts for genes that are near 
+Extract Read counts for genes that are near
 or overalapping SVs.
 }
 \examples{
@@ -59,12 +59,12 @@ datRNASeq <- RNAseqcombine(RNASeqDir = RNASeqDir,
 returnMethod = returnMethod)
 smapName="NA12878_DLE1_VAP_solo5.smap"
 smap = system.file("extdata", smapName, package="nanotatoR")
-datcomp<-overlapnearestgeneSearch(smap = smap, 
-   bed=bedFile, inputfmtBed = "BED", outpath, 
-   n = 3, returnMethod_bedcomp = c("dataFrame"), 
+datcomp<-overlapnearestgeneSearch(smap = smap,
+   bed=bedFile, inputfmtBed = "BED", outpath,
+   n = 3, returnMethod_bedcomp = c("dataFrame"),
    input_fmt_SV = "Text",
-   EnzymeType = "SVMerge", 
-   bperrorindel = 3000, 
+   EnzymeType = "SVMerge",
+   bperrorindel = 3000,
    bperrorinvtrans = 50000)
 datRNASeq1 <- SVexpression(
     input_fmt_SV=c("dataFrame"),

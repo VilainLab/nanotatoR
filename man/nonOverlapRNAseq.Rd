@@ -14,7 +14,7 @@ nonOverlapRNAseq(
 )
 }
 \arguments{
-\item{gnsNonOverlap}{character. genes that are upstream 
+\item{gnsNonOverlap}{character. genes that are upstream
 and/or downstream of SV.}
 
 \item{SVID}{character. ID of the SVs.}
@@ -40,7 +40,7 @@ datRNASeq <- RNAseqcombine(RNASeqDir = RNASeqDir,
 returnMethod = returnMethod)
 gnsNonOverlap <- c("DDX11L1", "MIR1302-2HG", "OR4G4P")
 SVID = 397
-datgnnonovrlap <- nonOverlapRNAseq(gnsNonOverlap = gnsNonOverlap, 
+datgnnonovrlap <- nonOverlapRNAseq(gnsNonOverlap = gnsNonOverlap,
 SVID = SVID, RNASeqData = datRNASeq,
 pattern_Proband = "*_P_*")
 }

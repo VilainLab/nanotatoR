@@ -234,7 +234,7 @@ readSMap_DLE <- function(smap, smapdata,
             r10 <- readLines(con, n = -1)
             close(con)
             # datfinal<-data.frame()
-            g1 <- grep("RawConfidence", r10)
+            g1 <- grep("RefEndPos", r10)
             g2 <- grep("RefStartPos", r10)
             'gg1 <- grep("# BSPQI Sample", r10)
             stt <- strsplit(r10[gg1], split = ":")
@@ -1561,7 +1561,9 @@ nonOverlapGenes <- function(bed, chrom, startpos,
 }
 #' Extracts gene information from bed files
 #'
-#' @param smap    character. Path to SMAP file.
+#' @param smap    character or dataFrame depending on the input_fmt_SV argument. 
+#' If input_fmt_SV= 'Text", it is path to SMAP file. If input_fmt_SV= 'dataFrame", 
+#' it is a dataframe.
 #' @param bed    Text. Normal Bed files or Bionano Bed file.
 #' @param inputfmtBed character Whether the bed input is UCSC bed or Bionano bed.
 #' Note: extract in bed format to be read by bedsv:
@@ -1611,7 +1613,7 @@ overlapnearestgeneSearch <- function(smap, bed, inputfmtBed = c("bed", "BNBED"),
     }
     ## reading SMAPs and extracting data
     if(input_fmt_SV=="dataFrame"){
-        smapdata = smapdata
+        smapdata = smap
         if(EnzymeType == "SVMerge"){
             #smapdata <- readSMap(smap, input_fmt_smap = "Text")
             SVID<-smapdata$SVIndex
@@ -1620,8 +1622,7 @@ overlapnearestgeneSearch <- function(smap, bed, inputfmtBed = c("bed", "BNBED"),
             #smapdata <- readSMap_DLE(smap, input_fmt_smap)
             SVID<-smapdata$SmapEntryID
         }
-    }
-    else if(input_fmt_SV=="Text"){
+    } else if(input_fmt_SV=="Text"){
         if(EnzymeType == "SVMerge"){
             smapdata <- readSMap(smap, input_fmt_smap = "Text")
             SVID<-smapdata$SVIndex
@@ -1630,8 +1631,7 @@ overlapnearestgeneSearch <- function(smap, bed, inputfmtBed = c("bed", "BNBED"),
             smapdata <- readSMap_DLE(smap, input_fmt_smap = "Text")
             SVID<-smapdata$SmapEntryID
         }
-    }
-    else{
+    } else{
         stop("Input format for SMAP Incorrect")
     }
     r2 <- smapdata

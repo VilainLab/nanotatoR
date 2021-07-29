@@ -5,7 +5,7 @@
 \title{Merging Dual and DLE, and adding nanotatoR relation ID}
 \usage{
 merging_SE_SVMerge(
-  labelType = c("SVMerge", "SE", "Both"),
+  labelType = c("SVMerge", "SE", "Both", "SE_Cancer"),
   SVMerge_path,
   SVMerge_pattern,
   SE_path,

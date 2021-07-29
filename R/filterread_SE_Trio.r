@@ -29,6 +29,7 @@
 #' smap = system.file("extdata", smapName, package="nanotatoR")
 #' bedFile <- system.file("extdata", "HomoSapienGRCH19_lift37.bed", package="nanotatoR")
 #' outpath <- system.file("extdata", package="nanotatoR")
+#' directoryName <- system.file("extdata", package="nanotatoR")
 #' datcomp<-overlapnearestgeneSearch(smap = smap, 
 #'     bed=bedFile, inputfmtBed = "bed", outpath, 
 #'     n = 3, returnMethod_bedcomp = c("dataFrame"), 
@@ -85,10 +86,10 @@
 #'     svData = datdecipher, 
 #'     dat_geneList = dat_geneList,
 #'     RZIPpath = RZIPpath, EnzymeType = c("SE"),
-#'     outputType = c("Excel"),
+#'     outputType = c("csv"),
 #'     primaryGenesPresent = FALSE, 
-#'     outputFilename = outputFilename,
-#'     outpath = outpath)
+#'     directoryName = directoryName,
+#'     fileprefix = "AnnotatedSamplesGM24385")
 #' @import openxlsx
 #' @import hash
 #' @importFrom stats na.omit
@@ -265,23 +266,23 @@ run_bionano_filter_SE_Trio <- function(primaryGenesPresent = TRUE,
         write.xlsx(list_of_datasets, file = file.path(outpath, fname), keepNA = TRUE)
     } else if (outputType == "csv"){
         write.csv(dat10, file.path(directoryName, paste(
-            fileprefix,"_indel_dup.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_indel_dup.csv",sep = "")), row.names = FALSE)
         write.csv(dat11, file.path(directoryName, paste(
-            fileprefix,"_indel_dup_both.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_indel_dup_both.csv",sep = "")), row.names = FALSE)
         write.csv(dat14, file.path(directoryName, paste(
-            fileprefix,"_indel_dup_cmpdHET.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_indel_dup_cmpdHET.csv",sep = "")), row.names = FALSE)
         write.csv(dat8, file.path(directoryName, paste(
-            fileprefix,"_inv.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_inv.csv",sep = "")), row.names = FALSE)
         write.csv(dat7, file.path(directoryName, paste(
-            fileprefix,"_trans.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_trans.csv",sep = "")), row.names = FALSE)
         write.csv(dat12, file.path(directoryName, paste(
-            fileprefix,"_indel_dup_mother.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_indel_dup_mother.csv",sep = "")), row.names = FALSE)
         write.csv(dat13, file.path(directoryName, paste(
-            fileprefix,"_indel_dup_father.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_indel_dup_father.csv",sep = "")), row.names = FALSE)
         write.csv(datOvrLap, file.path(directoryName, paste(
-            fileprefix,"_all_PG_OV.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_all_PG_OV.csv",sep = "")), row.names = FALSE)
         write.csv(data, file.path(directoryName, paste(
-            fileprefix,"_all.csv",sep = ""), row.names = FALSE))
+            fileprefix,"_all.csv",sep = "")), row.names = FALSE)
     } else {stop(" outputType incorrect !!")}
   
 

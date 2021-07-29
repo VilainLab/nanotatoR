@@ -2,7 +2,7 @@
 % Please edit documentation in R/RNASEQ_Analysis_Duo_Trio_SVMerge_SE.r
 \name{RNAseqcombine}
 \alias{RNAseqcombine}
-\title{Combining the RNAseq reads of family members in a 
+\title{Combining the RNAseq reads of family members in a
 single file.}
 \usage{
 RNAseqcombine(
@@ -17,7 +17,7 @@ RNAseqcombine(
 
 \item{returnMethod}{character. Method of returning Data.}
 
-\item{outpath}{character. Contains file path if Method of return is chosen as 
+\item{outpath}{character. Contains file path if Method of return is chosen as
 Text.}
 
 \item{outFileName}{character. Output file name.}
@@ -26,7 +26,7 @@ Text.}
 Text or Dataframe containing TPM read counts of genes in the family.
 }
 \description{
-Combining the RNAseq reads of family members in a 
+Combining the RNAseq reads of family members in a
 single file.
 }
 \examples{
