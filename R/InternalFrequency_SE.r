@@ -347,7 +347,7 @@ internalFrequency_solo <- function(mergedFiles,
                         & (as.character(dat2$FamilyID) != svfamid)
                         & (as.character(dat2$Type) == variantType2[nn])),]
                     
-                         
+                    
                     
                     
                     'countfre <- c();countfreunfilt<-c()
