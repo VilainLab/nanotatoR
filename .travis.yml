@@ -2,8 +2,8 @@ language: r
 sudo: false
 cache: packages
 r: 
-  - bioc-devel
   - 4.1.0
+bioc_required: true
 warnings_are_errors: false
 addons:
   apt:
