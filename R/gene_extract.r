@@ -77,6 +77,7 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
         terms_2<-as.character(terms[thresh:length(terms)])
         ##Extracting genes from the databases
         g<-gene_extraction(terms_1)
+		
         g_1<-gene_extraction(terms_2)
         print(paste0("main",omim = omim))
         g_o<-omim_gene(terms_1, omim =omim)
@@ -121,6 +122,27 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             omimID = omimID)
         }
         ##Collating output from all the datasets
+		if(g == "" | g_1 == ""){
+			    g$geneName = NA
+			    g1$geneName = NA
+				g$Final_terms = NA
+			    g_1$Final_terms = NA
+		} else if(g_o == "" | g_o_1 == ""){
+		    g_o$geneName = NA
+			g_o_1$geneName = NA
+			g_o$Final_terms = NA
+			g_o_1$Final_terms = NA
+		} else if(g_g == "" | g_g_1 == ""){
+		    g_g$geneName = NA
+			g_g_1$geneName = NA
+			g_g$Final_terms = NA
+			g_g_1$Final_terms = NA
+		} else if(g_g == "" | g_g_1 == ""){
+		    g_c$geneName = NA
+			g_c_1$geneName = NA
+			g_c$Final_terms = NA
+			g_c_1$Final_terms = NA
+		} else{print("All term extraction returns data!!!")}
         Genes<-c(as.character(g$geneName),as.character(g_1$geneName),
             as.character(g_o$omimGenes),as.character(g_o_1$omimGenes),
             as.character(g_g$gtrGenes),as.character(g_g_1$gtrGenes),
@@ -168,7 +190,19 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             downloadClinvar = downloadClinvar)
         }
         
-        
+        if(g == "" ){
+			g$geneName = NA
+			g$Final_terms = NA
+		} else if(g_o == ""){
+		    g_o$geneName = NA
+			g_o$Final_terms = NA
+		} else if(g_g == ""){
+		    g_g$geneName = NA
+			g_g$Final_terms = NA
+		} else if(g_g == ""){
+		    g_c$geneName = NA
+			g_c$Final_terms = NA
+		} else{print("All term extraction returns data!!!")}
         ##Collating output from all the datasets
         Genes<-c(as.character(g$geneName),as.character(g_g$gtrGenes),
             as.character(g_o$omimGenes),as.character(g_c$clinvarGenes))
