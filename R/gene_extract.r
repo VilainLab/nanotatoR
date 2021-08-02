@@ -678,7 +678,8 @@ omim_gene<-function(terms, omim){
 #' terms="Liver cirrhosis"
 #' gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR")
 #' ge <- gtr_gene(terms = terms,gtr = gtr, downloadGTR = FALSE)
-#' @importFrom stats na.omit 
+#' @importFrom stats na.omit
+#' @import org.Hs.eg.db
 #' @export
 gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
     ##Initialising variables
