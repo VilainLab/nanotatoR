@@ -77,6 +77,7 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
         terms_2<-as.character(terms[thresh:length(terms)])
         ##Extracting genes from the databases
         g<-gene_extraction(terms_1)
+		
         g_1<-gene_extraction(terms_2)
         print(paste0("main",omim = omim))
         g_o<-omim_gene(terms_1, omim =omim)
@@ -121,6 +122,12 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             omimID = omimID)
         }
         ##Collating output from all the datasets
+		if(g == "" | g_1 == ""){
+			    g$geneName = NA
+			    g1$geneName = NA
+				g$Final_terms = NA
+			    g_1$Final_terms = NA
+		} else{print("All term extraction returns data!!!")}
         Genes<-c(as.character(g$geneName),as.character(g_1$geneName),
             as.character(g_o$omimGenes),as.character(g_o_1$omimGenes),
             as.character(g_g$gtrGenes),as.character(g_g_1$gtrGenes),
@@ -168,7 +175,12 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             downloadClinvar = downloadClinvar)
         }
         
-        
+        if(length(g) == 1 ){
+              if(g == ""){
+			g$geneName = NA
+	      		g$Final_terms = NA
+               }else {g <- g}
+	} else{print("All term extraction returns data!!!")}
         ##Collating output from all the datasets
         Genes<-c(as.character(g$geneName),as.character(g_g$gtrGenes),
             as.character(g_o$omimGenes),as.character(g_c$clinvarGenes))
@@ -317,6 +329,15 @@ gene_extraction<-function(terms){
             ##Extracting gene IDs, and checking if length of the gene ids
             ##greater than 0.
             geneID<-b$ids
+			if(any(geneID == "") != FALSE | length(geneID) == 0){
+			         dat1 <- ""
+				return(dat1)
+				stop("geneIDs not found!!!!")
+			} else if (length(mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")) == 0){
+                                dat1 <- ""
+				return(dat1)
+				stop("geneIDs not found!!!!")
+                       }else{geneID <- geneID}
             gg1<-data.frame()
             ##Checking if geneids greater than 0, if not moved to the next term
             if(length(geneID)>0){
@@ -382,6 +403,15 @@ gene_extraction<-function(terms){
         patl <- paste(terms)
         b<-entrez_search(db="gene", term=patl, retmax=99999999)
         geneID<-b$ids
+		if(any(geneID == "") != FALSE | length(geneID) == 0){
+			         dat1 <- ""
+				return(dat1)
+				stop("geneIDs not found!!!!")
+			} else if (length(mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")) == 0){
+                                dat1 <- ""
+				return(dat1)
+				stop("geneIDs not found!!!!")
+                       }else{geneID <- geneID}
         gg1<-data.frame()
         ##Checking if geneids greater than 0, if not moved to the next term
         if(length(geneID)>0){
@@ -435,7 +465,7 @@ gene_extraction<-function(terms){
 #' @return Dataframe returned containing gene lists in entrezid and Gene 
 #' Symbols, and terms associated with it
 #' @examples
-#' terms="Muscle Weakness"
+#' terms="Liver cirrhosis"
 #' omim = system.file("extdata", "mim2gene.txt", package="nanotatoR")
 #' ge <- omim_gene(terms = terms, omim = omim)
 #' @import rentrez 
@@ -467,6 +497,7 @@ omim_gene<-function(terms, omim){
             geneName <- c()
             #omimgeneID_word<-c$ids
             omimgeneID_dis<-d$ids
+			
             final_omim<-unique(as.character(omimgeneID_dis))
             ##Checking if geneids greater than 0, if not moved to the next term
             if(length(final_omim)>0){
@@ -543,6 +574,7 @@ omim_gene<-function(terms, omim){
                 retmax=99999999)
         #omimgeneID_word<-c$ids
         omimgeneID_dis<-d$ids
+		
         final_omim<-unique(c(as.character(omimgeneID_dis)))
         ##Checking if geneids greater than 0, if not move to the next term
         if(length(final_omim)>0){
@@ -621,10 +653,12 @@ omim_gene<-function(terms, omim){
 #' @return Dataframe returned containing gene lists in entrezid and Gene 
 #' Symbols, and terms associated with it
 #' @examples
-#' terms="Muscle Weakness"
+#' terms="Liver cirrhosis"
 #' gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR")
 #' ge <- gtr_gene(terms = terms,gtr = gtr, downloadGTR = FALSE)
-#' @importFrom stats na.omit 
+#' @importFrom stats na.omit
+#' @importFrom AnnotationDbi mapIds
+#' @import org.Hs.eg.db
 #' @export
 gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
     ##Initialising variables
@@ -648,6 +682,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
                 as.character(datGtr$DiseaseName), ignore.case = TRUE)
             geneID <- as.character(unique(na.omit(datGtr$GeneID[g1])))
             geneID <- gsub("N/A", NA, geneID)
+			
             ##Checking if gene ID extracted is greater than 0
             if(length(geneID) > length(is.na(geneID))){
                 gn<-as.character(unique(geneID))
@@ -672,6 +707,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
                 ignore.case = TRUE)
             geneID <- as.character(unique(na.omit(datGtr$GeneID[g1])))
             geneID <- gsub("N/A", NA, geneID)
+	
             ##Checking if gene ID extracted is greater than 0
             if(length(geneID) > length(is.na(geneID))){
                 gn<-as.character(unique(geneID))
@@ -706,7 +742,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
 #' @return Dataframe returned containing gene lists in entrezid and Gene 
 #' Symbols, and terms associated with it
 #' @examples
-#' terms="Muscle Weakness"
+#' terms="Liver cirrhosis"
 #' clinvar = system.file("extdata", "localPDB/", package="nanotatoR")
 #' downloadClinvar = FALSE
 #' ge <- clinvar_gene(terms = terms, clinvar = clinvar, 
@@ -758,7 +794,7 @@ clinvar_gene<-function(terms,
             g3 <- grep(pterms2, as.character(disterms), ignore.case=TRUE)  
             g4 <- grep(pterms3, as.character(disterms), ignore.case=TRUE)  '
             geneID <- unique(as.numeric(dis2genes$X.GeneID[g1]))
-            omim <- unique(as.numeric(dis2genes$DiseaseMIM[g1]))
+			omim <- unique(as.numeric(dis2genes$DiseaseMIM[g1]))
             varn <- clinvar.phenotype$variants
             st1 <- strsplit(as.character(varn$PhenotypeIDS), split = ",")
             varn$omimID <- sapply(st1, function(x) strsplit(x[2],split="OMIM:")[[1]][2])

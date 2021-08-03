@@ -24,7 +24,7 @@ Symbols, and terms associated with it
 Extracting genes from clinvar database NCBI.
 }
 \examples{
-terms="Muscle Weakness"
+terms="Liver cirrhosis"
 clinvar = system.file("extdata", "localPDB/", package="nanotatoR")
 downloadClinvar = FALSE
 ge <- clinvar_gene(terms = terms, clinvar = clinvar, 
