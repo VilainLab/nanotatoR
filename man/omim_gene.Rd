@@ -19,7 +19,7 @@ Symbols, and terms associated with it
 Extracting genes from OMIM database NCBI.
 }
 \examples{
-terms="Muscle Weakness"
+terms="Liver cirrhosis"
 omim = system.file("extdata", "mim2gene.txt", package="nanotatoR")
 ge <- omim_gene(terms = terms, omim = omim)
 }

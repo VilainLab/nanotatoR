@@ -24,7 +24,7 @@ Symbols, and terms associated with it
 Extracting genes from gtr database NCBI.
 }
 \examples{
-terms="Muscle Weakness"
+terms="Liver cirrhosis"
 gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR")
 ge <- gtr_gene(terms = terms,gtr = gtr, downloadGTR = FALSE)
 }

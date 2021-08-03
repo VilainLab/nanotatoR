@@ -127,21 +127,6 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
 			    g1$geneName = NA
 				g$Final_terms = NA
 			    g_1$Final_terms = NA
-		} else if(g_o == "" | g_o_1 == ""){
-		    g_o$geneName = NA
-			g_o_1$geneName = NA
-			g_o$Final_terms = NA
-			g_o_1$Final_terms = NA
-		} else if(g_g == "" | g_g_1 == ""){
-		    g_g$geneName = NA
-			g_g_1$geneName = NA
-			g_g$Final_terms = NA
-			g_g_1$Final_terms = NA
-		} else if(g_g == "" | g_g_1 == ""){
-		    g_c$geneName = NA
-			g_c_1$geneName = NA
-			g_c$Final_terms = NA
-			g_c_1$Final_terms = NA
 		} else{print("All term extraction returns data!!!")}
         Genes<-c(as.character(g$geneName),as.character(g_1$geneName),
             as.character(g_o$omimGenes),as.character(g_o_1$omimGenes),
@@ -190,19 +175,12 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             downloadClinvar = downloadClinvar)
         }
         
-        if(g == "" ){
+        if(length(g) == 1 ){
+              if(g == ""){
 			g$geneName = NA
-			g$Final_terms = NA
-		} else if(g_o == ""){
-		    g_o$geneName = NA
-			g_o$Final_terms = NA
-		} else if(g_g == ""){
-		    g_g$geneName = NA
-			g_g$Final_terms = NA
-		} else if(g_g == ""){
-		    g_c$geneName = NA
-			g_c$Final_terms = NA
-		} else{print("All term extraction returns data!!!")}
+	      		g$Final_terms = NA
+               }else {g <- g}
+	} else{print("All term extraction returns data!!!")}
         ##Collating output from all the datasets
         Genes<-c(as.character(g$geneName),as.character(g_g$gtrGenes),
             as.character(g_o$omimGenes),as.character(g_c$clinvarGenes))
@@ -351,11 +329,15 @@ gene_extraction<-function(terms){
             ##Extracting gene IDs, and checking if length of the gene ids
             ##greater than 0.
             geneID<-b$ids
-			if(any(geneID == "") != FALSE | any(geneID %in% keys(org.Hs.eg.db)) == FALSE){
-			    dat1 <- ""
+			if(any(geneID == "") != FALSE | length(geneID) == 0){
+			         dat1 <- ""
 				return(dat1)
 				stop("geneIDs not found!!!!")
-			}else{geneID <- geneID}
+			} else if (length(mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")) == 0){
+                                dat1 <- ""
+				return(dat1)
+				stop("geneIDs not found!!!!")
+                       }else{geneID <- geneID}
             gg1<-data.frame()
             ##Checking if geneids greater than 0, if not moved to the next term
             if(length(geneID)>0){
@@ -421,11 +403,15 @@ gene_extraction<-function(terms){
         patl <- paste(terms)
         b<-entrez_search(db="gene", term=patl, retmax=99999999)
         geneID<-b$ids
-		if(any(geneID == "") != FALSE | any(geneID %in% keys(org.Hs.eg.db)) == FALSE){
-			    dat1 <- ""
+		if(any(geneID == "") != FALSE | length(geneID) == 0){
+			         dat1 <- ""
 				return(dat1)
 				stop("geneIDs not found!!!!")
-			}else{geneID <- geneID}
+			} else if (length(mapIds(org.Hs.eg.db, geneID, "SYMBOL", "ENTREZID")) == 0){
+                                dat1 <- ""
+				return(dat1)
+				stop("geneIDs not found!!!!")
+                       }else{geneID <- geneID}
         gg1<-data.frame()
         ##Checking if geneids greater than 0, if not moved to the next term
         if(length(geneID)>0){
@@ -511,11 +497,7 @@ omim_gene<-function(terms, omim){
             geneName <- c()
             #omimgeneID_word<-c$ids
             omimgeneID_dis<-d$ids
-			if(any(omimgeneID_dis == "") != FALSE | any(omimgeneID_dis %in% keys(org.Hs.eg.db)) == FALSE){
-			    dat1 <- ""
-				return(dat1)
-				stop("geneIDs not found!!!!")
-			}else{omimgeneID_dis <- omimgeneID_dis}
+			
             final_omim<-unique(as.character(omimgeneID_dis))
             ##Checking if geneids greater than 0, if not moved to the next term
             if(length(final_omim)>0){
@@ -592,11 +574,7 @@ omim_gene<-function(terms, omim){
                 retmax=99999999)
         #omimgeneID_word<-c$ids
         omimgeneID_dis<-d$ids
-		if(any(omimgeneID_dis == "") != FALSE | any(omimgeneID_dis %in% keys(org.Hs.eg.db)) == FALSE){
-			    dat1 <- ""
-				return(dat1)
-				stop("geneIDs not found!!!!")
-			}else{omimgeneID_dis <- omimgeneID_dis}
+		
         final_omim<-unique(c(as.character(omimgeneID_dis)))
         ##Checking if geneids greater than 0, if not move to the next term
         if(length(final_omim)>0){
@@ -679,6 +657,7 @@ omim_gene<-function(terms, omim){
 #' gtr = system.file("extdata", "gtrDatabase.txt", package="nanotatoR")
 #' ge <- gtr_gene(terms = terms,gtr = gtr, downloadGTR = FALSE)
 #' @importFrom stats na.omit
+#' @importFrom AnnotationDbi mapIds
 #' @import org.Hs.eg.db
 #' @export
 gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
@@ -703,11 +682,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
                 as.character(datGtr$DiseaseName), ignore.case = TRUE)
             geneID <- as.character(unique(na.omit(datGtr$GeneID[g1])))
             geneID <- gsub("N/A", NA, geneID)
-			if(any(geneID == "") != FALSE | any(geneID %in% keys(org.Hs.eg.db)) == FALSE){
-			    dat1 <- ""
-				return(dat1)
-				stop("geneIDs not found!!!!")
-			}else{geneID <- geneID}
+			
             ##Checking if gene ID extracted is greater than 0
             if(length(geneID) > length(is.na(geneID))){
                 gn<-as.character(unique(geneID))
@@ -732,11 +707,7 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
                 ignore.case = TRUE)
             geneID <- as.character(unique(na.omit(datGtr$GeneID[g1])))
             geneID <- gsub("N/A", NA, geneID)
-			if(any(geneID == "") != FALSE | any(geneID %in% keys(org.Hs.eg.db)) == FALSE){
-			    dat1 <- ""
-				return(dat1)
-				stop("geneIDs not found!!!!")
-			}else{geneID <- geneID}
+	
             ##Checking if gene ID extracted is greater than 0
             if(length(geneID) > length(is.na(geneID))){
                 gn<-as.character(unique(geneID))
