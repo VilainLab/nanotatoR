@@ -4,7 +4,13 @@
 \alias{mergingSMAP_SE}
 \title{Merging DLE labelled smaps}
 \usage{
-mergingSMAP_SE(path, pattern, outMode = c("Text", "dataframe"), outpath)
+mergingSMAP_SE(
+  path,
+  pattern,
+  outMode = c("Text", "dataframe"),
+  outpath,
+  pipeline = c("DVP", "RVP")
+)
 }
 \arguments{
 \item{path}{character. Path to the solo files directory.}
@@ -15,6 +21,9 @@ mergingSMAP_SE(path, pattern, outMode = c("Text", "dataframe"), outpath)
 
 \item{outpath}{character. Path where the dual labelled 
 merged samples are kept. Is mandatory if outMode is Text.}
+
+\item{pipeline}{Analysis pieline used. Options Rare variant Pipeline (RVP)
+or Denovo Variant pipeline(DVP).}
 }
 \value{
 Text files containg merged smaps from different samples
