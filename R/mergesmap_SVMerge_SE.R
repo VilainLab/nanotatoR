@@ -142,6 +142,8 @@ for (ii in seq_along((l))){
 #' @param outMode    character. The ouput mode. Choices, dataframe or Text.
 #' @param outpath character. Path where the dual labelled 
 #'        merged samples are kept. Is mandatory if outMode is Text.
+#' @param pipeline Analysis pieline used. Options Rare variant Pipeline (RVP)
+#' or Denovo Variant pipeline(DVP).
 #' @return Text files containg merged smaps from different samples
 #' @examples
 #' mergedSmap <- mergingSMAP_SE (
@@ -154,11 +156,12 @@ for (ii in seq_along((l))){
 
 mergingSMAP_SE <- function(
 path ,pattern,outMode = c("Text", "dataframe"),
-outpath)
+outpath, pipeline = c("DVP", "RVP"))
 {
 l <- list.files(path = path, pattern = pattern, full.names = TRUE)
 nam <- c()
 datfinal <- data.frame()
+pipeline = pipeline
 ###Merging
 for (ii in seq_along((l)))
 {
@@ -199,17 +202,17 @@ for (ii in seq_along((l)))
     stop("column names doesnot Match")
     }
 	if(length(unique(r1$Sample)) > 1){
-	    r1$Sample <- gsub("-", "ExperimentLabel", r1$Sample)
+	    r1$Sample <- gsub("^-$", "ExperimentLabel", r1$Sample)
 	}else{r1$Sample <- r1$Sample}
-	if(unique(r1$Sample) == "ExperimentLabel"){
+	if(any(unique(r1$Sample) == "ExperimentLabel") == TRUE){
 	    g1 <- strsplit(smap, split = "/")
 		g2 <- strsplit(g1[[1]][length(g1[[1]])], split = ".smap")
-		g3 <- strsplit(g1[[1]][length(g1[[1]])], split = "_")
+		#g3 <- strsplit(g1[[1]][length(g1[[1]])], split = "_")
 	    #Samp <- as.character(g2[[1]][1])
-        Samp <- as.character(paste0(g3[[1]][1],g3[[1]][3], "_", g3[[1]][5]))	
-		}else{
-	    	Samp <- as.character(unique(r1$Sample))
-	    }
+        Samp <- as.character(g2[[1]][1])
+	}else{
+	   	Samp <- as.character(unique(r1$Sample))
+	}
     'st1 <- strsplit(Samp, split = "*_DLE")
     SampleID <- st1[[1]][1]'
     if(length(grep("*_BspQI_*", Samp)) >= 1){
@@ -253,32 +256,38 @@ for (ii in seq_along((l)))
             )
         Method <- as.character(c(rep ("SE", times = nrow(datfinal))))
         SampleID = datfinal$SampleID
+		if(pipeline == "RVP"){
+		    Zygosity = as.character(c(rep ("-", times = nrow(datfinal))))
+		}
+		else{
+		    Zygosity = as.character(datfinal$Zygosity)
+		}	
         'strsample <- strsplit(as.character(datfinal$Sample), 
             split = "*_DLE_*")
         SampleID = sapply(strsample, function(x) x[1])'
         datFinal_DLE <- data.frame(
-        SVIndex = as.character(datfinal$SmapEntryID), 
-        SampleID = datfinal$SampleID,
-        RefcontigID1 = as.numeric(datfinal$RefcontigID1), 
-        RefcontigID2 = as.numeric(datfinal$RefcontigID2),
-        RefStartPos = as.numeric(datfinal$RefStartPos), 
-        RefEndPos = as.numeric(datfinal$RefEndPos), 
-        Confidence = as.numeric(datfinal$Confidence), 
-        Size = as.numeric(datfinal$Size), 
-        Zygosity = as.character(datfinal$Zygosity), 
-        Type = as.character(datfinal$Type),
-        Type1 = Type1, Type2 = Type2, 
-        Fail_BSPQI_assembly_chimeric_score = Fail_BSPQI_assembly_chimeric_score, 
-        Fail_BSSSI_assembly_chimeric_score =Fail_BSSSI_assembly_chimeric_score,
-        Fail_assembly_chimeric_score_SE = as.character(
-            datfinal$Fail_assembly_chimeric_score
-        ),
-        Found_in_self_BSPQI_molecules = Found_in_self_BSPQI_molecules, 
-        Found_in_self_BSSSI_molecules = Found_in_self_BSPQI_molecules,
-        Found_in_SE_self_molecules = as.character(
-            datfinal$Found_in_self_molecules
-            ), 
-        Method = Method
+            SVIndex = as.character(datfinal$SmapEntryID), 
+            SampleID = datfinal$SampleID,
+            RefcontigID1 = as.numeric(datfinal$RefcontigID1), 
+            RefcontigID2 = as.numeric(datfinal$RefcontigID2),
+            RefStartPos = as.numeric(datfinal$RefStartPos), 
+            RefEndPos = as.numeric(datfinal$RefEndPos), 
+            Confidence = as.numeric(datfinal$Confidence), 
+            Size = as.numeric(datfinal$Size), 
+            Zygosity = Zygosity, 
+            Type = as.character(datfinal$Type),
+            Type1 = Type1, Type2 = Type2, 
+            Fail_BSPQI_assembly_chimeric_score = Fail_BSPQI_assembly_chimeric_score, 
+            Fail_BSSSI_assembly_chimeric_score =Fail_BSSSI_assembly_chimeric_score,
+            Fail_assembly_chimeric_score_SE = as.character(
+                datfinal$Fail_assembly_chimeric_score
+            ),
+            Found_in_self_BSPQI_molecules = Found_in_self_BSPQI_molecules, 
+            Found_in_self_BSSSI_molecules = Found_in_self_BSPQI_molecules,
+            Found_in_SE_self_molecules = as.character(
+                datfinal$Found_in_self_molecules
+                ), 
+            Method = Method
         )
         ##Writing output dataframe or text
         if (outMode == "Text"){
@@ -653,6 +662,8 @@ datFinal$NID <- as.character(paste(datFinal$ProjectID,"_",datFinal$NID, sep = ""
 #' @param mergedKeyFname character. File name storing sample name and nanoID
 #'        key information.
 #' @param outputMode character. Mode of databse output. Text or dataframe.
+#' @param pipeline Analysis pieline used. Options Rare variant Pipeline (RVP)
+#' or Denovo Variant pipeline(DVP).
 #' @return Text files containg merged smaps from different samples
 #' @examples
 #' dat1 <- merging_SE_SVMerge (
@@ -677,7 +688,9 @@ merging_SE_SVMerge <- function(
     Samplecodes ,mergeKey,
     outpath , mergedKeyoutpath ,
     mergedKeyFname , filename,
+	pipeline = c("DVP", "RVP"),
     outputMode = c("dataframe", "Text")){
+	pipeline = pipeline
     ###Creating the sample ID relation connection
    if(labelType == "SE_Cancer"){
 	    re <- read.csv(mergeKey)
@@ -703,20 +716,22 @@ merging_SE_SVMerge <- function(
             outMode = "dataframe")
         datDLE <- mergingSMAP_SE(path = SE_path, 
             pattern = SE_pattern, 
-            outMode = "dataframe")
+            outMode = "dataframe", 
+			pipeline = pipeline)
         'datFinal <- FamilyInfoPrep(Samplecodes, mergeKey, outMode = "dataframe")
         sampleIds <- as.character(unique(datFinal$SampleID))'
         datfinal <- rbind(datDual,datDLE)
     }else if(labelType == "SE"){
         datDLE <- mergingSMAP_SE(path = SE_path, 
-            pattern = SE_pattern, outMode = "dataframe")
+            pattern = SE_pattern, outMode = "dataframe",pipeline = pipeline)
             datfinal <- datDLE
     }else if(labelType == "SVMerge"){
         datDual <- mergingSMAP_SVMerge(path = SVMerge_path, pattern = SVMerge_pattern, outMode = "dataframe")
         datfinal <- datDual
     }else if(labelType == "SE_Cancer"){
 	    datDLE <- mergingSMAP_SE(path = SE_path, 
-            pattern = SE_pattern, outMode = "dataframe")
+            pattern = SE_pattern, outMode = "dataframe",
+			pipeline = pipeline)
         datfinal <- datDLE
 	}
 	else{stop("Label Type Empty !!!!")}    
