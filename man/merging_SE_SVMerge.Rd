@@ -16,7 +16,6 @@ merging_SE_SVMerge(
   mergedKeyoutpath,
   mergedKeyFname,
   filename,
-  pipeline = c("DVP", "RVP"),
   outputMode = c("dataframe", "Text")
 )
 }
