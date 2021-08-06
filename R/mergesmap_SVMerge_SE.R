@@ -1,5 +1,3 @@
-'library(hash)
-library(tidyverse)'
 #' Merging dual labelled smaps
 #'
 #' @param path character. Path to the solo files directory.
@@ -683,8 +681,8 @@ merging_SE_SVMerge <- function(
     Samplecodes ,mergeKey,
     outpath , mergedKeyoutpath ,
     mergedKeyFname , filename,
-	outputMode = c("dataframe", "Text")){
-	###Creating the sample ID relation connection
+    outputMode = c("dataframe", "Text")){
+    ###Creating the sample ID relation connection
    if(labelType == "SE_Cancer"){
 	    re <- read.csv(mergeKey)
 	    re$sampleIds <- paste(re$ProjectID, "_", re$Tag, "_", re$SampleID, sep = "")
