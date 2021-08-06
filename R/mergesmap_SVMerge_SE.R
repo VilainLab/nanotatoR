@@ -142,8 +142,6 @@ for (ii in seq_along((l))){
 #' @param outMode    character. The ouput mode. Choices, dataframe or Text.
 #' @param outpath character. Path where the dual labelled 
 #'        merged samples are kept. Is mandatory if outMode is Text.
-#' @param pipeline Analysis pieline used. Options Rare variant Pipeline (RVP)
-#' or Denovo Variant pipeline(DVP).
 #' @return Text files containg merged smaps from different samples
 #' @examples
 #' mergedSmap <- mergingSMAP_SE (
@@ -156,7 +154,7 @@ for (ii in seq_along((l))){
 
 mergingSMAP_SE <- function(
 path ,pattern,outMode = c("Text", "dataframe"),
-outpath, pipeline = c("DVP", "RVP"))
+outpath)
 {
 l <- list.files(path = path, pattern = pattern, full.names = TRUE)
 nam <- c()
@@ -256,13 +254,13 @@ for (ii in seq_along((l)))
             )
         Method <- as.character(c(rep ("SE", times = nrow(datfinal))))
         SampleID = datfinal$SampleID
-		if(pipeline == "RVP"){
+		'if(pipeline == "RVP"){
 		    Zygosity = as.character(c(rep ("-", times = nrow(datfinal))))
 		}
 		else{
 		    Zygosity = as.character(datfinal$Zygosity)
 		}	
-        'strsample <- strsplit(as.character(datfinal$Sample), 
+        strsample <- strsplit(as.character(datfinal$Sample), 
             split = "*_DLE_*")
         SampleID = sapply(strsample, function(x) x[1])'
         datFinal_DLE <- data.frame(
@@ -662,8 +660,6 @@ datFinal$NID <- as.character(paste(datFinal$ProjectID,"_",datFinal$NID, sep = ""
 #' @param mergedKeyFname character. File name storing sample name and nanoID
 #'        key information.
 #' @param outputMode character. Mode of databse output. Text or dataframe.
-#' @param pipeline Analysis pieline used. Options Rare variant Pipeline (RVP)
-#' or Denovo Variant pipeline(DVP).
 #' @return Text files containg merged smaps from different samples
 #' @examples
 #' dat1 <- merging_SE_SVMerge (
@@ -716,22 +712,20 @@ merging_SE_SVMerge <- function(
             outMode = "dataframe")
         datDLE <- mergingSMAP_SE(path = SE_path, 
             pattern = SE_pattern, 
-            outMode = "dataframe", 
-			pipeline = pipeline)
+            outMode = "dataframe")
         'datFinal <- FamilyInfoPrep(Samplecodes, mergeKey, outMode = "dataframe")
         sampleIds <- as.character(unique(datFinal$SampleID))'
         datfinal <- rbind(datDual,datDLE)
     }else if(labelType == "SE"){
         datDLE <- mergingSMAP_SE(path = SE_path, 
-            pattern = SE_pattern, outMode = "dataframe",pipeline = pipeline)
+            pattern = SE_pattern, outMode = "dataframe")
             datfinal <- datDLE
     }else if(labelType == "SVMerge"){
         datDual <- mergingSMAP_SVMerge(path = SVMerge_path, pattern = SVMerge_pattern, outMode = "dataframe")
         datfinal <- datDual
     }else if(labelType == "SE_Cancer"){
 	    datDLE <- mergingSMAP_SE(path = SE_path, 
-            pattern = SE_pattern, outMode = "dataframe",
-			pipeline = pipeline)
+            pattern = SE_pattern, outMode = "dataframe")
         datfinal <- datDLE
 	}
 	else{stop("Label Type Empty !!!!")}    

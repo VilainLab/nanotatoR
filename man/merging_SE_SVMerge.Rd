@@ -47,9 +47,6 @@ key information.}
 
 \item{filename}{character. Output file name.}
 
-\item{pipeline}{Analysis pieline used. Options Rare variant Pipeline (RVP)
-or Denovo Variant pipeline(DVP).}
-
 \item{outputMode}{character. Mode of databse output. Text or dataframe.}
 }
 \value{
