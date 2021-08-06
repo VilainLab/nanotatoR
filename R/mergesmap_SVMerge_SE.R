@@ -157,7 +157,6 @@ outpath)
 l <- list.files(path = path, pattern = pattern, full.names = TRUE)
 nam <- c()
 datfinal <- data.frame()
-pipeline = pipeline
 ###Merging
 for (ii in seq_along((l)))
 {
