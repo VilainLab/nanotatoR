@@ -257,9 +257,11 @@ for (ii in seq_along((l)))
 		else{
 		    Zygosity = as.character(datfinal$Zygosity)
 		}	
+				    
         strsample <- strsplit(as.character(datfinal$Sample), 
             split = "*_DLE_*")
         SampleID = sapply(strsample, function(x) x[1])'
+		Zygosity = as.character(datfinal$Zygosity)
         datFinal_DLE <- data.frame(
             SVIndex = as.character(datfinal$SmapEntryID), 
             SampleID = datfinal$SampleID,
