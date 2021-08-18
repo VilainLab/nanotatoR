@@ -264,6 +264,7 @@ readSMap_DLE <- function(smap, smapdata,
         } else {
         stop("column names doesnot Match")
         }
+
 		if(any(unique(r1$Sample) == "ExperimentLabel") == TRUE){
 	        g1 <- strsplit(smap, split = "/")
 		    g2 <- strsplit(g1[[1]][length(g1[[1]])], split = ".smap")

@@ -52,6 +52,7 @@ ha1 <- hash()
                         opag <- c(opag, as.character(gen2[l]))
                         val1 <- hash::values(ha, keys = gen2[l])
                         gene_Terms <- c(gene_Terms, as.character(val1))
+
                         val2 <- hash::values(ha1, keys = gen2[l])
                         clinSig <- c(clinSig, as.character(val2))
                     }
@@ -59,6 +60,7 @@ ha1 <- hash()
                         opag <- c(opag, "-")
                         gene_Terms <- c(gene_Terms, "-")
                         clinSig <- c(clinSig, "-")
+
                     }
                 }
                 opag <- as.character(unique(opag))

@@ -1,3 +1,4 @@
+
 #' Merging dual labelled smaps
 #'
 #' @param path character. Path to the solo files directory.
