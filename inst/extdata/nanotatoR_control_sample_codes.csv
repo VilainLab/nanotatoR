@@ -1,0 +1,5 @@
+SampleID,ProjectID,Tag,Relationship
+GM24385_Ason,nano,F1,proband
+GM24143_Amother,nano,F1,mother
+GM24149_Afather,nano,F1,father
+NA12878,nano,F2,proband

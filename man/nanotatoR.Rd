@@ -3,7 +3,6 @@
 \docType{package}
 \name{nanotatoR}
 \alias{nanotatoR}
-\alias{nanotatoR-package}
 \title{nanotatoR: Annotation package for Bionano Data}
 \description{
 Annotation of Bionano data using available databases
@@ -11,5 +10,7 @@ Annotation of Bionano data using available databases
 \examples{
 path <- system.file("extdata", "Bionano_config/", package = "nanotatoR")
 pattern <- "_hg19.txt"
-mergedSmap <- makeMergedSmapData(path, pattern, dbOutput = "dataframe")
+mergedSmap <- makeInternalBNDatabase(path = path, 
+   pattern = pattern, dbOutput = "dataframe")
+mergedSmap[1,]
 }
