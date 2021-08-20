@@ -1,0 +1,18 @@
+#Format: HPO-id<tab>HPO label<tab>entrez-gene-id<tab>entrez-gene-symbol<tab>Additional Info from G-D source<tab>G-D source<tab>disease-ID for link
+HP:0009919	Retinoblastoma	5925	RB1	-	mim2gene	OMIM:180200
+HP:0009919	Retinoblastoma	11200	CHEK2	-	mim2gene	OMIM:259500
+HP:0009919	Retinoblastoma	7157	TP53	susceptibility	mim2gene	OMIM:259500
+HP:0009919	Retinoblastoma	5925	RB1		orphadata	ORPHA:1587
+HP:0009919	Retinoblastoma	5925	RB1	-	mim2gene	OMIM:259500
+HP:0009921	Duane anomaly	10059	DNM1L		orphadata	ORPHA:98673
+HP:0009921	Duane anomaly	1123	CHN1	-	mim2gene	OMIM:604356
+HP:0009921	Duane anomaly	170302	ARX	-	mim2gene	OMIM:300215
+HP:0009921	Duane anomaly	63895	PIEZO2	-	mim2gene	OMIM:108145
+HP:0009921	Duane anomaly	4976	OPA1		orphadata	ORPHA:98673
+HP:0009921	Duane anomaly	9786	KIAA0586		orphadata	ORPHA:397715
+HP:0009921	Duane anomaly	6299	SALL1	-	mim2gene	OMIM:107480
+HP:0009921	Duane anomaly	79848	CSPP1		orphadata	ORPHA:397715
+HP:0009921	Duane anomaly	1387	CREBBP	-	mim2gene	OMIM:180849
+HP:0009921	Duane anomaly	92002	CCNQ	-	mim2gene	OMIM:300707
+HP:0009921	Duane anomaly	57167	SALL4	-	mim2gene	OMIM:607323
+HP:0009921	Duane anomaly	2033	EP300	-	mim2gene	OMIM:180849

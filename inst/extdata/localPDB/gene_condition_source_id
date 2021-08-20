@@ -1,0 +1,13 @@
+#GeneID	AssociatedGenes	RelatedGenes	ConceptID	DiseaseName	SourceName	SourceID	DiseaseMIM	LastUpdated
+2	A2M		C0002395	Alzheimer's disease			104300	Feb 16 2016
+2	A2M		C3279661	Alpha-2-macroglobulin deficiency	NCBI curation		614036	Feb 16 2016
+144568	A2ML1		C1833692	Otitis media, susceptibility to	NCBI curation		166760	Feb 16 2016
+53947	A4GALT		C3549485	p phenotype	NCBI curation		111400	Feb 16 2016
+8086	AAAS		C0271742	Glucocorticoid deficiency with achalasia			231550	Feb 16 2016
+79719	AAGAB		C1835662	Keratosis palmoplantaris papulosa			148600	Feb 16 2016
+16	AARS1		C4225361	Epileptic encephalopathy, early infantile, 29	NCBI curation		616339	Feb 16 2016
+16	AARS1		C2750090	Charcot-Marie-Tooth disease, type 2N	NCBI curation		613287	Feb 16 2016
+57505	AARS2		C3279793	Combined oxidative phosphorylation deficiency 8	NCBI curation		614096	Feb 16 2016
+57505	AARS2		C4014588	Leukoencephalopathy, progressive, with ovarian failure	NCBI curation		615889	Feb 16 2016
+10157	AASS		C0268556	Saccharopinuria			268700	Feb 16 2016
+10157	AASS		C0543533	Hyperlysinemia	Human Phenotype Ontology	HP:0002161	238700	Feb 16 2016

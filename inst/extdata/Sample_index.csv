@@ -1,0 +1,5 @@
+"SampleID","ProjectID","Tag","Relationship","NID"
+"GM24385_Ason","nano","F1","proband","nano_NR1.1"
+"GM24143_Amother","nano","F1","mother","nano_NR1.2"
+"GM24149_Afather","nano","F1","father","nano_NR1.3"
+"NA12878","nano","F2","proband","nano_NR2.1"

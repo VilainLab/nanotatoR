@@ -1,0 +1,19 @@
+nanotatoR v1.00
+==============
+
+Changes:
+
+* Fixed gene_extract bugs with rentrez.
+
+nanotatoR v1.00
+==============
+
+Changes:
+
+* Annotation for variants identified by Bionano SV caller for Optical mapping data.
+* Features include:
+      * Population Frequency calculation using DGV and DECIPHER, as well Bionano Genomics internal cohort of 154 samples from 1000 genomes project.
+      * Creates Internal Frequency database using available cohort samples, and calculates frequency for the variants based on that database.
+      * Identify genes that overlap and nearestto the breakpoints.
+      * Identify genes using phenotype values provided.
+      * Exports output in form of Excel, with different tabs with different type of variants.

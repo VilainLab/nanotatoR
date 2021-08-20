@@ -1,0 +1,36 @@
+#accession_version	test_type	object	GTR_identifier	MIM_number	object_name	gene_or_SNOMED_CT_ID	gene_symbol
+GTR000537912.3	Clinical	condition	C0853087		Abnormality of the nail		N/A
+GTR000537912.3	Clinical	condition	C0023890		Liver cirrhosis		N/A
+GTR000537912.3	Clinical	condition	C1846821		Abnormality of coagulation		N/A
+GTR000537912.3	Clinical	condition	C1855204		Cellular immunodeficiency		N/A
+GTR000537912.3	Clinical	condition	C2132198		Abnormal blistering of the skin		N/A
+GTR000537912.3	Clinical	condition	C4020969		Inflammatory abnormality of the eye		N/A
+GTR000537912.3	Clinical	condition	C4024737		Aplasia/Hypoplasia of the skin		N/A
+GTR000537912.3	Clinical	condition	C0152009		Abnormality of leukocytes		N/A
+GTR000537912.3	Clinical	condition	C4011556		Abnormal eyebrow morphology		N/A
+GTR000537912.3	Clinical	condition	C1862859		Palmoplantar keratoderma		N/A
+GTR000537912.3	Clinical	condition	C1842408		Neoplasm of the pancreas		N/A
+GTR000537912.3	Clinical	condition	C3806482		Recurrent respiratory infections		N/A
+GTR000537912.3	Clinical	condition	C2674432		Reduced bone mineral density		N/A
+GTR000537912.3	Clinical	condition	C4020958		Rough bone trabeculation		N/A
+GTR000537912.3	Clinical	condition	C0026826		Hypertonia		N/A
+GTR000537912.3	Clinical	condition	C0011849		Diabetes mellitus	73211009	N/A
+GTR000537912.3	Clinical	condition	C0020458		Hyperhidrosis		N/A
+GTR000537912.3	Clinical	condition	C4024878		Generalized hyperpigmentation		N/A
+GTR000537912.3	Clinical	condition	C0263498		Premature graying of hair		N/A
+GTR000537912.3	Clinical	condition	C0011334		Carious teeth		N/A
+GTR000537912.3	Clinical	condition	C4022018		Telangiectasia of the skin		N/A
+GTR000537912.3	Clinical	condition	C1837770		Sparse hair		N/A
+GTR000537912.3	Clinical	condition	C1855710		Bone marrow hypocellularity		N/A
+GTR000537912.3	Clinical	condition	C1384666		Hearing impairment		N/A
+GTR000537912.3	Clinical	condition	C0086543		Cataract		N/A
+GTR000537912.3	Clinical	condition	C2931527		Nonsyndromic microcephaly		N/A
+GTR000537912.3	Clinical	condition	C0520966		Incoordination		N/A
+GTR000537912.3	Clinical	condition	C4025900		Abnormality of female internal genitalia		N/A
+GTR000537912.3	Clinical	condition	C1260926		Abnormality of skin pigmentation		N/A
+GTR000537912.3	Clinical	condition	C0221260		Nail dystrophy		N/A
+GTR000537912.3	Clinical	condition	C1866934		Reduced tendon reflexes		N/A
+GTR000537912.3	Clinical	condition	C1800706	178500	"Idiopathic fibrosing alveolitis, chronic form"	28168000	N/A
+GTR000537912.3	Clinical	condition	C1861028	189960	Tracheoesophageal fistula		N/A
+GTR000537912.3	Clinical	condition	C3277900	206800	Anonychia	23610003	N/A
+GTR000537912.3	Clinical	condition	C0266470	213000	Congenital cerebellar hypoplasia	16026008	N/A
