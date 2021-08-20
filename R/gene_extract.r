@@ -74,7 +74,10 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
         ##Diving the number of genes to be given as an
         ##input based on the threshold.
         terms_1<-as.character(terms[1:thresh])
-        terms_2<-as.character(terms[thresh:length(terms)])
+
+    		thresh1 <- thresh+1
+        terms_2<-as.character(terms[thresh1:length(terms)])
+
         ##Extracting genes from the databases
         g<-gene_extraction(terms_1)
 		
@@ -122,12 +125,18 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
             omimID = omimID)
         }
         ##Collating output from all the datasets
+
+		if((typeof(g) == "character" 
+		    |  typeof(g_1) == "character")
+			& (length(g) == 1 
+			| length(g_1) == 1)){
 		if(g == "" | g_1 == ""){
 			    g$geneName = NA
-			    g1$geneName = NA
+			    g_1$geneName = NA
 				g$Final_terms = NA
 			    g_1$Final_terms = NA
 		} else{print("All term extraction returns data!!!")}
+		}else{ g <- g; g_1 <- g_1}
         Genes<-c(as.character(g$geneName),as.character(g_1$geneName),
             as.character(g_o$omimGenes),as.character(g_o_1$omimGenes),
             as.character(g_g$gtrGenes),as.character(g_g_1$gtrGenes),

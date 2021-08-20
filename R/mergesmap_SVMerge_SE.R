@@ -1,5 +1,3 @@
-'library(hash)
-library(tidyverse)'
 #' Merging dual labelled smaps
 #'
 #' @param path character. Path to the solo files directory.
@@ -199,17 +197,18 @@ for (ii in seq_along((l)))
     stop("column names doesnot Match")
     }
 	if(length(unique(r1$Sample)) > 1){
-	    r1$Sample <- gsub("-", "ExperimentLabel", r1$Sample)
+	    r1$Sample <- gsub("^-$", "ExperimentLabel", r1$Sample)
 	}else{r1$Sample <- r1$Sample}
-	if(unique(r1$Sample) == "ExperimentLabel"){
+	if(any(unique(r1$Sample) == "ExperimentLabel") == TRUE){
 	    g1 <- strsplit(smap, split = "/")
 		g2 <- strsplit(g1[[1]][length(g1[[1]])], split = ".smap")
-		g3 <- strsplit(g1[[1]][length(g1[[1]])], split = "_")
+		#g3 <- strsplit(g1[[1]][length(g1[[1]])], split = "_")
 	    #Samp <- as.character(g2[[1]][1])
-        Samp <- as.character(paste0(g3[[1]][1],g3[[1]][3], "_", g3[[1]][5]))	
-		}else{
-	    	Samp <- as.character(unique(r1$Sample))
-	    }
+        Samp <- as.character(g2[[1]][1])
+	}else{
+	   	Samp <- as.character(unique(r1$Sample))
+	}
+
     'st1 <- strsplit(Samp, split = "*_DLE")
     SampleID <- st1[[1]][1]'
     if(length(grep("*_BspQI_*", Samp)) >= 1){
@@ -253,32 +252,41 @@ for (ii in seq_along((l)))
             )
         Method <- as.character(c(rep ("SE", times = nrow(datfinal))))
         SampleID = datfinal$SampleID
-        'strsample <- strsplit(as.character(datfinal$Sample), 
+		'if(pipeline == "RVP"){
+		    Zygosity = as.character(c(rep ("-", times = nrow(datfinal))))
+		}
+		else{
+		    Zygosity = as.character(datfinal$Zygosity)
+		}	
+				    
+        strsample <- strsplit(as.character(datfinal$Sample), 
             split = "*_DLE_*")
         SampleID = sapply(strsample, function(x) x[1])'
+		Zygosity = as.character(datfinal$Zygosity)
         datFinal_DLE <- data.frame(
-        SVIndex = as.character(datfinal$SmapEntryID), 
-        SampleID = datfinal$SampleID,
-        RefcontigID1 = as.numeric(datfinal$RefcontigID1), 
-        RefcontigID2 = as.numeric(datfinal$RefcontigID2),
-        RefStartPos = as.numeric(datfinal$RefStartPos), 
-        RefEndPos = as.numeric(datfinal$RefEndPos), 
-        Confidence = as.numeric(datfinal$Confidence), 
-        Size = as.numeric(datfinal$Size), 
-        Zygosity = as.character(datfinal$Zygosity), 
-        Type = as.character(datfinal$Type),
-        Type1 = Type1, Type2 = Type2, 
-        Fail_BSPQI_assembly_chimeric_score = Fail_BSPQI_assembly_chimeric_score, 
-        Fail_BSSSI_assembly_chimeric_score =Fail_BSSSI_assembly_chimeric_score,
-        Fail_assembly_chimeric_score_SE = as.character(
-            datfinal$Fail_assembly_chimeric_score
-        ),
-        Found_in_self_BSPQI_molecules = Found_in_self_BSPQI_molecules, 
-        Found_in_self_BSSSI_molecules = Found_in_self_BSPQI_molecules,
-        Found_in_SE_self_molecules = as.character(
-            datfinal$Found_in_self_molecules
-            ), 
-        Method = Method
+            SVIndex = as.character(datfinal$SmapEntryID), 
+            SampleID = datfinal$SampleID,
+            RefcontigID1 = as.numeric(datfinal$RefcontigID1), 
+            RefcontigID2 = as.numeric(datfinal$RefcontigID2),
+            RefStartPos = as.numeric(datfinal$RefStartPos), 
+            RefEndPos = as.numeric(datfinal$RefEndPos), 
+            Confidence = as.numeric(datfinal$Confidence), 
+            Size = as.numeric(datfinal$Size), 
+            Zygosity = Zygosity, 
+            Type = as.character(datfinal$Type),
+            Type1 = Type1, Type2 = Type2, 
+            Fail_BSPQI_assembly_chimeric_score = Fail_BSPQI_assembly_chimeric_score, 
+            Fail_BSSSI_assembly_chimeric_score =Fail_BSSSI_assembly_chimeric_score,
+            Fail_assembly_chimeric_score_SE = as.character(
+                datfinal$Fail_assembly_chimeric_score
+            ),
+            Found_in_self_BSPQI_molecules = Found_in_self_BSPQI_molecules, 
+            Found_in_self_BSSSI_molecules = Found_in_self_BSPQI_molecules,
+            Found_in_SE_self_molecules = as.character(
+                datfinal$Found_in_self_molecules
+                ), 
+            Method = Method
+
         )
         ##Writing output dataframe or text
         if (outMode == "Text"){
