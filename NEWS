@@ -1,6 +1,5 @@
 
 nanotatoR v3.13
-==============
 
 Changes:
 
@@ -8,11 +7,10 @@ Changes:
 * Fixed gene_extract bugs with rentrez.
 
 nanotatoR v1.00
-==============
+
 
 Changes:
 
-=======
 * Annotation for variants identified by Bionano SV caller for Optical mapping data.
 * Features include:
       * Population Frequency calculation using DGV and DECIPHER, as well Bionano Genomics internal cohort of 154 samples from 1000 genomes project.
