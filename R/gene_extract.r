@@ -74,8 +74,10 @@ gene_list_generation<-function(method_entrez = c("Single","Multiple","Text"),
         ##Diving the number of genes to be given as an
         ##input based on the threshold.
         terms_1<-as.character(terms[1:thresh])
+
     		thresh1 <- thresh+1
         terms_2<-as.character(terms[thresh1:length(terms)])
+
         ##Extracting genes from the databases
         g<-gene_extraction(terms_1)
 		

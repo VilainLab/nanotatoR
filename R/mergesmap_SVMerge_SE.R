@@ -1,4 +1,3 @@
-
 #' Merging dual labelled smaps
 #'
 #' @param path character. Path to the solo files directory.
@@ -209,6 +208,7 @@ for (ii in seq_along((l)))
 	}else{
 	   	Samp <- as.character(unique(r1$Sample))
 	}
+
     'st1 <- strsplit(Samp, split = "*_DLE")
     SampleID <- st1[[1]][1]'
     if(length(grep("*_BspQI_*", Samp)) >= 1){
@@ -286,6 +286,7 @@ for (ii in seq_along((l)))
                 datfinal$Found_in_self_molecules
                 ), 
             Method = Method
+
         )
         ##Writing output dataframe or text
         if (outMode == "Text"){

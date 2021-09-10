@@ -39,5 +39,5 @@ License: file LICENSE
 biocViews: Software, WorkflowStep, GenomeAssembly, VariantAnnotation
 Encoding: UTF-8
 RoxygenNote: 7.1.1.9001
-URL: https://github.com/VilainLab/Nanotator
-BugReports: https://github.com/VilainLab/Nanotator/issues
+URL: https://github.com/VilainLab/nanotatoR
+BugReports: https://github.com/VilainLab/nanotatoR/issues
