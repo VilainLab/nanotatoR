@@ -264,9 +264,6 @@ readSMap_DLE <- function(smap, smapdata,
         } else {
         stop("column names doesnot Match")
         }
-<<<<<<< HEAD
-        Samp <- as.character(unique(r1$Sample))
-=======
 
 		if(any(unique(r1$Sample) == "ExperimentLabel") == TRUE){
 	        g1 <- strsplit(smap, split = "/")
@@ -278,7 +275,6 @@ readSMap_DLE <- function(smap, smapdata,
 	       	Samp <- as.character(unique(r1$Sample))
 	    }
         #Samp <- as.character(unique(r1$Sample))
->>>>>>> 290722e937d0be2298a6f67270fd541e2ee3ab6e
         'st1 <- strsplit(Samp, split = "*_DLE")
         SampleID <- st1[[1]][1]'
         if(length(grep("*_BspQI_*", Samp)) >= 1){
