@@ -477,7 +477,3 @@
 #'   \item{RGB}{RGB codes}
 #' }
 "Homo_sapiens.Hg19_BN_bed.txt"
-<<<<<<< HEAD
-=======
-
->>>>>>> 04c1b43bc3aded9fbd47aace30093a5b16389a06
