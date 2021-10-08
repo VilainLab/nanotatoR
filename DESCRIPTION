@@ -1,6 +1,6 @@
 Package: nanotatoR
 Title: Next generation structural variant annotation and classification
-Version: 3.13.2
+Version: 1.9.1
 Author: Surajit Bhattacharya, Hayk Barsheghyan, Emmanuele C Delot and Eric Vilain
 Authors@R: 
     c(person(given = "Surajit",
