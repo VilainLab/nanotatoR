@@ -758,9 +758,6 @@ gtr_gene<-function(terms, gtr, url_gtr, downloadGTR = TRUE){
 #' downloadClinvar = downloadClinvar, 
 #' omimID = "OMIM:118980")
 #' @importFrom stats na.omit 
-#' @import VarfromPDB
-#' @export
-#' @export
 clinvar_gene<-function(terms, 
     clinvar,
     downloadClinvar, 
